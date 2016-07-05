@@ -201,6 +201,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
               </div>
             </form><!-- fim login page -->
 
+            <br>
 
             <div class="content-block-title">Delivery</div>
                 <div class="content-block">
