@@ -40,34 +40,6 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
     <script type="text/javascript">
         $(document).ready(function(){
-
-         function verificaBairro(){
-          var login = $("#bairro").val;
-
-          $.ajax({
-            url:"ajax/verifica_bairro.php",
-            type:"POST",
-            data: "br="+bairro,
-              success: function (result){
-                          if(result==1){
-                            location.href='player/index.php'
-                          }else{
-                            var myApp = new Framework7({
-                              material: true
-                            });
-                            var mainView = myApp.addView('.view-main');
-
-                            var $$ = Dom7;
-
-                            myApp.addNotification({
-                                    message: 'Desculpe, não entregamos neste bairro.'
-                                });
-                          }
-                      }
-          })
-          return false;
-        })
-
           document.getElementById("cep").onkeypress = function(e) {
          var chr = String.fromCharCode(e.which);
          if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
@@ -97,6 +69,32 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                       });
                   });
             });
+
+            function verificaBairro(){
+             var login = $("#bairro").val;
+
+             $.ajax({
+               url:"ajax/verifica_bairro.php",
+               type:"POST",
+               data: "br="+bairro,
+                 success: function (result){
+                             if(result==1){
+                               location.href='player/index.php'
+                             }else{
+                               var myApp = new Framework7({
+                                 material: true
+                               });
+                               var mainView = myApp.addView('.view-main');
+
+                               myApp.addNotification({
+                                       message: 'Desculpe, não entregamos neste bairro.'
+                                   });
+                             }
+                         }
+             })
+             return false;
+           }
+
     </script>
 
   </head>
