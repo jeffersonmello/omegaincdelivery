@@ -97,6 +97,96 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                         </div>
                   </div>
                 </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">Selecione seu pedido:</div>
+
+                <div class="list-block">
+                  <ul>
+
+                    <li>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title label">Categorias</div>
+                          <div class="item-input">
+                              <select>...</select>
+                            </div>
+                        </div>
+                      </div>
+                    </li>
+                    
+                  </ul>
+                </div>
+
+                <div class="card-content">
+                  <div class="list-block media-list">
+                    <ul>
+                      <li class="item-content">
+                        <div class="item-media">
+                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Yellow Submarine</div>
+                          </div>
+                          <div class="item-subtitle">Beatles</div>
+                        </div>
+                      </li>
+
+                      <li class="item-content">
+                        <div class="item-media">
+                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Yellow Submarine</div>
+                          </div>
+                          <div class="item-subtitle">Beatles</div>
+                        </div>
+                      </li>
+
+                      <li class="item-content">
+                        <div class="item-media">
+                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Yellow Submarine</div>
+                          </div>
+                          <div class="item-subtitle">Beatles</div>
+                        </div>
+                      </li>
+
+                      <li class="item-content">
+                        <div class="item-media">
+                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Yellow Submarine</div>
+                          </div>
+                          <div class="item-subtitle">Beatles</div>
+                        </div>
+                      </li>
+
+
+                      <li class="item-content">
+                        <div class="item-media">
+                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                        </div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Yellow Submarine</div>
+                          </div>
+                          <div class="item-subtitle">Beatles</div>
+                        </div>
+                      </li>
+
+                    </ul>
+                  </div>
+                </div>
+
 
 
               <!-- Fim do Conteudo -->
