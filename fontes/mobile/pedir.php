@@ -72,9 +72,34 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
             <div class="page-content">
               <br>
               <br>
-              <p>Page content goes here</p>
-              <!-- Link to another page -->
-              <a href="about.html">About app</a>
+              <br>
+              <!-- Inicio do Conteudo -->
+
+              <div class="card">
+                <div class="card-header">Nome da Loja - Delivery</div>
+                <div class="card-content">
+                  <div class="card-content-inner">
+
+                    <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.437152806504!2d-52.35454038490684!3d-24.015644884410168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ed0b28ee9a9359%3A0x1c5dee983eeb3986!2sAv.+Bronislav+Wronski+-+Jardim+Aeroporto%2C+Campo+Mour%C3%A3o+-+PR%2C+87310-300!5e0!3m2!1spt-BR!2sbr!4v1459362655860" width="100%" height="150" frameborder="0" style="border:0"></iframe></div>
+
+                    <div class="list-block">
+                          <ul>
+                            <li>
+                              <a href="#" class="item-link item-content">
+                                <div class="item-media"><i class="icon icon-f7"></i></div>
+                                <div class="item-inner">
+                                  <div class="item-title">Estamos:</div>
+                                </div>
+                              </a>
+                            </li>
+
+                          </ul>
+                        </div>
+                  </div>
+                </div>
+
+
+              <!-- Fim do Conteudo -->
             </div>
           </div>
         </div>
