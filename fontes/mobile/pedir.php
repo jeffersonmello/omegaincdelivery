@@ -75,8 +75,9 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
               <br>
               <!-- Inicio do Conteudo -->
 
-              <div class="card">
+              <div class="card demo-card-header-pic">
                 <div class="card-header">Nome da Loja - Delivery</div>
+                <div style="background-image:url(...)" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div>
                 <div class="card-content">
                   <div class="card-content-inner">
 
