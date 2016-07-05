@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>My App</title>
+    <title>Omega Inc - Delivery</title>
     <!-- Path to Framework7 Library CSS-->
     <link rel="stylesheet" href="css/framework7.material.min.css">
     <link rel="stylesheet" href="css/framework7.material.colors.min.css">
@@ -23,32 +23,76 @@
         <p>Left panel content goes here</p>
       </div>
     </div>
-	
-	!-- Should be a direct child of BODY -->
-  <div class="login-screen">
+
+    <!-- Views-->
+    <div class="views">
+      <!-- Your main view, should have "view-main" class-->
+      <div class="view view-main">
+        <!-- Top Navbar-->
+        <div class="navbar">
+          <div class="navbar-inner">
+            <!-- We have home navbar without left link-->
+            <div class="center sliding">Login</div>
+            <div class="right">
+              <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+        <div class="pages navbar-through toolbar-through">
+          <!-- Page, data-page contains page name-->
+          <div data-page="index" class="page">
+            <!-- Scrollable page content-->
+            <div class="page-content">
+             <div class="login-screen modal-in">
       <!-- Default view-page layout -->
       <div class="view">
         <div class="page">
+
+          <br>
+          <br>
+
           <!-- page-content has additional login-screen content -->
           <div class="page-content login-screen-content">
-            <div class="login-screen-title">My App</div>
+            <div class="login-screen-title">Delivery</div>
+
+
             <!-- Login form -->
-            <form>
+            <form action="" method="post">
               <div class="list-block">
                 <ul>
+
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Username</div>
+                      <div class="item-title label">Endereço</div>
                       <div class="item-input">
-                        <input type="text" name="username" placeholder="Username">
+                        <input type="text" name="username" placeholder="CEP">
+                      </div>
+                    </div>
+                    </li>
+
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="text" name="username" placeholder="" disabled>
+                        </div>
+                      </div>
+                      </li>
+
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Nome</div>
+                      <div class="item-input">
+                        <input type="text" name="username" placeholder="Seu Nome">
                       </div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Password</div>
+                      <div class="item-title label">Email</div>
                       <div class="item-input">
-                        <input type="password" name="password" placeholder="Password">
+                        <input type="password" name="password" placeholder="Seu Email">
                       </div>
                     </div>
                   </li>
@@ -57,18 +101,25 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" class="item-link list-button">Sign In</a>
+                    <p><a href="#" class="button button-fill color-green">Pronto</a></p>
+                    <p class="buttons-row">
+                      <a href="#" class="button button-big button-fill button-raised color-red">Cancelar</a>
+                      <a href="#" class="button button-big button-fill button-raised color-green">Pronto</a>
+                    </p>
                   </li>
                 </ul>
-                <div class="list-block-labe">Some text with login information.</div>
               </div>
             </form>
+
           </div>
         </div>
       </div>
   </div>
-	
-	
+            </div>
+          </div>
+        </div>
+
+    </div>
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="js/framework7.min.js"></script>
     <!-- Path to your app js-->
