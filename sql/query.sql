@@ -23,6 +23,7 @@ create table lanc_pedidos (
 	email varchar(500),
 	telefone varchar(500),
 	endereco varchar(750),
+	entregar int not null,
 	status int not null,
 	formaPagamento int not null,
 	observacao text,

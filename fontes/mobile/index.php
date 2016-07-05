@@ -1,4 +1,12 @@
- <!DOCTYPE html>
+<?php
+ob_start();// Inicia Buffer
+
+// Funções para não exibir alguns erros de conexao
+ini_set( 'display_errors', true );
+error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
+
+?>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -9,8 +17,8 @@
     <!-- Path to Framework7 Library CSS-->
     <link rel="stylesheet" href="css/framework7.material.min.css">
     <link rel="stylesheet" href="css/framework7.material.colors.min.css">
+
     <!-- Path to your custom app styles-->
-    <link rel="stylesheet" href="css/my-app.css">
     <link rel="stylesheet" href="css/delivery.css">
 
     <!--jquery-->
@@ -30,33 +38,30 @@
     <!--Import Fontawesome Icon Font-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-    <script type="text/javascript" >
-
+    <script type="text/javascript">
         $(document).ready(function(){
-                    $("#cep").blur(function(){
-                            $("#rua").val("...")
+                  $("#cep").blur(function(){
+                    $("#rua").val("...")
                     $("#bairro").val("...")
-    				$("#xd").val("Procurando seu endereço...")
-                $("#cidade").val("...")
+    				        $("#endereco").val("Procurando seu endereço...")
+                    $("#cidade").val("...")
                     $("#uf").val("...")
 
-            consulta = $("#cep").val()
-
+                    consulta = $("#cep").val()
                     $.getScript("http://www.toolsweb.com.br/webservice/clienteWebService.php?cep="+consulta+"&formato=javascript", function(){
 
-                            rua=unescape(resultadoCEP.logradouro)
-                            bairro=unescape(resultadoCEP.bairro)
-                            cidade=unescape(resultadoCEP.cidade)
-                            uf=unescape(resultadoCEP.uf)
+                    rua=unescape(resultadoCEP.logradouro)
+                    bairro=unescape(resultadoCEP.bairro)
+                    cidade=unescape(resultadoCEP.cidade)
+                    uf=unescape(resultadoCEP.uf)
 
-                            $("#rua").val(rua)
-                            $("#bairro").val(bairro)
-                            $("#cidade").val(cidade)
-    						            $("#endereco").val('Rua '+rua+', '+bairro+', '+cidade)
-                            $("#uf").val(uf)
-
-                            });
-                    });
+                    $("#rua").val(rua)
+                    $("#bairro").val(bairro)
+                    $("#cidade").val(cidade)
+    						    $("#endereco").val('Rua '+rua+', '+bairro+', '+cidade)
+                    $("#uf").val(uf)
+                      });
+                  });
             });
 
             function remove(){
@@ -122,7 +127,7 @@
                     <div class="item-media"><i class="material-icons color-icon">near_me</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text"  id="cep" name="cep" placeholder="CEP" maxlength="8">
+                        <input type="text"  id="cep" name="cep" placeholder="CEP" maxlength="8" required autofocus>
                       </div>
                     </div>
                     </li>
@@ -140,7 +145,7 @@
                     <div class="item-media"><i class="material-icons color-icon">person</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text" id="nome" name="nome" placeholder="Seu Nome">
+                        <input type="text" id="nome" name="nome" placeholder="Seu Nome" required>
                       </div>
                     </div>
                   </li>
@@ -149,7 +154,7 @@
                     <div class="item-media"><i class="material-icons color-icon">email</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="email" id="email" name="email" placeholder="Seu Email">
+                        <input type="email" id="email" name="email" placeholder="Seu Email" required>
                       </div>
                     </div>
                   </li>
@@ -165,9 +170,7 @@
                 <ul>
                   <li>
                     <p class="buttons-row">
-                      <div class="col-50">
                       <a href="#" class="button button-fill button-raised color-green">Pronto</a>
-                    </div>
                     </p>
                   </li>
                 </ul>
