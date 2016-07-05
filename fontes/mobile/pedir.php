@@ -102,29 +102,13 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
               <div class="card">
                 <div class="card-header">Selecione seu pedido:</div>
 
-                <div class="list-block">
-                  <ul>
-
-                    <li>
-                      <div class="item-content">
-                        <div class="item-inner">
-                          <div class="item-title label">Categorias</div>
-                          <div class="item-input">
-                              <select>...</select>
-                            </div>
-                        </div>
-                      </div>
-                    </li>
-                    
-                  </ul>
-                </div>
 
                 <div class="card-content">
                   <div class="list-block media-list">
                     <ul>
                       <li class="item-content">
                         <div class="item-media">
-                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
                         </div>
                         <div class="item-inner">
                           <div class="item-title-row">
@@ -136,7 +120,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
                       <li class="item-content">
                         <div class="item-media">
-                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
                         </div>
                         <div class="item-inner">
                           <div class="item-title-row">
@@ -148,7 +132,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
                       <li class="item-content">
                         <div class="item-media">
-                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
                         </div>
                         <div class="item-inner">
                           <div class="item-title-row">
@@ -160,7 +144,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
                       <li class="item-content">
                         <div class="item-media">
-                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
                         </div>
                         <div class="item-inner">
                           <div class="item-title-row">
@@ -173,7 +157,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
                       <li class="item-content">
                         <div class="item-media">
-                          <img src="https://cdn1.iconfinder.com/data/icons/all_google_icons_symbols_by_carlosjj-du/128/pizza-o.png" width="44">
+                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
                         </div>
                         <div class="item-inner">
                           <div class="item-title-row">
