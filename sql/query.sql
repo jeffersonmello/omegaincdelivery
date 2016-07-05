@@ -1,0 +1,55 @@
+create database delivery;
+
+use delivery;
+
+create table cad_categorias (
+	guid int not null auto_increment,
+	descricao varchar(500) not null,
+	primary key (guid)
+);
+
+create table cad_produtos (
+	guid int not null auto_increment,
+	guid_categoria int not null,
+	descricao varchar(500) not null,
+	preco double,
+	primary key (guid),
+	foreign key (guid_categoria) references cad_categorias (guid)
+);
+
+create table lanc_pedidos (
+	guid int not null auto_increment,
+	nome varchar(500),
+	email varchar(500),
+	telefone varchar(500),
+	endereco varchar(750),
+	status int not null,
+	formaPagamento int not null,
+	observacao text,
+	primary key (guid)	
+);
+
+create table lanc_listprodpedido (
+	guid int not null auto_increment,
+	guid_produto int not null,
+	guid_pedido int not null,
+	primary key (guid),
+	foreign key (guid_produto) references cad_produtos (guid),
+	foreign key (guid_pedido) references lanc_pedidos (guid)
+);
+
+create table atd_bairros 
+	guid int not null auto_increment,
+	descricao varchar(500) not null,
+	taxaEntrega double,
+	primary key (guid)
+);
+
+create table adm_usuarios (
+	guid int not null auto_increment,
+	usuario varchar(250) not null,
+	senha varchar(250) not null,
+	nome varchar(500) not null,
+	nivel int not null default 0,
+	primary key(guid)
+);

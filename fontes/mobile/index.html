@@ -59,6 +59,13 @@
                     });
             });
 
+            function remove(){
+              var text = $("#cep").val;
+              var er = /\^|~|\?|,|\*|\.|\-/g;
+              text = text.replace(er, "");
+              $("#cep").val = text;
+            }
+
     </script>
 
   </head>
@@ -76,18 +83,14 @@
 
     <!-- Views-->
     <div class="views">
-      <!-- Your main view, should have "view-main" class-->
       <div class="view view-main">
+
         <!-- Top Navbar-->
         <div class="navbar">
           <div class="navbar-inner">
-
-            <div class="right">
-              <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
-            </div>
-
-            <!-- We have home navbar without left link-->
-            <div class="center sliding">Delivery</div>
+            <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
+            <div class="center">Delivery</div>
+            <div class="right"></div>
           </div>
         </div>
 
@@ -119,7 +122,7 @@
                     <div class="item-media"><i class="material-icons color-icon">near_me</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text" id="cep" name="cep" placeholder="CEP" maxlength="8">
+                        <input type="text"  id="cep" name="cep" placeholder="CEP" maxlength="8">
                       </div>
                     </div>
                     </li>
@@ -162,8 +165,9 @@
                 <ul>
                   <li>
                     <p class="buttons-row">
-                      <a href="#" class="button button-big button-fill button-raised color-green">Pronto</a>
-                      <a href="#" class="button button-big button-fill button-raised color-red">Cancelar</a>
+                      <div class="col-50">
+                      <a href="#" class="button button-fill button-raised color-green">Pronto</a>
+                    </div>
                     </p>
                   </li>
                 </ul>
