@@ -11,6 +11,20 @@
     <link rel="stylesheet" href="css/framework7.material.colors.min.css">
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/my-app.css">
+
+    <!--Toastr-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+
+    <!--DataTables-->
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import Fontawesome Icon Font-->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
   </head>
   <body>
     <!-- Status bar overlay for fullscreen mode-->
@@ -31,11 +45,13 @@
         <!-- Top Navbar-->
         <div class="navbar">
           <div class="navbar-inner">
-            <!-- We have home navbar without left link-->
-            <div class="center sliding">Login</div>
+
             <div class="right">
               <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
             </div>
+
+            <!-- We have home navbar without left link-->
+            <div class="center sliding">Delivery</div>
           </div>
         </div>
 
@@ -64,6 +80,7 @@
                 <ul>
 
                   <li class="item-content">
+                    <div class="item-media"><i class="fa fa-search" aria-hidden="true"></i></div>
                     <div class="item-inner">
                       <div class="item-title label">Endereço</div>
                       <div class="item-input">
@@ -101,10 +118,9 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <p><a href="#" class="button button-fill color-green">Pronto</a></p>
                     <p class="buttons-row">
-                      <a href="#" class="button button-big button-fill button-raised color-red">Cancelar</a>
                       <a href="#" class="button button-big button-fill button-raised color-green">Pronto</a>
+                      <a href="#" class="button button-big button-fill button-raised color-red">Cancelar</a>
                     </p>
                   </li>
                 </ul>
