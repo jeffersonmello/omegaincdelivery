@@ -205,11 +205,13 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
             <div class="content-block-title">Delivery</div>
                 <div class="content-block">
+                  <div class="content-block-inner">
                     <p class="color-icon">
                       Horário de Atendimento: Ter. à Dom. das 18h as 00h.<br>
                       Telefone:<br>
                       Email:
                     </p>
+                  </div>
                 </div>
 
            </div>
