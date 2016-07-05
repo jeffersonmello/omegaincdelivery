@@ -40,6 +40,40 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
     <script type="text/javascript">
         $(document).ready(function(){
+
+         function verificaBairro(){
+          var login = $("#bairro").val;
+
+          $.ajax({
+            url:"ajax/verifica_bairro.php",
+            type:"POST",
+            data: "br="+bairro,
+              success: function (result){
+                          if(result==1){
+                            location.href='player/index.php'
+                          }else{
+                            var myApp = new Framework7({
+                              material: true
+                            });
+                            var mainView = myApp.addView('.view-main');
+
+                            var $$ = Dom7;
+
+                            myApp.addNotification({
+                                    message: 'Desculpe, não entregamos neste bairro.'
+                                });
+                          }
+                      }
+          })
+          return false;
+        })
+
+          document.getElementById("cep").onkeypress = function(e) {
+         var chr = String.fromCharCode(e.which);
+         if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
+           return false;
+       };
+
                   $("#cep").blur(function(){
                     $("#rua").val("...")
                     $("#bairro").val("...")
@@ -63,14 +97,6 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                       });
                   });
             });
-
-            function remove(){
-              var text = $("#cep").val;
-              var er = /\^|~|\?|,|\*|\.|\-/g;
-              text = text.replace(er, "");
-              $("#cep").val = text;
-            }
-
     </script>
 
   </head>
@@ -127,7 +153,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                     <div class="item-media"><i class="material-icons color-icon">near_me</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text"  id="cep" name="cep" placeholder="CEP" maxlength="8" required autofocus>
+                        <input type="text"  id="cep" name="cep" placeholder="CEP"  maxlength="8" required autofocus>
                       </div>
                     </div>
                     </li>
@@ -161,7 +187,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
                   <input name="cep" type="hidden" id="cep" value="" size="15" maxlength="8" />
                   <input name="rua" type="hidden" id="rua" size="60" />
-                  <input name="bairro" type="hidden" id="bairro" style="border:none;border:none;" class="form-control" size="60" />
+                  <input name="bairro" type="hidden" id="bairro" class="form-control" size="60" />
                   <input name="cidade" type="hidden" id="cidade" size="60" />
 
                 </ul>
@@ -170,7 +196,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                 <ul>
                   <li>
                     <p class="buttons-row">
-                      <a href="#" class="button button-fill button-raised color-green">Pronto</a>
+                      <a href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
                     </p>
                   </li>
                 </ul>
