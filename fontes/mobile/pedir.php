@@ -126,37 +126,61 @@ $taxa = $_SESSION['taxaentrega'];
               <br>
 
               <div class="card">
-                <div class="card-header">Selecione seu pedido:</div>
+                <div class="card-header"><i class="fa fa-archive color-icon" aria-hidden="true"></i> Selecione seu pedido</div>
 
 
                 <div class="card-content">
-                  <div class="list-block media-list">
-                    <ul>
-                      <li class="item-content">
-                        <div class="item-media">
-                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
-                        </div>
-                        <div class="item-inner">
-                          <div class="item-title-row">
-                            <div class="item-title">Yellow Submarine</div>
-                          </div>
-                          <div class="item-subtitle">Beatles</div>
-                        </div>
-                      </li>
 
-                      <li class="item-content">
-                        <div class="item-media">
-                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
-                        </div>
-                        <div class="item-inner">
-                          <div class="item-title-row">
-                            <div class="item-title">Yellow Submarine</div>
-                          </div>
-                          <div class="item-subtitle">Beatles</div>
-                        </div>
-                      </li>
+                  <div class="list-block accordion-list">
+                      <ul>
+                          <li class="accordion-item">
+                              <a href="" class="item-link item-content">
+                                  <div class="item-inner">
+                                      <div class="item-title"><i class="material-icons color-icon">local_pizza</i> Pizzas</div>
+                                  </div>
+                              </a>
+                              <div class="accordion-item-content">
 
-                    </ul>
+                                <div class="list-block media-list">
+                                  <ul>
+                                    <li class="item-content">
+                                      <div class="item-media">
+                                        <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
+                                      </div>
+                                      <div class="item-inner">
+                                        <div class="item-title-row">
+                                          <div class="item-title">Yellow Submarine</div>
+                                        </div>
+                                        <div class="item-subtitle">Beatles</div>
+                                      </div>
+                                    </li>
+
+                                    <li class="item-content">
+                                      <div class="item-media">
+                                        <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
+                                      </div>
+                                      <div class="item-inner">
+                                        <div class="item-title-row">
+                                          <div class="item-title">Yellow Submarine</div>
+                                        </div>
+                                        <div class="item-subtitle">Beatles</div>
+                                      </div>
+                                    </li>
+
+                                  </ul>
+                                </div>
+
+                              </div>
+                          </li>
+                          <li class="accordion-item">
+                              <a href="" class="item-link item-content">
+                                  <div class="item-inner">
+                                      <div class="item-title"><i class="material-icons color-icon">local_drink</i> Refrigerante</div>
+                                  </div>
+                              </a>
+                              <div class="accordion-item-content">Item 2 content ...</div>
+                          </li>
+                      </ul>
                   </div>
                 </div>
                 </div>
