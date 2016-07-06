@@ -70,6 +70,16 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                   });
             });
 
+            window.onload = function(){
+            	$.ajax({
+            		url:("ajax/verifica_abertofechado.php"),
+            		type: "POST",
+            		success:function(data){
+                  if(data!=1){
+                    location.href='fechados.html'
+                  }
+            		}})}
+
             function verificaBairro(){
               var myApp = new Framework7({
                 material: true
@@ -233,7 +243,6 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
             <br>
 
-            <div class="content-block-title">Delivery</div>
                 <div class="content-block">
                   <div class="content-block-inner">
                     <p class="color-icon">
