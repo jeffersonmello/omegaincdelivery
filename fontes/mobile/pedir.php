@@ -106,7 +106,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                   <div class="card-content-inner">Vazio</div>
                   </div>
                 </div>
-              </div>
+
 
               <br>
 
@@ -145,6 +145,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                   </div>
                 </div>
                 </div>
+
 
 
               <!-- Fim do Conteudo -->
