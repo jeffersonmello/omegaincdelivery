@@ -66,7 +66,7 @@ create table adm_empresa (
 	telefone varchar(20),
 	email varchar(50),
 	endereco varchar(500),
-	padrao int not null default 0,
-	aberto int not null default 0,
+	padrao boolean,
+	aberto boolean,
 	primary key (guid)
 );
