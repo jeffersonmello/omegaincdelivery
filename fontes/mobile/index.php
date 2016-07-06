@@ -79,17 +79,25 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
              var ende   = $("#bairro").val();
              var nome   = $("#nome").val();
              var email  = $("#email").val();
+             var cepV   = $("#cep").val();
 
-             if (nome.length < 1) {
+             if (cepV.length < 8) {
                myApp.addNotification({
-                       message: 'Preencha o campo Nome.'
+               message: 'CEP Inválido.',
+               button: {
+                           text: 'Fechar',
+                       },
+                });
+             } else if (nome.length < 1) {
+               myApp.addNotification({
+                       message: 'Preencha o campo Nome.',
                        button: {
                                    text: 'Fechar',
                                },
                    });
              } else if (email.length < 1) {
                myApp.addNotification({
-                       message: 'Preencha o campo email.'
+                       message: 'Preencha o campo email.',
                        button: {
                                    text: 'Fechar',
                                },
@@ -106,7 +114,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                              }else{
 
                                myApp.addNotification({
-                                       message: 'Desculpe, não entregamos neste bairro.'
+                                       message: 'Desculpe, não entregamos neste bairro.',
                                        button: {
                                                    text: 'Fechar',
                                                },
