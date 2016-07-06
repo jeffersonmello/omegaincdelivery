@@ -173,6 +173,6 @@ session_destroy();
     <script type="text/javascript" src="js/my-app.js"></script>
 
     <!--delivery Js-->
-    <script type="text/javascript" src="js/delivery.js" ></script>
+    <script type="text/javascript" src="js/delivery.min.js" ></script>
   </body>
 </html>
