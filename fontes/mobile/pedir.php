@@ -8,8 +8,9 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 session_start();
 if (!isset($_SESSION['idBairro'])) {
         session_destroy();
-       	header("Location: index.php"); exit;	
+       	header("Location: index.php"); exit;
 }
+
 
 $taxa = $_SESSION['taxaentrega'];
 ?>
@@ -46,7 +47,7 @@ $taxa = $_SESSION['taxaentrega'];
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
   </head>
-  <body>
+  <body style="background-color: #F2F2F2">
     <!-- Status bar overlay for fullscreen mode-->
     <div class="statusbar-overlay"></div>
     <!-- Panels overlay-->
@@ -111,7 +112,11 @@ $taxa = $_SESSION['taxaentrega'];
                 <div class="card-header"><i class="material-icons color-icon">shopping_cart</i> Meu Carrinho</div>
                 <div class="card-content">
                   <div class="card-content-inner">
-                      Taxa de Entrega: <?php echo $taxa; ?>
+                    <?php
+                      setlocale(LC_MONETARY,"pt_BR", "ptb");
+                      $taxaM = money_format('%n', $taxa);
+                     ?>
+                      Taxa de Entrega: R$ <?php echo $taxaM; ?>
 
                   </div>
                   </div>
