@@ -99,6 +99,17 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                 </div>
               </div>
 
+
+              <div class="card">
+                <div class="card-header"><i class="material-icons color-icon">shopping_cart</i> Meu Carrinho</div>
+                <div class="card-content">
+                  <div class="card-content-inner">Vazio</div>
+                  </div>
+                </div>
+              </div>
+
+              <br>
+
               <div class="card">
                 <div class="card-header">Selecione seu pedido:</div>
 
@@ -130,47 +141,10 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                         </div>
                       </li>
 
-                      <li class="item-content">
-                        <div class="item-media">
-                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
-                        </div>
-                        <div class="item-inner">
-                          <div class="item-title-row">
-                            <div class="item-title">Yellow Submarine</div>
-                          </div>
-                          <div class="item-subtitle">Beatles</div>
-                        </div>
-                      </li>
-
-                      <li class="item-content">
-                        <div class="item-media">
-                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
-                        </div>
-                        <div class="item-inner">
-                          <div class="item-title-row">
-                            <div class="item-title">Yellow Submarine</div>
-                          </div>
-                          <div class="item-subtitle">Beatles</div>
-                        </div>
-                      </li>
-
-
-                      <li class="item-content">
-                        <div class="item-media">
-                          <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
-                        </div>
-                        <div class="item-inner">
-                          <div class="item-title-row">
-                            <div class="item-title">Yellow Submarine</div>
-                          </div>
-                          <div class="item-subtitle">Beatles</div>
-                        </div>
-                      </li>
-
                     </ul>
                   </div>
                 </div>
-
+                </div>
 
 
               <!-- Fim do Conteudo -->

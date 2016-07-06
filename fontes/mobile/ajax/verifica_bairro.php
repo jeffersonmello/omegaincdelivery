@@ -3,6 +3,8 @@ header('content-type: application/json; charset=utf-8');
 include('../class/mysql_crud.php');
 
 $bairro = $_POST["br"];
+$nome   = $_POST["nome"];
+$email  = $_POST["email"];
 
 $db = new Database();
 $db->connect();
@@ -18,11 +20,12 @@ $res = $db->numRows();
 
 if ($res >= 1) {
       echo 1;
-      if(!isset($_SESSION)) 	//verifica se há sessão aberta
-		  session_start();		//Inicia seção
-		  //Abrindo seções
-	  	$_SESSION['idBairro']    = $guidbairro;
+      if(!isset($_SESSION))
+		  session_start();
+	  	$_SESSION['idBairro']     = $guidbairro;
 	  	$_SESSION['taxaentrega']  = $valorentrega;
+      $_SESSION['nomecliente']  = $nome;
+      $_SESSION['emailcliente'] = $email;
 		exit;
 } else
 {

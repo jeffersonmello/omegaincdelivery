@@ -79,7 +79,7 @@ $(document).ready(function(){
      $.ajax({
        url:"ajax/verifica_bairro.php",
        type:"POST",
-       data: "br="+ende+"&nome="+nome+"email="+email,
+       data: "br="+ende+"&nome="+nome+"&email="+email,
          success: function (result){
                      if(result==1){
                        location.href='pedir.php'
