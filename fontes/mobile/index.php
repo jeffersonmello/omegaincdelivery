@@ -1,7 +1,7 @@
 <?php
-ob_start();// Inicia Buffer
+ob_start();
 
-// Funções para não exibir alguns erros de conexao
+
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
@@ -110,7 +110,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
                data: "br="+ende,
                  success: function (result){
                              if(result==1){
-                               location.href='player/index.php'
+                               location.href='pedir.php'
                              }else{
 
                                myApp.addNotification({

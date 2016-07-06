@@ -11,6 +11,7 @@ create table cad_categorias (
 create table cad_produtos (
 	guid int not null auto_increment,
 	guid_categoria int not null,
+	imgproduto varchar(700),
 	descricao varchar(500) not null,
 	preco double,
 	primary key (guid),
@@ -27,6 +28,8 @@ create table lanc_pedidos (
 	status int not null,
 	formaPagamento int not null,
 	observacao text,
+	notificado int not null default 0,
+	visualizado int not null default 0,
 	primary key (guid)	
 );
 
@@ -53,4 +56,17 @@ create table adm_usuarios (
 	nome varchar(500) not null,
 	nivel int not null default 0,
 	primary key(guid)
+);
+
+create table adm_empresa (
+	guid int not null auto_increment,
+	nome varchar(500) not null,
+	cnpj varchar(15),
+	inscricaoestd varchar(15),
+	telefone varchar(20),
+	email varchar(50),
+	endereco varchar(500),
+	padrao int not null default 0,
+	aberto int not null default 0,
+	primary key (guid)
 );
