@@ -72,7 +72,9 @@ session_destroy();
                   });
             });
 
-            window.onload = function(){
+
+          var timeout = setTimeout(verifica, 2000);
+          function verifica(){
             	$.ajax({
             		url:("ajax/verifica_abertofechado.php"),
             		type: "POST",
@@ -80,7 +82,9 @@ session_destroy();
                   if(data!=1){
                     location.href='fechados.html'
                   }
-            		}})}
+            		}})
+                timeout = setTimeout(verifica, 2000);
+              }
 
             function verificaBairro(){
               var myApp = new Framework7({
