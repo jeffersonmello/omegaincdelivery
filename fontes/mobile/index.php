@@ -1,9 +1,11 @@
 <?php
 ob_start();
 
-
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
+
+session_start();
+session_destroy();
 
 ?>
 <!DOCTYPE html>

@@ -30,6 +30,21 @@
     <!--Import Fontawesome Icon Font-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+    <script>
+    function verifica(){
+      var timeout = setTimeout(verifica, 2000);
+
+      $.ajax({
+        url:("ajax/verifica_abertofechado.php"),
+        type: "POST",
+        success:function(data){
+          if(data == 1){
+            location.href='index.php'
+          }
+        }})
+          timeout = setTimeout(verifica, 2000);
+      }
+    </script>
   </head>
   <body>
     <!-- Status bar overlay for fullscreen mode-->
