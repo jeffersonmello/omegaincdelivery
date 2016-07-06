@@ -5,6 +5,13 @@ ob_start();// Inicia Buffer
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
+session_start();
+if (!isset($_SESSION['idBairro'])) {
+        session_destroy();
+       	header("Location: index.php"); exit;	
+}
+
+$taxa = $_SESSION['taxaentrega'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -103,7 +110,10 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
               <div class="card">
                 <div class="card-header"><i class="material-icons color-icon">shopping_cart</i> Meu Carrinho</div>
                 <div class="card-content">
-                  <div class="card-content-inner">Vazio</div>
+                  <div class="card-content-inner">
+                      Taxa de Entrega: <?php echo $taxa; ?>
+
+                  </div>
                   </div>
                 </div>
 

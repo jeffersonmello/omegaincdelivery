@@ -13,7 +13,7 @@ create table cad_produtos (
 	guid_categoria int not null,
 	imgproduto varchar(700),
 	descricao varchar(500) not null,
-	preco double,
+	preco float,
 	primary key (guid),
 	foreign key (guid_categoria) references cad_categorias (guid)
 );
@@ -45,7 +45,7 @@ create table lanc_listprodpedido (
 create table atd_bairros 
 	guid int not null auto_increment,
 	descricao varchar(500) not null,
-	taxaEntrega double,
+	taxaEntrega float,
 	primary key (guid)
 );
 
