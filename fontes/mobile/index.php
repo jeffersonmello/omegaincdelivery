@@ -71,30 +71,52 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
             });
 
             function verificaBairro(){
-             var login = $("#bairro").val;
+              var myApp = new Framework7({
+                material: true
+              });
+              var mainView = myApp.addView('.view-main');
+
+             var ende   = $("#bairro").val();
+             var nome   = $("#nome").val();
+             var email  = $("#email").val();
+
+             if (nome.length < 1) {
+               myApp.addNotification({
+                       message: 'Preencha o campo Nome.'
+                       button: {
+                                   text: 'Fechar',
+                               },
+                   });
+             } else if (email.length < 1) {
+               myApp.addNotification({
+                       message: 'Preencha o campo email.'
+                       button: {
+                                   text: 'Fechar',
+                               },
+                   });
+             } else {
 
              $.ajax({
                url:"ajax/verifica_bairro.php",
                type:"POST",
-               data: "br="+bairro,
+               data: "br="+ende,
                  success: function (result){
                              if(result==1){
                                location.href='player/index.php'
                              }else{
-                               var myApp = new Framework7({
-                                 material: true
-                               });
-                               var mainView = myApp.addView('.view-main');
 
                                myApp.addNotification({
                                        message: 'Desculpe, não entregamos neste bairro.'
+                                       button: {
+                                                   text: 'Fechar',
+                                               },
                                    });
                              }
                          }
              })
              return false;
            }
-
+        }
     </script>
 
   </head>
