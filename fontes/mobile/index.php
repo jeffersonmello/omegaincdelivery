@@ -26,6 +26,7 @@ session_destroy();
     <!--jquery-->
     <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
 
+
     <!--Toastr-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
@@ -40,108 +41,6 @@ session_destroy();
     <!--Import Fontawesome Icon Font-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-          document.getElementById("cep").onkeypress = function(e) {
-         var chr = String.fromCharCode(e.which);
-         if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
-           return false;
-       };
-
-                  $("#cep").blur(function(){
-                    $("#rua").val("...")
-                    $("#bairro").val("...")
-    				        $("#endereco").val("Procurando seu endereço...")
-                    $("#cidade").val("...")
-                    $("#uf").val("...")
-
-                    consulta = $("#cep").val()
-                    $.getScript("http://www.toolsweb.com.br/webservice/clienteWebService.php?cep="+consulta+"&formato=javascript", function(){
-
-                    rua=unescape(resultadoCEP.logradouro)
-                    bairro=unescape(resultadoCEP.bairro)
-                    cidade=unescape(resultadoCEP.cidade)
-                    uf=unescape(resultadoCEP.uf)
-
-                    $("#rua").val(rua)
-                    $("#bairro").val(bairro)
-                    $("#cidade").val(cidade)
-    						    $("#endereco").val('Rua '+rua+', '+bairro+', '+cidade)
-                    $("#uf").val(uf)
-                      });
-                  });
-            });
-
-
-          var timeout = setTimeout(verifica, 2000);
-          function verifica(){
-            	$.ajax({
-            		url:("ajax/verifica_abertofechado.php"),
-            		type: "POST",
-            		success:function(data){
-                  if(data!=1){
-                    location.href='fechados.html'
-                  }
-            		}})
-                timeout = setTimeout(verifica, 2000);
-              }
-
-            function verificaBairro(){
-              var myApp = new Framework7({
-                material: true
-              });
-              var mainView = myApp.addView('.view-main');
-
-             var ende   = $("#bairro").val();
-             var nome   = $("#nome").val();
-             var email  = $("#email").val();
-             var cepV   = $("#cep").val();
-
-             if (cepV.length < 8) {
-               myApp.addNotification({
-               message: 'CEP Inválido.',
-               button: {
-                           text: 'Fechar',
-                       },
-                });
-             } else if (nome.length < 1) {
-               myApp.addNotification({
-                       message: 'Preencha o campo Nome.',
-                       button: {
-                                   text: 'Fechar',
-                               },
-                   });
-             } else if (email.length < 1) {
-               myApp.addNotification({
-                       message: 'Preencha o campo email.',
-                       button: {
-                                   text: 'Fechar',
-                               },
-                   });
-             } else {
-
-             $.ajax({
-               url:"ajax/verifica_bairro.php",
-               type:"POST",
-               data: "br="+ende,
-                 success: function (result){
-                             if(result==1){
-                               location.href='pedir.php'
-                             }else{
-
-                               myApp.addNotification({
-                                       message: 'Desculpe, não entregamos neste bairro.',
-                                       button: {
-                                                   text: 'Fechar',
-                                               },
-                                   });
-                             }
-                         }
-             })
-             return false;
-           }
-        }
-    </script>
 
   </head>
   <body>
@@ -272,5 +171,8 @@ session_destroy();
     <script type="text/javascript" src="js/framework7.min.js"></script>
     <!-- Path to your app js-->
     <script type="text/javascript" src="js/my-app.js"></script>
+
+    <!--delivery Js-->
+    <script type="text/javascript" src="js/delivery.js" ></script>
   </body>
 </html>

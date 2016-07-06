@@ -29,15 +29,18 @@ $(document).ready(function(){
           });
     });
 
-    window.onload = function(){
-      $.ajax({
-        url:("ajax/verifica_abertofechado.php"),
-        type: "POST",
-        success:function(data){
-          if(data!=1){
-            location.href='fechados.html'
-          }
-        }})}
+    var timeout = setTimeout(verifica, 2000);
+    function verifica(){
+        $.ajax({
+          url:("ajax/verifica_abertofechado.php"),
+          type: "POST",
+          success:function(data){
+            if(data!=1){
+              location.href='fechados.html'
+            }
+          }})
+          timeout = setTimeout(verifica, 2000);
+        }
 
     function verificaBairro(){
       var myApp = new Framework7({
@@ -76,7 +79,7 @@ $(document).ready(function(){
      $.ajax({
        url:"ajax/verifica_bairro.php",
        type:"POST",
-       data: "br="+ende,
+       data: "br="+ende+"&nome="+nome+"email="+email,
          success: function (result){
                      if(result==1){
                        location.href='pedir.php'
