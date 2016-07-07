@@ -59,8 +59,10 @@ $db = new Database();
     <script type="text/javascript">
     $(document).ready(function(){
       $("#search").on( 'keyup', function () {
-        $(".categorias").hide();
+
         var pesquisa = $("#search").val();
+        if (pesquisa.length > 0) {
+        $(".categorias").hide();
         $.ajax({
           url:("ajax/buscaprods.php"),
           type: "POST",
@@ -71,6 +73,9 @@ $db = new Database();
               $("#listaprodutos").append("<li id='itempesquisa' class='item-content'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>")
             });
           }})
+        } else {
+          $(".categorias.").show();
+        }
       })
 
     })
@@ -165,15 +170,6 @@ $db = new Database();
                             </div>
                           </div>
                         </li>
-
-
-                               <li class="item-content">
-                                 <div class="item-media"><i class="icon icon-f7"></i></div>
-                                 <div class="item-inner">
-                                   <div class="item-title">Item title</div>
-                                   <div class="item-after">Label</div>
-                                 </div>
-                               </li>
 
 
               <?php
