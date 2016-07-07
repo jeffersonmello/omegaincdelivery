@@ -12,7 +12,16 @@ if (!isset($_SESSION['idBairro'])) {
 }
 
 
-$taxa = $_SESSION['taxaentrega'];
+$taxa         = $_SESSION['taxaentrega'];
+$nome_cliente = $_SESSION['nomecliente'];
+$email_cliente= $_SESSION['emailcliente'];
+$guid_bairro  = $_SESSION['idBairro'];
+
+
+include('class/mysql_crud.php');
+
+
+$db = new Database();
 ?>
 <!DOCTYPE html>
 <html>
@@ -107,7 +116,7 @@ $taxa = $_SESSION['taxaentrega'];
                 </div>
               </div>
 
-
+              <!-- Carrinho -->
               <div class="card">
                 <div class="card-header"><i class="material-icons color-icon">shopping_cart</i> Meu Carrinho</div>
                 <div class="card-content">
@@ -122,30 +131,65 @@ $taxa = $_SESSION['taxaentrega'];
                   </div>
                 </div>
 
-
               <br>
 
+
+
+              <!-- Produtos -->
               <div class="card">
                 <div class="card-header"><i class="fa fa-archive color-icon" aria-hidden="true"></i> Selecione seu pedido</div>
-
-
                 <div class="card-content">
-
                   <div class="list-block accordion-list">
                       <ul>
-                          <li class="accordion-item">
-                              <a href="" class="item-link item-content">
-                                  <div class="item-inner">
-                                      <div class="item-title"><i class="material-icons color-icon">local_pizza</i> Pizzas</div>
-                                  </div>
-                              </a>
-                              <div class="accordion-item-content">
+              <?php
+              $db->connect();
+              $db->sql("SELECT * FROM cad_categorias");
+              $res = $db->getResult();
+              foreach($res as $output)
+              {
+                $guid_categoria = $output["guid"];
+                $iconecategoria = $output["iconecategoria"];
+                $nome_categoria = $output["descricao"];
 
-                                <div class="list-block media-list">
-                                  <ul>
-                                    <li class="item-content">
-                                      <div class="item-media">
-                                        <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
+                echo '<li class="accordion-item">'
+                     ,'<a href="" class="item-link item-content">'
+                     ,'<div class="item-inner">';
+                echo "<div class='item-title'>$iconecategoria; $nome_categoria</div>";
+                echo '</div>'
+                    ,'</a>'
+                    ,'<div class="accordion-item-content">'
+                    ,'<div class="list-block media-list">'
+                    ,'<ul>';
+
+                  $db->connect();
+                  $db->sql("SELECT a.guid as guidcategoria,
+	                                 a.descricao as descricaocategoria,
+	                                 a.iconecategoria as icone,
+                                   b.guid as guidprod,
+                                   b.guid_categoria,
+	                                 b.imgproduto as imagem,
+	                                 b.descricao as produto,
+	                                 b.preco
+                                   FROM cad_categorias AS a
+                                   INNER JOIN cad_produtos AS b
+                                   ON a.guid = b.guid_categoria WHERE a.guid = $guid_categoria");
+                  $res = $db->getResult();
+                  foreach($res as $output)
+                  {
+                    $categoria_guid           = $output["guidcategoria"];
+                    $produto_guid             = $output["guidprod"];
+                    $produto_imagem           = $output["imagem"];
+                    $produto_nome             = $output["produto"];
+                    $produto_preco            = $output["preco"];
+
+                    echo '<li class="item-content">'
+                        ,'<div class="item-media">';
+                    echo "<img src='$produto_imagem' width='44'>";
+                    echo ''
+
+                  }
+               ?>
+
                                       </div>
                                       <div class="item-inner">
                                         <div class="item-title-row">
@@ -155,31 +199,14 @@ $taxa = $_SESSION['taxaentrega'];
                                       </div>
                                     </li>
 
-                                    <li class="item-content">
-                                      <div class="item-media">
-                                        <img src="https://cdn4.iconfinder.com/data/icons/foods-and-meals/512/Food_Meals_Pizza-49-128.png" width="44">
-                                      </div>
-                                      <div class="item-inner">
-                                        <div class="item-title-row">
-                                          <div class="item-title">Yellow Submarine</div>
-                                        </div>
-                                        <div class="item-subtitle">Beatles</div>
-                                      </div>
-                                    </li>
+
 
                                   </ul>
                                 </div>
 
                               </div>
                           </li>
-                          <li class="accordion-item">
-                              <a href="" class="item-link item-content">
-                                  <div class="item-inner">
-                                      <div class="item-title"><i class="material-icons color-icon">local_drink</i> Refrigerante</div>
-                                  </div>
-                              </a>
-                              <div class="accordion-item-content">Item 2 content ...</div>
-                          </li>
+
                       </ul>
                   </div>
                 </div>
