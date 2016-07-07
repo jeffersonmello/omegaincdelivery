@@ -58,19 +58,23 @@ $db = new Database();
 
     <script type="text/javascript">
     $(document).ready(function(){
+
       $("#search").on( 'keyup', function () {
 
         var pesquisa = $("#search").val();
         if (pesquisa.length > 0) {
         $(".categorias").hide();
+        $(".itempesquisa").remove();
         $.ajax({
           url:("ajax/buscaprods.php"),
           type: "POST",
           data: "busca="+pesquisa,
           success:function(dados){
             $.each(dados, function(index){
-              $("#itempesquisa").remove();
-              $("#listaprodutos").append("<li id='itempesquisa' class='item-content'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>")
+              var len    = dados.length;
+              for (var i=0; i < len; i++){
+                $("#listaprodutos").append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
+              }
             });
           }})
         } else {
@@ -174,7 +178,7 @@ $db = new Database();
                         <div class="list-block media-list">
                         <ul id="listaprodutos">
                         </ul>
-                        </div>  
+                        </div>
 
               <?php
               $db->connect();
