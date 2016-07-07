@@ -160,7 +160,7 @@ $db = new Database();
                 <div class="card-header"><i class="fa fa-archive color-icon" aria-hidden="true"></i> Selecione seu pedido</div>
                 <div class="card-content">
                   <div class="list-block accordion-list">
-                      <ul id="listaprodutos">
+                      <ul>
 
                         <li class="item-content">
                           <div class="item-media"><i class="material-icons color-icon">search</i></div>
@@ -171,6 +171,9 @@ $db = new Database();
                           </div>
                         </li>
 
+                        <div class="list-block media-list">
+                        <ul id="listaprodutos">
+                        </ul>  
 
               <?php
               $db->connect();
