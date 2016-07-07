@@ -154,7 +154,7 @@ $db = new Database();
                 echo '<li class="accordion-item">'
                      ,'<a href="" class="item-link item-content">'
                      ,'<div class="item-inner">';
-                echo "<div class='item-title'>$iconecategoria; $nome_categoria</div>";
+                echo "<div class='item-title'>$iconecategoria $nome_categoria</div>";
                 echo '</div>'
                     ,'</a>'
                     ,'<div class="accordion-item-content">'
@@ -198,7 +198,7 @@ $db = new Database();
 
                   echo '</ul>'
                       ,'</div>'
-                      ,'</div>'
+                      ,'</div>';
                     }
                ?>
 
