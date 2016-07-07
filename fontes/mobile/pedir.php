@@ -185,17 +185,17 @@ $db = new Database();
                     echo '<li class="item-content">'
                         ,'<div class="item-media">';
                     echo "<img src='$produto_imagem' width='44'>";
-                    echo ''
+                    echo '</div>'
+                        ,'<div class="item-inner">'
+                        ,'<div class="item-title-row">';
+                   echo "<div class='item-title'>$produto_nome</div>";
+                   echo "</div>";
+                   echo "<div class='item-subtitle'>R$ $produto_preco</div>";
 
                   }
                ?>
 
-                                      </div>
-                                      <div class="item-inner">
-                                        <div class="item-title-row">
-                                          <div class="item-title">Yellow Submarine</div>
-                                        </div>
-                                        <div class="item-subtitle">Beatles</div>
+
                                       </div>
                                     </li>
 
