@@ -58,7 +58,7 @@ $db = new Database();
 
     <script type="text/javascript">
     $(document).ready(function(){
-      $("#search").onkeypress = function(){
+      $("#search").on( 'keyup', function () {
         $(".categorias").hide();
         var pesquisa = $("#search").val();
         $.ajax({
@@ -71,7 +71,7 @@ $db = new Database();
               $("#listaprodutos").append("<li id='itempesquisa' class='item-content'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>")
             });
           }})
-      }
+      })
 
     })
     </script>
