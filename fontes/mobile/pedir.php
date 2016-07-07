@@ -67,7 +67,9 @@ $db = new Database();
           data: "busca="+pesquisa,
           success:function(dados){
             $.each(dados, function(index){
-              $("#listaprodutos").append("<li class='collection-item'>"+dados[index].mensagem+"</li>")
+              $("#listaprodutos").append("
+
+              ")
             });
           }})
       }
