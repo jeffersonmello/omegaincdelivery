@@ -62,7 +62,7 @@ $db = new Database();
         $(".categorias").hide();
         var pesquisa = $("#search").val();
         $.ajax({
-          url:("ajax/verifica_abertofechado.php"),
+          url:("ajax/buscaprods.php"),
           type: "POST",
           data: "busca="+pesquisa,
           success:function(dados){
