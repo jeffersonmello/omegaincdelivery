@@ -58,7 +58,19 @@ $db = new Database();
 
     <script type="text/javascript">
     $(document).ready(function(){
-      
+      $("#search").onkeypress = function(){
+        $(".categorias").hide();
+        var pesquisa = $("#search").val();
+        $.ajax({
+          url:("ajax/verifica_abertofechado.php"),
+          type: "POST",
+          data: "busca="+pesquisa,
+          success:function(dados){
+            $.each(dados, function(index){
+              $("#listaprodutos").append("<li class='collection-item'>"+dados[index].mensagem+"</li>")
+            });
+          }})
+      }
 
     })
     </script>
@@ -142,7 +154,7 @@ $db = new Database();
                 <div class="card-header"><i class="fa fa-archive color-icon" aria-hidden="true"></i> Selecione seu pedido</div>
                 <div class="card-content">
                   <div class="list-block accordion-list">
-                      <ul>
+                      <ul id="listaprodutos">
 
                         <li class="item-content">
                           <div class="item-media"><i class="material-icons color-icon">search</i></div>
