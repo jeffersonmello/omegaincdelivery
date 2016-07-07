@@ -191,21 +191,16 @@ $db = new Database();
                    echo "<div class='item-title'>$produto_nome</div>";
                    echo "</div>";
                    echo "<div class='item-subtitle'>R$ $produto_preco</div>";
+                   echo '</div>'
+                      ,'</li>';
 
                   }
+
+                  echo '</ul>'
+                      ,'</div>'
+                      ,'</div>'
+                    }
                ?>
-
-
-                                      </div>
-                                    </li>
-
-
-
-                                  </ul>
-                                </div>
-
-                              </div>
-                          </li>
 
                       </ul>
                   </div>
