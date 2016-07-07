@@ -5,6 +5,7 @@ use delivery;
 create table cad_categorias (
 	guid int not null auto_increment,
 	descricao varchar(500) not null,
+	iconecategoria varchar(500) default '<i class="fa fa-archive color-icon" aria-hidden="true"></i> ',
 	primary key (guid)
 );
 
