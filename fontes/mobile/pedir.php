@@ -67,7 +67,8 @@ $db = new Database();
           data: "busca="+pesquisa,
           success:function(dados){
             $.each(dados, function(index){
-              $("#listaprodutos").append("<li id='itempesquisa' class='item-content'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div>")
+              $("#itempesquisa").remove();
+              $("#listaprodutos").append("<li id='itempesquisa' class='item-content'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>")
             });
           }})
       }
