@@ -11,6 +11,7 @@ if (!isset($_SESSION['idBairro'])) {
        	header("Location: index.php"); exit;
 }
 
+setlocale(LC_MONETARY,"pt_BR", "ptb");
 
 $taxa         = $_SESSION['taxaentrega'];
 $nome_cliente = $_SESSION['nomecliente'];
@@ -55,8 +56,14 @@ $db = new Database();
     <!--Import Fontawesome Icon Font-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+    <script type="text/javascript">
+    $(document).ready(function(){
+      
+
+    })
+    </script>
   </head>
-  <body style="background-color: #F2F2F2">
+  <body>
     <!-- Status bar overlay for fullscreen mode-->
     <div class="statusbar-overlay"></div>
     <!-- Panels overlay-->
@@ -122,7 +129,6 @@ $db = new Database();
                 <div class="card-content">
                   <div class="card-content-inner">
                     <?php
-                      setlocale(LC_MONETARY,"pt_BR", "ptb");
                       $taxaM = money_format('%n', $taxa);
                      ?>
                       Taxa de Entrega: R$ <?php echo $taxaM; ?>
@@ -131,16 +137,32 @@ $db = new Database();
                   </div>
                 </div>
 
-              <br>
-
-
-
               <!-- Produtos -->
               <div class="card">
                 <div class="card-header"><i class="fa fa-archive color-icon" aria-hidden="true"></i> Selecione seu pedido</div>
                 <div class="card-content">
                   <div class="list-block accordion-list">
                       <ul>
+
+                        <li class="item-content">
+                          <div class="item-media"><i class="material-icons color-icon">search</i></div>
+                          <div class="item-inner">
+                            <div class="item-input">
+                              <input type="text" id="search" name="search" placeholder="Buscar..." required>
+                            </div>
+                          </div>
+                        </li>
+
+
+                               <li class="item-content">
+                                 <div class="item-media"><i class="icon icon-f7"></i></div>
+                                 <div class="item-inner">
+                                   <div class="item-title">Item title</div>
+                                   <div class="item-after">Label</div>
+                                 </div>
+                               </li>
+
+
               <?php
               $db->connect();
               $db->sql("SELECT * FROM cad_categorias");
@@ -151,7 +173,7 @@ $db = new Database();
                 $iconecategoria = $output["iconecategoria"];
                 $nome_categoria = $output["descricao"];
 
-                echo '<li class="accordion-item">'
+                echo '<li class="accordion-item categorias">'
                      ,'<a href="" class="item-link item-content">'
                      ,'<div class="item-inner">';
                 echo "<div class='item-title'>$iconecategoria $nome_categoria</div>";
@@ -181,6 +203,8 @@ $db = new Database();
                     $produto_imagem           = $output["imagem"];
                     $produto_nome             = $output["produto"];
                     $produto_preco            = $output["preco"];
+
+                    $produto_preco = money_format('%n', $produto_preco);
 
                     echo '<li class="item-content">'
                         ,'<div class="item-media">';
