@@ -173,7 +173,8 @@ $db = new Database();
 
                         <div class="list-block media-list">
                         <ul id="listaprodutos">
-                        </ul>  
+                        </ul>
+                        </div>  
 
               <?php
               $db->connect();
