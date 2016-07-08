@@ -70,7 +70,7 @@ $db = new Database();
             $.each(dados, function(index){
               var len    = dados.length;
               for (var i=0; i < len; i++){
-                produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
+                produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
               }
             });
           }})
@@ -112,7 +112,7 @@ $db = new Database();
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
             <div class="center">Delivery</div>
-            <div class="right"></div>
+            <div class="right"><a href="#" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
           </div>
         </div>
 
@@ -134,19 +134,6 @@ $db = new Database();
 
                     <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.437152806504!2d-52.35454038490684!3d-24.015644884410168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ed0b28ee9a9359%3A0x1c5dee983eeb3986!2sAv.+Bronislav+Wronski+-+Jardim+Aeroporto%2C+Campo+Mour%C3%A3o+-+PR%2C+87310-300!5e0!3m2!1spt-BR!2sbr!4v1459362655860" width="100%" height="150" frameborder="0" style="border:0"></iframe></div>
 
-                    <div class="list-block">
-                          <ul>
-                            <li>
-                              <a href="#" class="item-link item-content">
-                                <div class="item-media"><i class="icon icon-f7"></i></div>
-                                <div class="item-inner">
-                                  <div class="item-title">Estamos:</div>
-                                </div>
-                              </a>
-                            </li>
-
-                          </ul>
-                        </div>
                   </div>
                 </div>
               </div>
@@ -159,7 +146,7 @@ $db = new Database();
                     <?php
                       $taxaM = money_format('%n', $taxa);
                      ?>
-                      Taxa de Entrega: R$ <?php echo $taxaM; ?>
+                      Taxa de Entrega: <b>R$ <?php echo $taxaM; ?></b>
 
                   </div>
                   </div>
@@ -236,6 +223,7 @@ $db = new Database();
                         ,'<div class="item-inner">'
                         ,'<div class="item-title-row">';
                    echo "<div class='item-title'>$produto_nome</div>";
+                   echo '<div class="item-after"><span href="#" class="button"><i class="material-icons color-icon">add</i></span></div>';
                    echo "</div>";
                    echo "<div class='item-subtitle'>R$ $produto_preco</div>";
                    echo '</div>'
