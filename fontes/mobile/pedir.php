@@ -1,7 +1,6 @@
 <?php
-ob_start();// Inicia Buffer
+ob_start();
 
-// Funções para não exibir alguns erros de conexao
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
