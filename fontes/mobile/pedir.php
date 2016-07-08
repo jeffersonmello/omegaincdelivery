@@ -42,13 +42,6 @@ $db = new Database();
     <!--jquery-->
     <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
 
-    <!--Toastr-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
-
-    <!--DataTables-->
-    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
 
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -60,11 +53,15 @@ $db = new Database();
     $(document).ready(function(){
 
       $("#search").on( 'keyup', function () {
+        var pesquisa      = $("#search").val();
+        var categorias    = $(".categorias"); // Lista de categorias
+        var produtos      = $("#listaprodutos");
+        var itemproduto   = $(".itempesquisa");
 
-        var pesquisa = $("#search").val();
-        if (pesquisa.length > 0) {
-        $(".categorias").hide();
-        $(".itempesquisa").remove();
+        categorias.hide();
+
+        $(itemproduto, produtos).remove();
+
         $.ajax({
           url:("ajax/buscaprods.php"),
           type: "POST",
@@ -73,15 +70,24 @@ $db = new Database();
             $.each(dados, function(index){
               var len    = dados.length;
               for (var i=0; i < len; i++){
-                $("#listaprodutos").append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
+                produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
               }
             });
           }})
-        } else {
-          $(".categorias.").show();
-        }
       })
 
+
+      $("#search").on( 'blur', function () {
+        var categorias    = $(".categorias"); // Lista de categorias
+        var produtos      = $("#listaprodutos");
+        var itemproduto   = $(".itempesquisa");
+        var pesquisas = $('#search').val();
+
+        if (pesquisas.length < 1) {
+          $(itemproduto, produtos).remove();
+          categorias.show();
+        }
+      })
     })
     </script>
   </head>
@@ -170,7 +176,7 @@ $db = new Database();
                           <div class="item-media"><i class="material-icons color-icon">search</i></div>
                           <div class="item-inner">
                             <div class="item-input">
-                              <input type="text" id="search" name="search" placeholder="Buscar..." required>
+                              <input type="text" id="search" name="search" placeholder="Buscar...">
                             </div>
                           </div>
                         </li>
