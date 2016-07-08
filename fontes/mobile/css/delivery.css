@@ -27,9 +27,6 @@
   align-items: center;
 }
 
-.navbar-inner,.subnavbar {
-  background: #2196F3; /* COR DA BARRA DE TITULO*/
-}
 
 .demo-card-header-pic .card-header {
     height: 40vw;
