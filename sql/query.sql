@@ -23,6 +23,7 @@ create table lanc_pedidos (
 	guid int not null auto_increment,
 	nome varchar(500),
 	email varchar(500),
+	bairro varchar(500), /* Novo */
 	telefone varchar(500),
 	endereco varchar(750),
 	entregar int not null,
@@ -43,7 +44,7 @@ create table lanc_listprodpedido (
 	foreign key (guid_pedido) references lanc_pedidos (guid)
 );
 
-create table atd_bairros 
+create table atd_bairros (
 	guid int not null auto_increment,
 	descricao varchar(500) not null,
 	taxaEntrega float,
@@ -67,7 +68,7 @@ create table adm_empresa (
 	telefone varchar(20),
 	email varchar(50),
 	endereco varchar(500),
-	padrao boolean,
-	aberto boolean,
+	padrao int,
+	aberto int,
 	primary key (guid)
 );

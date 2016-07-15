@@ -1,3 +1,8 @@
+/**
+ * Omega Inc Delivery
+ * Escrito por Jefferson Mello Olynyki, Campo Mourão, Paraná - Brasiç
+ * Classe CRUD Criada por Rory Standley
+ */
 <?php
 ob_start();
 
@@ -16,6 +21,7 @@ $taxa         = $_SESSION['taxaentrega'];
 $nome_cliente = $_SESSION['nomecliente'];
 $email_cliente= $_SESSION['emailcliente'];
 $guid_bairro  = $_SESSION['idBairro'];
+$guid_pedido  = $_SESSION['idPedido'];
 
 
 include('class/mysql_crud.php');
@@ -92,7 +98,7 @@ $db = new Database();
   </head>
   <body>
     <!-- Status bar overlay for fullscreen mode-->
-    <div class="statusbar-overlay"></div>
+    <div class="statusbar-overlaply"></div>
     <!-- Panels overlay-->
     <div class="panel-overlay"></div>
     <!-- Left panel with reveal effect-->
@@ -145,7 +151,8 @@ $db = new Database();
                     <?php
                       $taxaM = money_format('%n', $taxa);
                      ?>
-                      Taxa de Entrega: <b>R$ <?php echo $taxaM; ?></b>
+                      Número do Pedido: <b><?php echo $guid_pedido?></b>
+                      Taxa de Entrega: <b><?php echo $taxaM ?></b>
 
                   </div>
                   </div>
@@ -224,7 +231,7 @@ $db = new Database();
                    echo "<div class='item-title'>$produto_nome</div>";
                    echo '<div class="item-after"><span href="#" class="button"><i class="material-icons color-icon">add</i></span></div>';
                    echo "</div>";
-                   echo "<div class='item-subtitle'>R$ $produto_preco</div>";
+                   echo "<div class='item-subtitle'>$produto_preco</div>";
                    echo '</div>'
                       ,'</li>';
 

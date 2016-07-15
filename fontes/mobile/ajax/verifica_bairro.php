@@ -26,6 +26,14 @@ if ($res >= 1) {
 	  	$_SESSION['taxaentrega']  = $valorentrega;
       $_SESSION['nomecliente']  = $nome;
       $_SESSION['emailcliente'] = $email;
+
+      $db->connect();
+      $db->insert('lanc_pedidos',array('nome'=>$nome,'email'=>$email, 'bairro'=>$bairro));
+      $res = $db->getResult();
+      foreach ($res as $output) {
+          $guid_pedido = $output["guid"];
+      }
+      $_SESSION['idPedido']   = $guid_pedido;
 		exit;
 } else
 {
