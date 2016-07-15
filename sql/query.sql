@@ -21,6 +21,7 @@ create table cad_produtos (
 
 create table lanc_pedidos (
 	guid int not null auto_increment,
+	eguid int, /* Novo */
 	nome varchar(500),
 	email varchar(500),
 	bairro varchar(500), /* Novo */

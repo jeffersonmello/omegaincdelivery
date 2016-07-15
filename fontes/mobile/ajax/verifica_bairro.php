@@ -22,18 +22,26 @@ if ($res >= 1) {
       echo 1;
       if(!isset($_SESSION))
 		  session_start();
+
+      $key = strlen($email);
+      $key = $key + 81;
+
+      $db->connect();
+      $db->insert('lanc_pedidos',array('guid'=>'', 'nome'=>$nome,'email'=>$email, 'bairro'=>$bairro, 'eguid'=>$key));
+      $res = $db->getResult();
+
+      $db->connect();
+      $db->sql("SELECT * FROM lanc_pedidos WHERE eguid = '$key'");
+      $ress = $db->getResult();
+      foreach ($ress as $output) {
+          $guid_pedido = $output["guid"];
+      }
+      $_SESSION['idPedido']     = $guid_pedido;
 	  	$_SESSION['idBairro']     = $guidbairro;
 	  	$_SESSION['taxaentrega']  = $valorentrega;
       $_SESSION['nomecliente']  = $nome;
       $_SESSION['emailcliente'] = $email;
 
-      $db->connect();
-      $db->insert('lanc_pedidos',array('nome'=>$nome,'email'=>$email, 'bairro'=>$bairro));
-      $res = $db->getResult();
-      foreach ($res as $output) {
-          $guid_pedido = $output["guid"];
-      }
-      $_SESSION['idPedido']   = $guid_pedido;
 		exit;
 } else
 {

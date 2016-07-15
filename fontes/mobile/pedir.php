@@ -1,8 +1,3 @@
-/**
- * Omega Inc Delivery
- * Escrito por Jefferson Mello Olynyki, Campo Mourão, Paraná - Brasiç
- * Classe CRUD Criada por Rory Standley
- */
 <?php
 ob_start();
 
@@ -133,7 +128,7 @@ $db = new Database();
               <!-- Inicio do Conteudo -->
 
               <div class="card demo-card-header-pic">
-                <div style="background-image:url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/6bb33613489499.562747b282f8d.png)" valign="bottom" class="card-header color-white no-border">Delivery Nome da Loja</div>
+                <div style="background-image:url(http://www.pizzaaltafrequencia.com.br/content/img/Logo_Delivery.png)" valign="bottom" class="card-header color-white no-border">Delivery Nome da Loja</div>
                 <div class="card-content">
                   <div class="card-content-inner">
 
@@ -151,7 +146,7 @@ $db = new Database();
                     <?php
                       $taxaM = money_format('%n', $taxa);
                      ?>
-                      Número do Pedido: <b><?php echo $guid_pedido?></b>
+                      Número do Pedido: <b><?php echo $guid_pedido?></b><br>
                       Taxa de Entrega: <b><?php echo $taxaM ?></b>
 
                   </div>
