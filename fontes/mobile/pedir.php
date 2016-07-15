@@ -51,6 +51,7 @@ $db = new Database();
 
     <script type="text/javascript">
     $(document).ready(function(){
+      totaliza();
 
       $("#search").on( 'keyup', function () {
         var pesquisa      = $("#search").val();
@@ -89,6 +90,34 @@ $db = new Database();
         }
       })
     })
+
+    function totaliza(){
+      $.ajax({
+        url:("ajax/totaliza.php"),
+        type: "POST",
+        data: "guidpedido="+<?php echo $guid_pedido; ?>+"&taxa="+<?php echo $taxa; ?>,
+        success:function(dados){
+          var valor = dados;
+          $("#total").html("R$ "+(valor.toFixed(2)));
+        }})
+      }
+
+    function adicionarCarrinho(guid, nome, preco, imagem){
+      var currentiten   = $("#"+guid);
+      var listacarrinho = $("#teste");
+      var total         = $("#total");
+
+      $.ajax({
+        url:("ajax/adicionacarrinho.php"),
+        type: "POST",
+        data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+        success:function(dados){
+
+        }})
+        listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_'"+guid+" class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div></div></li>");
+        totaliza();
+    }
+
     </script>
   </head>
   <body>
@@ -147,9 +176,15 @@ $db = new Database();
                       $taxaM = money_format('%n', $taxa);
                      ?>
                       Número do Pedido: <b><?php echo $guid_pedido?></b><br>
-                      Taxa de Entrega: <b><?php echo $taxaM ?></b>
-
+                      Taxa de Entrega: <b><?php echo $taxaM ?></b><br>
+                      Total:  <b id="total"></b><br>
                   </div>
+
+                  <div class="list-block">
+                      <ul id="teste">
+                      </ul>
+                  </div>
+
                   </div>
                 </div>
 
@@ -215,6 +250,8 @@ $db = new Database();
                     $produto_nome             = $output["produto"];
                     $produto_preco            = $output["preco"];
 
+                    $preco_value = $produto_preco;
+
                     $produto_preco = money_format('%n', $produto_preco);
 
                     echo '<li class="item-content">'
@@ -224,7 +261,7 @@ $db = new Database();
                         ,'<div class="item-inner">'
                         ,'<div class="item-title-row">';
                    echo "<div class='item-title'>$produto_nome</div>";
-                   echo '<div class="item-after"><span href="#" class="button"><i class="material-icons color-icon">add</i></span></div>';
+                   echo "<div class='item-after'><span href='#' onclick='adicionarCarrinho($produto_guid,\"$produto_nome\",$preco_value,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
                    echo "</div>";
                    echo "<div class='item-subtitle'>$produto_preco</div>";
                    echo '</div>'
