@@ -195,7 +195,7 @@ $db = new Database();
                     <?php
                       $taxaM = money_format('%n', $taxa);
                      ?>
-                      Número do Pedido: <b><?php echo $guid_pedido?></b><br>
+                      Número do Pedido: <b>#<?php echo $guid_pedido?></b><br>
                       Taxa de Entrega: <b><?php echo $taxaM ?></b><br>
                       Total:  <b id="total"></b><br>
                   </div>
