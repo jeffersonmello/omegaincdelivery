@@ -33,3 +33,9 @@
     background-size: cover;
     background-position: center;
   }
+
+  .demo2-card-header-pic .card-header {
+      height: 20vw;
+      background-size: cover;
+      background-position: center;
+    }

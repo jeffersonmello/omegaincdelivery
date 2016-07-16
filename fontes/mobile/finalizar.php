@@ -137,7 +137,7 @@ $db = new Database();
                   </li>
 
                   <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
+                    <div class="item-media"><i class="material-icons color-icon">home</i></div>
                     <div class="item-inner">
                       <div class="item-input">
                         <input type="text" value="" id="numero" name="numero" placeholder="Número da sua residência" required>
@@ -146,7 +146,20 @@ $db = new Database();
                   </li>
 
                   <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
+                    <div class="item-media"><i class="material-icons color-icon">payment</i></div>
+                    <div class="item-inner">
+                      <div class="item-title label">Forma de Pagamento</div>
+                      <div class="item-input">
+                        <select>
+                          <option>Dinheiro</option>
+                          <option>Cartão de Crédito/Débito</option>
+                        </select>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">home</i></div>
                     <div class="item-inner">
                       <div class="item-input">
                         <input type="text" value="" id="numero" name="numero" placeholder="Número da sua residência" required>
@@ -154,8 +167,40 @@ $db = new Database();
                     </div>
                   </li>
 
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">business</i></div>
+                    <div class="item-inner">
+                      <div class="item-title label">Retirar na Loja</div>
+                      <div class="item-input">
+                        <label class="label-switch">
+                           <input type="checkbox">
+                           <div class="checkbox"></div>
+                         </label>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">note</i></div>
+                    <div class="item-inner">
+                      <div class="item-title label">Observação</div>
+                      <div class="item-input">
+                        <textarea class="resizable"></textarea>
+                      </div>
+                    </div>
+                  </li>
+
                 </ul>
               </div>
+
+              <div class="card">
+                <div class="card-content">
+                  <div class="card-content-inner">
+                    <center><img src="http://mobile.kingofeletro.com.br/delivery/css/bandeiras.png"></center>
+                  </div>
+                </div>
+              </div>
+
               <div class="list-block">
                 <ul>
                   <li>
@@ -166,6 +211,8 @@ $db = new Database();
                 </ul>
               </div>
             </form>
+
+
 
             <br>
            </div>
