@@ -93,6 +93,17 @@ $db = new Database();
       })
     })
 
+    function mesmo(guid,valor){
+      $.ajax({
+        url:("ajax/mesmoitem.php"),
+        type: "POST",
+        data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+        success:function(dados){
+          $("#idvaloresqtde_"+guid).html("R$ "+(valor.toFixed(2))+" ("+dados+")");
+          totaliza();
+        }})
+    }
+
     function totaliza(){
       $.ajax({
         url:("ajax/totaliza.php"),
@@ -105,7 +116,7 @@ $db = new Database();
       }
 
     function adicionarCarrinho(guid, nome, preco, imagem){
-      var currentiten   = $("#"+guid);
+      var currentiten   = $("#listacarrinho_"+guid);
       var listacarrinho = $("#teste");
       var total         = $("#total");
 
@@ -114,11 +125,18 @@ $db = new Database();
         type: "POST",
         data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
         success:function(dados){
-
+          if ($(currentiten, listacarrinho).length){
+            mesmo(guid,preco);
+          } else {
+            if (dados == 1){
+              listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div></div></li>");
+              totaliza();
+            }
+            }
         }})
-        listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_'"+guid+" class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div></div></li>");
-        totaliza();
     }
+
+
 
     </script>
   </head>
