@@ -104,6 +104,7 @@ $db = new Database();
         }})
     }
 
+
     function totaliza(){
       $.ajax({
         url:("ajax/totaliza.php"),
@@ -136,8 +137,29 @@ $db = new Database();
         }})
     }
 
+    function finalizaPedido(){
+      var myApp = new Framework7({
+        material: true
+      });
+      var mainView = myApp.addView('.view-main');
 
-
+      $.ajax({
+        url:("ajax/totalitens.php"),
+        type: "POST",
+        data: "guidpedido="+<?php echo $guid_pedido; ?>,
+        success:function(dados){
+            if (dados == 1){
+              location.href = 'finalizar.php'
+            } else {
+              myApp.addNotification({
+              message: 'É necesário ter pelo menos um item no carrinho.',
+              button: {
+                          text: 'Fechar',
+                      },
+               });
+            }
+        }})
+    }
     </script>
   </head>
   <body>
@@ -161,7 +183,7 @@ $db = new Database();
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
             <div class="center">Delivery</div>
-            <div class="right"><a href="#" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
+            <div class="right"><a href="#" onclick="finalizaPedido()" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
           </div>
         </div>
 
