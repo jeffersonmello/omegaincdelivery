@@ -49,6 +49,12 @@ $db = new Database();
     <!--Import Fontawesome Icon Font-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+    <script type="text/javascript">
+      function checkvalue(){
+        var valor = $("#check").val();
+        alert(valor);
+      }
+    </script>
   </head>
   <body>
     <!-- Status bar overlay for fullscreen mode-->
@@ -70,7 +76,7 @@ $db = new Database();
         <div class="navbar">
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
-            <div class="center">Delivery</div>
+            <div class="center">Finalizar</div>
               <div class="right"><a href="#" onclick="" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
           </div>
         </div>
@@ -150,7 +156,7 @@ $db = new Database();
                     <div class="item-inner">
                       <div class="item-title label">Forma de Pagamento</div>
                       <div class="item-input">
-                        <select>
+                        <select id="formapagamento">
                           <option>Dinheiro</option>
                           <option>Cartão de Crédito/Débito</option>
                         </select>
@@ -172,10 +178,10 @@ $db = new Database();
                     <div class="item-inner">
                       <div class="item-title label">Retirar na Loja</div>
                       <div class="item-input">
-                        <label class="label-switch">
-                           <input type="checkbox">
-                           <div class="checkbox"></div>
-                         </label>
+                        <select id="check">
+                          <option>Não, Entregar</option>
+                          <option>Sim, vou retirar na loja</option>
+                        </select>
                       </div>
                     </div>
                   </li>
@@ -185,7 +191,7 @@ $db = new Database();
                     <div class="item-inner">
                       <div class="item-title label">Observação</div>
                       <div class="item-input">
-                        <textarea class="resizable"></textarea>
+                        <textarea id="obs" class="resizable"></textarea>
                       </div>
                     </div>
                   </li>
@@ -205,7 +211,7 @@ $db = new Database();
                 <ul>
                   <li>
                     <p class="buttons-row">
-                      <a href="" onclick=""  class="button button-fill button-raised color-green">Pronto</a>
+                      <a href="" onclick="checkvalue()"  class="button button-fill button-raised color-green">Pronto</a>
                     </p>
                   </li>
                 </ul>
