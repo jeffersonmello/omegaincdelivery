@@ -48,10 +48,11 @@ $(document).ready(function(){
       });
       var mainView = myApp.addView('.view-main');
 
-     var ende   = $("#bairro").val();
-     var nome   = $("#nome").val();
-     var email  = $("#email").val();
-     var cepV   = $("#cep").val();
+     var ende     = $("#bairro").val();
+     var nome     = $("#nome").val();
+     var email    = $("#email").val();
+     var cepV     = $("#cep").val();
+     var endereco = $("#endereco").val();
 
      if (cepV.length < 8) {
        myApp.addNotification({
@@ -79,7 +80,7 @@ $(document).ready(function(){
      $.ajax({
        url:"ajax/verifica_bairro.php",
        type:"POST",
-       data: "br="+ende+"&nome="+nome+"&email="+email,
+       data: "br="+ende+"&nome="+nome+"&email="+email+"&endereco="+endereco,
          success: function (result){
                      if(result==1){
                        location.href='pedir.php'

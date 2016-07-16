@@ -2,9 +2,10 @@
 header('content-type: application/json; charset=utf-8');
 include('../class/mysql_crud.php');
 
-$bairro = $_POST["br"];
-$nome   = $_POST["nome"];
-$email  = $_POST["email"];
+$bairro   = $_POST["br"];
+$nome     = $_POST["nome"];
+$email    = $_POST["email"];
+$endereco = $_POST["endereco"];
 
 $db = new Database();
 $db->connect();
@@ -41,6 +42,7 @@ if ($res >= 1) {
 	  	$_SESSION['taxaentrega']  = $valorentrega;
       $_SESSION['nomecliente']  = $nome;
       $_SESSION['emailcliente'] = $email;
+      $_SESSION['endereco']     = $endereco;
 
 		exit;
 } else

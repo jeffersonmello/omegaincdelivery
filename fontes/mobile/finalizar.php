@@ -5,8 +5,25 @@ ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
 session_start();
-session_destroy();
+if (!isset($_SESSION['idBairro'])) {
+        session_destroy();
+       	header("Location: index.php"); exit;
+}
 
+setlocale(LC_MONETARY,"pt_BR", "ptb");
+
+$taxa         = $_SESSION['taxaentrega'];
+$nome_cliente = $_SESSION['nomecliente'];
+$email_cliente= $_SESSION['emailcliente'];
+$guid_bairro  = $_SESSION['idBairro'];
+$guid_pedido  = $_SESSION['idPedido'];
+$endereco     = $_SESSION['endereco'];
+
+
+include('class/mysql_crud.php');
+
+
+$db = new Database();
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,7 +71,7 @@ session_destroy();
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
             <div class="center">Delivery</div>
-            <div class="right"></div>
+              <div class="right"><a href="#" onclick="" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
           </div>
         </div>
 
@@ -74,37 +91,29 @@ session_destroy();
 
           <!-- page-content has additional login-screen content -->
           <div class="page-content login-screen-content">
-            <div class="login-screen-title">Delivery</div>
+            <div class="login-screen-title">Finalizar Pedido</div>
 
 
-            <!-- Login form -->
+            <!-- end form -->
             <form action="" method="post">
               <div class="list-block">
                 <ul>
 
                   <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">near_me</i></div>
+                    <div class="item-media"><i class="material-icons color-icon">check_circle</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text"  id="cep" name="cep" placeholder="CEP"  maxlength="8" required autofocus>
+                        <input type="text" value="#<?php echo $guid_pedido?>" id="pedido" name="pedido" placeholder="pedido" required disabled>
                       </div>
                     </div>
-                    </li>
+                  </li>
 
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
-                      <div class="item-inner">
-                        <div class="item-input">
-                          <input style="color: green" type="text" id="endereco" name="endereco" placeholder="" disabled>
-                        </div>
-                      </div>
-                      </li>
 
                   <li class="item-content">
                     <div class="item-media"><i class="material-icons color-icon">person</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text" id="nome" name="nome" placeholder="Seu Nome" required>
+                        <input type="text" value="<?php echo $nome_cliente?>" id="nome" name="nome" placeholder="Seu Nome" required>
                       </div>
                     </div>
                   </li>
@@ -113,15 +122,37 @@ session_destroy();
                     <div class="item-media"><i class="material-icons color-icon">email</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="email" id="email" name="email" placeholder="Seu Email" required>
+                        <input type="email" value="<?php echo $email_cliente?>" id="email" name="email" placeholder="Seu Email" required>
                       </div>
                     </div>
                   </li>
 
-                  <input name="cep" type="hidden" id="cep" value="" size="15" maxlength="8" />
-                  <input name="rua" type="hidden" id="rua" size="60" />
-                  <input name="bairro" type="hidden" id="bairro" class="form-control" size="60" />
-                  <input name="cidade" type="hidden" id="cidade" size="60" />
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" value="<?php echo $endereco?>" id="rua" name="Rua" placeholder="Seu Endereço" required>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" value="" id="numero" name="numero" placeholder="Número da sua residência" required>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" value="" id="numero" name="numero" placeholder="Número da sua residência" required>
+                      </div>
+                    </div>
+                  </li>
 
                 </ul>
               </div>
@@ -129,25 +160,14 @@ session_destroy();
                 <ul>
                   <li>
                     <p class="buttons-row">
-                      <a href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
+                      <a href="" onclick=""  class="button button-fill button-raised color-green">Pronto</a>
                     </p>
                   </li>
                 </ul>
               </div>
-            </form><!-- fim login page -->
+            </form>
 
             <br>
-
-                <div class="content-block">
-                  <div class="content-block-inner">
-                    <p class="color-icon">
-                      Horário de Atendimento: Ter. à Dom. das 18h as 00h.<br>
-                      Telefone:<br>
-                      Email:
-                    </p>
-                  </div>
-                </div>
-
            </div>
         </div>
       </div>
@@ -162,7 +182,5 @@ session_destroy();
     <!-- Path to your app js-->
     <script type="text/javascript" src="js/my-app.js"></script>
 
-    <!--delivery Js-->
-    <script type="text/javascript" src="js/delivery.js" ></script>
   </body>
 </html>
