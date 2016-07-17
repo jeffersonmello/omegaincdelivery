@@ -320,8 +320,7 @@ $db = new Database();
                       </ul>
                   </div>
                 </div>
-                </div>
-
+              </div>
 
 
               <!-- Fim do Conteudo -->
