@@ -50,9 +50,90 @@ $db = new Database();
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
     <script type="text/javascript">
-      function checkvalue(){
-        var valor = $("#check").val();
-        alert(valor);
+      function finalizaPedido(){
+        var myApp = new Framework7({
+          material: true
+        });
+        var mainView = myApp.addView('.view-main');
+
+        // dados
+        var numeroPedido      = $("#pedido").val();
+        var nomecliente       = $("#nome").val();
+        var emailcliente      = $("#email").val();
+        var endereco          = $("#rua").val();
+        var numeroResidencia  = $("#numero").val();
+        var formaPgto         = $("#formapagamento").val();
+        var retirarLoja       = $("#check").val();
+        var observacao        = $("#obs").val();
+
+        if (numeroPedido.length < 1) {
+          myApp.addNotification({
+          message: 'Pedido Inválido',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else if (nomecliente.length < 1) {
+          myApp.addNotification({
+          message: 'Preencha o campo Nome',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else if (emailcliente.length < 1) {
+          myApp.addNotification({
+          message: 'Preencha o campo E-mail',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else if (endereco.length < 1) {
+          myApp.addNotification({
+          message: 'Preencha o endereço',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        }  else if (numeroResidencia.length < 1) {
+          myApp.addNotification({
+          message: 'Preencha o campo Número da Residencia',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else if (formaPgto.length < 1) {
+          myApp.addNotification({
+          message: 'Selecione a forma de pagamento',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else if (retirarLoja.length < 1) {
+          myApp.addNotification({
+          message: 'Selecione a entrega ou retirada na loja',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else {
+          $.ajax({
+            url:"ajax/finalizapedido.php",
+            type:"POST",
+            data: "endereco="+endereco+"&nome="+nomecliente+"&email="+emailcliente+"&numero="+numeroResidencia+"&pedido="+numeroPedido+"&formapagamento="+formaPgto+"&retirarloja="+retirarLoja+"&observacao="+observacao,
+              success: function (result){
+                if (result == 1){
+                  location.href='finalizado.php'
+                } else {
+                  myApp.addNotification({
+                  message: 'Erro desconhecido',
+                  button: {
+                              text: 'Fechar',
+                          },
+                   });
+                }
+              }
+          })
+        }
       }
     </script>
   </head>
@@ -77,7 +158,7 @@ $db = new Database();
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
             <div class="center">Finalizar</div>
-              <div class="right"><a href="#" onclick="" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
+              <div class="right"><a href="#" onclick="finalizaPedido()" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
           </div>
         </div>
 
@@ -109,7 +190,7 @@ $db = new Database();
                     <div class="item-media"><i class="material-icons color-icon">check_circle</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text" value="#<?php echo $guid_pedido?>" id="pedido" name="pedido" placeholder="pedido" required disabled>
+                        <input type="text" value="<?php echo $guid_pedido?>" id="pedido" name="pedido" placeholder="pedido" required disabled>
                       </div>
                     </div>
                   </li>
@@ -137,7 +218,7 @@ $db = new Database();
                     <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text" value="<?php echo $endereco?>" id="rua" name="Rua" placeholder="Seu Endereço" required>
+                        <input type="text" value="<?php echo $endereco?>" id="rua" name="Rua" placeholder="Seu Endereço" disabled>
                       </div>
                     </div>
                   </li>
@@ -164,14 +245,6 @@ $db = new Database();
                     </div>
                   </li>
 
-                  <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">home</i></div>
-                    <div class="item-inner">
-                      <div class="item-input">
-                        <input type="text" value="" id="numero" name="numero" placeholder="Número da sua residência" required>
-                      </div>
-                    </div>
-                  </li>
 
                   <li class="item-content">
                     <div class="item-media"><i class="material-icons color-icon">business</i></div>
@@ -189,9 +262,8 @@ $db = new Database();
                   <li class="item-content">
                     <div class="item-media"><i class="material-icons color-icon">note</i></div>
                     <div class="item-inner">
-                      <div class="item-title label">Observação</div>
                       <div class="item-input">
-                        <textarea id="obs" class="resizable"></textarea>
+                        <textarea id="obs" class="resizable" placeholder="Observação"></textarea>
                       </div>
                     </div>
                   </li>
@@ -207,15 +279,6 @@ $db = new Database();
                 </div>
               </div>
 
-              <div class="list-block">
-                <ul>
-                  <li>
-                    <p class="buttons-row">
-                      <a href="" onclick="checkvalue()"  class="button button-fill button-raised color-green">Pronto</a>
-                    </p>
-                  </li>
-                </ul>
-              </div>
             </form>
 
 

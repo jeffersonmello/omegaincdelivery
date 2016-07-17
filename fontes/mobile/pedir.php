@@ -182,7 +182,7 @@ $db = new Database();
         <div class="navbar">
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
-            <div class="center">Selecioando Pedido</div>
+            <div class="center">Selecionando Pedido</div>
             <div class="right"><a href="#" onclick="finalizaPedido()" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
           </div>
         </div>

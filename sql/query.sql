@@ -27,6 +27,7 @@ create table lanc_pedidos (
 	bairro varchar(500), /* Novo */
 	telefone varchar(500),
 	endereco varchar(750),
+	numero varchar(100),
 	entregar int not null,
 	status int not null,
 	formaPagamento int not null,
