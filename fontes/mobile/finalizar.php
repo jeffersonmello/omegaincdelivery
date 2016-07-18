@@ -214,14 +214,6 @@ $db = new Database();
                     </div>
                   </li>
 
-                  <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">phone</i></div>
-                    <div class="item-inner">
-                      <div class="item-input">
-                        <input type="number" value="" id="telefone" name="telefone" placeholder="Seu Telefone" required>
-                      </div>
-                    </div>
-                  </li>
 
                   <li class="item-content">
                     <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
