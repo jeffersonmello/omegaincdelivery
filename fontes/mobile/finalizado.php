@@ -5,11 +5,8 @@ ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
 session_start();
-if (!isset($_SESSION['idBairro'])) {
-        session_destroy();
-       	header("Location: index.php"); exit;
-}
-
+session_destroy();
+    
 setlocale(LC_MONETARY,"pt_BR", "ptb");
 
 $taxa         = $_SESSION['taxaentrega'];

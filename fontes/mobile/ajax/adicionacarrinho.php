@@ -14,6 +14,7 @@ $db->connect();
 $db->insert('lanc_listprodpedido',array('guid_produto'=>$guid_produto,'guid_pedido'=>$guid_pedido));
 $res = $db->getResult();
 
+
 $return = 1;
 
 echo ($return);

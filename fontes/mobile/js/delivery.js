@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  document.getElementById("cep").onkeypress = function(e) {
+  document.getElementById("cep").onkeyup = function(e) {
  var chr = String.fromCharCode(e.which);
  if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
    return false;
@@ -42,6 +42,11 @@ $(document).ready(function(){
           timeout = setTimeout(verifica, 2000);
         }
 
+        function validateEmail(email) {
+          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+        }
+
     function verificaBairro(){
       var myApp = new Framework7({
         material: true
@@ -53,6 +58,7 @@ $(document).ready(function(){
      var email    = $("#email").val();
      var cepV     = $("#cep").val();
      var endereco = $("#endereco").val();
+     var status   = 0;
 
      if (cepV.length < 8) {
        myApp.addNotification({
@@ -68,9 +74,9 @@ $(document).ready(function(){
                            text: 'Fechar',
                        },
            });
-     } else if (email.length < 1) {
+     } else if (!(validateEmail(email))) {
        myApp.addNotification({
-               message: 'Preencha o campo email.',
+               message: 'E-mail Inválido.',
                button: {
                            text: 'Fechar',
                        },
@@ -80,7 +86,7 @@ $(document).ready(function(){
      $.ajax({
        url:"ajax/verifica_bairro.php",
        type:"POST",
-       data: "br="+ende+"&nome="+nome+"&email="+email+"&endereco="+endereco,
+       data: "br="+ende+"&nome="+nome+"&email="+email+"&endereco="+endereco+"&status="+status,
          success: function (result){
                      if(result==1){
                        location.href='pedir.php'

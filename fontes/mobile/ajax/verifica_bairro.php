@@ -6,6 +6,7 @@ $bairro   = $_POST["br"];
 $nome     = $_POST["nome"];
 $email    = $_POST["email"];
 $endereco = $_POST["endereco"];
+$status   = $_POST["status"];
 
 $db = new Database();
 $db->connect();
@@ -28,7 +29,7 @@ if ($res >= 1) {
       $key = $key + 81;
 
       $db->connect();
-      $db->insert('lanc_pedidos',array('guid'=>'', 'nome'=>$nome,'email'=>$email, 'bairro'=>$bairro, 'eguid'=>$key));
+      $db->insert('lanc_pedidos',array('guid'=>'', 'nome'=>$nome,'email'=>$email, 'bairro'=>$bairro, 'eguid'=>$key, 'status'=>$status));
       $res = $db->getResult();
 
       $db->connect();

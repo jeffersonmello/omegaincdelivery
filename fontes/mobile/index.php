@@ -129,7 +129,7 @@ session_destroy();
                 <ul>
                   <li>
                     <p class="buttons-row">
-                      <a href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
+                      <a type="submit" href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
                     </p>
                   </li>
                 </ul>

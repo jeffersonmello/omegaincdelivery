@@ -53,9 +53,13 @@ $db = new Database();
     $(document).ready(function(){
       totaliza();
 
+      $("#iframe").click(function(event) {
+            event.preventDefault();
+        });
+
       $("#search").on( 'keyup', function () {
         var pesquisa      = $("#search").val();
-        var categorias    = $(".categorias"); // Lista de categorias
+        var categorias    = $(".categorias");
         var produtos      = $("#listaprodutos");
         var itemproduto   = $(".itempesquisa");
 
@@ -99,7 +103,7 @@ $db = new Database();
         type: "POST",
         data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
         success:function(dados){
-          $("#idvaloresqtde_"+guid).html("R$ "+(valor.toFixed(2))+" ("+dados+")");
+          $("#idvaloresqtde_"+guid).html("R$ "+(valor.toFixed(2, '.', ','))+" ("+dados+")");
           totaliza();
         }})
     }
@@ -119,7 +123,6 @@ $db = new Database();
     function adicionarCarrinho(guid, nome, preco, imagem){
       var currentiten   = $("#listacarrinho_"+guid);
       var listacarrinho = $("#teste");
-      var total         = $("#total");
 
       $.ajax({
         url:("ajax/adicionacarrinho.php"),
@@ -130,7 +133,7 @@ $db = new Database();
             mesmo(guid,preco);
           } else {
             if (dados == 1){
-              listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div></div></li>");
+              listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div><div class='item-subtitle'><a href='#' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
               totaliza();
             }
             }
@@ -142,6 +145,7 @@ $db = new Database();
         material: true
       });
       var mainView = myApp.addView('.view-main');
+      var total   = totaliza();
 
       $.ajax({
         url:("ajax/totalitens.php"),
@@ -203,7 +207,7 @@ $db = new Database();
                 <div class="card-content-block">
                   <div class="card-content-inner">
 
-                    <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.437152806504!2d-52.35454038490684!3d-24.015644884410168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ed0b28ee9a9359%3A0x1c5dee983eeb3986!2sAv.+Bronislav+Wronski+-+Jardim+Aeroporto%2C+Campo+Mour%C3%A3o+-+PR%2C+87310-300!5e0!3m2!1spt-BR!2sbr!4v1459362655860" width="100%" height="150" frameborder="0" style="border:0"></iframe></div>
+                    <div ><iframe id="iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.437152806504!2d-52.35454038490684!3d-24.015644884410168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ed0b28ee9a9359%3A0x1c5dee983eeb3986!2sAv.+Bronislav+Wronski+-+Jardim+Aeroporto%2C+Campo+Mour%C3%A3o+-+PR%2C+87310-300!5e0!3m2!1spt-BR!2sbr!4v1459362655860" width="100%" height="150" frameborder="0" style="border:0" disabled></iframe></div>
 
                   </div>
                 </div>
@@ -306,6 +310,7 @@ $db = new Database();
                    echo "<div class='item-after'><span href='#' onclick='adicionarCarrinho($produto_guid,\"$produto_nome\",$preco_value,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
                    echo "</div>";
                    echo "<div class='item-subtitle'>$produto_preco</div>";
+                   echo "<div class='item-text'>Lorem ipsum dolor sit amet...</div>";
                    echo '</div>'
                       ,'</li>';
 

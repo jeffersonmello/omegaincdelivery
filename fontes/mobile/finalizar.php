@@ -18,7 +18,9 @@ $email_cliente= $_SESSION['emailcliente'];
 $guid_bairro  = $_SESSION['idBairro'];
 $guid_pedido  = $_SESSION['idPedido'];
 $endereco     = $_SESSION['endereco'];
-
+$mydate       = getDate(date("U"));
+$data         = ("$mydate[year]-$mydate[mon]-$mydate[mday]");
+$total        = $_SESSION['totalpedio'];
 
 include('class/mysql_crud.php');
 
@@ -43,6 +45,8 @@ $db = new Database();
     <!--jquery-->
     <script   src="js/jquery-3.0.0.min.js"></script>
 
+    <script src="http://digitalbush.com/wp-content/uploads/2014/10/jquery.maskedinput.js"></script>
+
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -50,6 +54,148 @@ $db = new Database();
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
     <script type="text/javascript">
+      $(document).ready(function(){
+          $("#datafield").hide();
+          jQuery("input.telefone")
+        .mask("(99) 9999-9999?9")
+        .focusout(function (event) {
+            var target, phone, element;
+            target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+            phone = target.value.replace(/\D/g, '');
+            element = $(target);
+            element.unmask();
+            if(phone.length > 10) {
+                element.mask("(99) 99999-999?9");
+            } else {
+                element.mask("(99) 9999-9999?9");
+            }
+        });
+      })
+
+      function validarCPF( cpf ){
+      	var filtro = /^\d{3}.\d{3}.\d{3}-\d{2}$/i;
+
+        var myApp = new Framework7({
+          material: true
+        });
+        var mainView = myApp.addView('.view-main');
+        var campocpf = $("#cpf");
+
+      	if(!filtro.test(cpf))
+      	{
+          myApp.addNotification({
+          message: 'CPF Inválido',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+           campocpf.focus();
+           campocpf.val("");
+      		return false;
+      	}
+
+      	cpf = remove(cpf, ".");
+      	cpf = remove(cpf, "-");
+
+      	if(cpf.length != 11 || cpf == "00000000000" || cpf == "11111111111" ||
+      		cpf == "22222222222" || cpf == "33333333333" || cpf == "44444444444" ||
+      		cpf == "55555555555" || cpf == "66666666666" || cpf == "77777777777" ||
+      		cpf == "88888888888" || cpf == "99999999999")
+      	{
+          myApp.addNotification({
+          message: 'CPF Inválido',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+           campocpf.focus();
+           campocpf.val("");
+      		return false;
+         }
+
+      	soma = 0;
+      	for(i = 0; i < 9; i++)
+      	{
+      		soma += parseInt(cpf.charAt(i)) * (10 - i);
+      	}
+
+      	resto = 11 - (soma % 11);
+      	if(resto == 10 || resto == 11)
+      	{
+      		resto = 0;
+      	}
+      	if(resto != parseInt(cpf.charAt(9))){
+          myApp.addNotification({
+          message: 'CPF Inválido',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+           campocpf.focus();
+           campocpf.val("");
+      		return false;
+      	}
+
+      	soma = 0;
+      	for(i = 0; i < 10; i ++)
+      	{
+      		soma += parseInt(cpf.charAt(i)) * (11 - i);
+      	}
+      	resto = 11 - (soma % 11);
+      	if(resto == 10 || resto == 11)
+      	{
+      		resto = 0;
+      	}
+
+      	if(resto != parseInt(cpf.charAt(10))){
+          myApp.addNotification({
+          message: 'CPF Inválido',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+           campocpf.focus();
+           campocpf.val("");
+      		return false;
+      	}
+
+      	return true;
+       }
+
+      function remove(str, sub) {
+      	i = str.indexOf(sub);
+      	r = "";
+      	if (i == -1) return str;
+      	{
+      		r += str.substring(0,i) + remove(str.substring(i + sub.length), sub);
+      	}
+
+      	return r;
+      }
+
+      /**
+         * MASCARA ( mascara(o,f) e execmascara() ) CRIADAS POR ELCIO LUIZ
+         * elcio.com.br
+         */
+      function mascara(o,f){
+      	v_obj=o
+      	v_fun=f
+      	setTimeout("execmascara()",1)
+      }
+
+      function execmascara(){
+      	v_obj.value=v_fun(v_obj.value)
+      }
+
+      function cpf_mask(v){
+      	v=v.replace(/\D/g,"")                 //Remove tudo o que não é dígito
+      	v=v.replace(/(\d{3})(\d)/,"$1.$2")    //Coloca ponto entre o terceiro e o quarto dígitos
+      	v=v.replace(/(\d{3})(\d)/,"$1.$2")    //Coloca ponto entre o setimo e o oitava dígitos
+      	v=v.replace(/(\d{3})(\d)/,"$1-$2")   //Coloca ponto entre o decimoprimeiro e o decimosegundo dígitos
+      	return v
+      }
+
+
       function finalizaPedido(){
         var myApp = new Framework7({
           material: true
@@ -65,8 +211,19 @@ $db = new Database();
         var formaPgto         = $("#formapagamento").val();
         var retirarLoja       = $("#check").val();
         var observacao        = $("#obs").val();
+        var hoje              = $("#data").val();
+        var cpf               = $("#cpf").val();
+        var telefone          = $("#telefone").val();
 
-        if (numeroPedido.length < 1) {
+
+        if (cpf.length < 9) {
+          myApp.addNotification({
+          message: 'CPF Inválido',
+          button: {
+                      text: 'Fechar',
+                  },
+           });
+        } else if (numeroPedido.length < 1) {
           myApp.addNotification({
           message: 'Pedido Inválido',
           button: {
@@ -119,7 +276,7 @@ $db = new Database();
           $.ajax({
             url:"ajax/finalizapedido.php",
             type:"POST",
-            data: "endereco="+endereco+"&nome="+nomecliente+"&email="+emailcliente+"&numero="+numeroResidencia+"&pedido="+numeroPedido+"&formapagamento="+formaPgto+"&retirarloja="+retirarLoja+"&observacao="+observacao,
+            data: "endereco="+endereco+"&nome="+nomecliente+"&email="+emailcliente+"&numero="+numeroResidencia+"&pedido="+numeroPedido+"&formapagamento="+formaPgto+"&retirarloja="+retirarLoja+"&observacao="+observacao+"&hoje="+hoje+"&cpf="+cpf+"&telefone="+telefone+"&total="+<?php echo $total ?>,
               success: function (result){
                 if (result == 1){
                   location.href='finalizado.php'
@@ -214,6 +371,23 @@ $db = new Database();
                     </div>
                   </li>
 
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">perm_contact_calendar</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text"  id="cpf" name="cpf" placeholder="CPF" onblur="javascript: validarCPF(this.value);" onkeyup="javascript: mascara(this, cpf_mask);">
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">phone</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" class="telefone" id="telefone" name="telefone" placeholder="Seu telefone">
+                      </div>
+                    </div>
+                  </li>
 
                   <li class="item-content">
                     <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
@@ -256,6 +430,15 @@ $db = new Database();
                           <option>Não, Entregar</option>
                           <option>Sim, vou retirar na loja</option>
                         </select>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content" id="datafield">
+                    <div class="item-media"><i class="material-icons color-icon">calendar</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" value="<?php echo $data?>" id="data" name="data" placeholder="data">
                       </div>
                     </div>
                   </li>
