@@ -53,10 +53,6 @@ $db = new Database();
     $(document).ready(function(){
       totaliza();
 
-      $("#iframe").click(function(event) {
-            event.preventDefault();
-        });
-
       $("#search").on( 'keyup', function () {
         var pesquisa      = $("#search").val();
         var categorias    = $(".categorias");
@@ -120,6 +116,28 @@ $db = new Database();
         }})
       }
 
+    function removeItem(guid, preco){
+      var corrente     = $("#listacarrinho_"+guid);
+
+      $.ajax({
+        url:("ajax/removeitem.php"),
+        type: "POST",
+        data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+        success:function(dados){
+          if (dados == 1) {
+            mesmo(guid, preco);
+            totaliza()
+          } else {
+            corrente.remove();
+            totaliza()
+          }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("Status: " + textStatus); alert("Error: " + errorThrown);
+    }
+      })
+    }
+
     function adicionarCarrinho(guid, nome, preco, imagem){
       var currentiten   = $("#listacarrinho_"+guid);
       var listacarrinho = $("#teste");
@@ -133,7 +151,7 @@ $db = new Database();
             mesmo(guid,preco);
           } else {
             if (dados == 1){
-              listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div><div class='item-subtitle'><a href='#' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
+              listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
               totaliza();
             }
             }
