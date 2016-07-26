@@ -234,7 +234,7 @@ width: 100%;
           <h1>Pedido Realizado no Aplicativo Delivery</h1><br>
     <p><b>Olá recebemos o seu pedido !</b></p>
           <p>Seu pedido realizado através do aplicativo foi recebido<br>
-    O Estado atual do seu pedido é: <b>Processando</b></p>
+    O Estado atual do seu pedido é: <b>Processando</b></p><br>
     <br>
 
     <br>
@@ -257,37 +257,6 @@ width: 100%;
       </tr>
     </table>
     </div>
-    <!-- /content -->
-
-  </td>
-  <td></td>
-</tr>
-</table>
-<!-- /body -->
-
-<!-- footer -->
-<table class='footer-wrap'>
-<tr>
-  <td></td>
-  <td class='container'>
-
-    <!-- content -->
-    <div class='content'>
-      <table>
-        <tr>
-          <td align='center'>
-            <p>Delivery <a href='http://pristonspnbr.tk/'><unsubscribe>Site</unsubscribe></a>.
-            </p>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <!-- /content -->
-
-  </td>
-  <td></td>
-</tr>
-</table>
 <!-- /footer -->
 
 </body>
