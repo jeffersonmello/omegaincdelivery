@@ -195,6 +195,21 @@ $db = new Database();
       	return v
       }
 
+      function cancelaPedido(){
+        var pedido = <?php echo $guid_pedido ?>;
+
+        $.ajax({
+          url:("ajax/cancelapedido.php"),
+          type: "POST",
+          data: "guidpedido="+pedido,
+          success:function(dados){
+            if (dados == 1){
+              location.href = 'index.php'
+            }
+          }
+        })
+      }
+
 
       function finalizaPedido(){
         var myApp = new Framework7({
@@ -315,7 +330,7 @@ $db = new Database();
           <div class="navbar-inner">
             <div class="left"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>
             <div class="center">Finalizar</div>
-              <div class="right"><a href="#" onclick="finalizaPedido()" class="link icon-only"><i class="material-icons">arrow_forward</i></a></div>
+              <div class="right"></div>
           </div>
         </div>
 
@@ -464,11 +479,22 @@ $db = new Database();
               </div>
 
             </form>
+            <div class="list-block inset">
+              <ul>
+                <li>
+                  <p><a href="#" onclick="finalizaPedido()" class="button button-fill color-green">Finalizar</a></p>
+                </li>
+                <li>
+                  <p><a href="#" onclick="cancelaPedido()" class="button button-fill color-red">Cancelar</a></p>
+                </li>
+              </ul>
+            </div>
 
 
 
             <br>
            </div>
+
         </div>
       </div>
   </div>
