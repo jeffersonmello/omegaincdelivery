@@ -27,7 +27,7 @@ $db = new Database();
 ?>
 <html>
 <head>
-	<title>Omega Inc. | Delivery Dashboard</title>
+	<title>Omega Inc. | Delivery | Categorias</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

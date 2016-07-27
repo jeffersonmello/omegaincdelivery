@@ -27,7 +27,7 @@ $db = new Database();
 ?>
 <html>
 <head>
-	<title>Omega Inc. | Delivery Dashboard</title>
+	<title>Omega Inc. | Delivery | Produtos</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -75,7 +75,7 @@ $db = new Database();
 		var searchfield = $("#searchBar").val();
 
 		if (searchfield.length < 1) {
-			$('#divcat').load('ajax/tab_categorias.php', function(){
+			$('#divcat').load('ajax/tab_produtos.php', function(){
 				setTimeout(reloadtable, 5000);
 			});
 		}
@@ -143,7 +143,7 @@ $db = new Database();
 	}
 
 	function search(){
-		var table = $('#categorias').DataTable();
+		var table = $('#produtos').DataTable();
 
 		$('#searchBar').on( 'keyup', function () {
 			table.search( this.value ).draw();
@@ -271,7 +271,7 @@ $db = new Database();
 						<h2>
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
-							<span>Cadastro de Categorias</span>
+							<span>Cadastro de Produtos</span>
 						</h2>
 					</div>
 					<!--//banner-->
@@ -279,7 +279,7 @@ $db = new Database();
 					<br>
 
 					<div class="banner">
-						<h2>Categorias <button type="button" onclick="openModal('salvar',0)" class="btn btn-primary pull-right">Novo</button><br></h2>
+						<h2>Produtos <button type="button" onclick="openModal('salvar',0)" class="btn btn-primary pull-right">Novo</button><br></h2>
 					</div>
 
 					<div class="blank">
@@ -296,7 +296,7 @@ $db = new Database();
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
-											<h4 class="modal-title" id="titulomodal">Cadastro de Categorias</h4>
+											<h4 class="modal-title" id="titulomodal">Cadastro de Produtos</h4>
 										</div>
 										<div class="modal-body">
 											<form id="formCategoria">
@@ -315,10 +315,7 @@ $db = new Database();
 													<input type="text" class="form-control" id="icone" name="icone" placeholder="Cole o embed do icone deseja">
 													<small class="text-muted">Clique no botão abaixo para ver a lista de icones.</small>
 												</fieldset>
-
-												<div class="form-group">
-													<button type="button" class="btn btn-secondary btn-block" data-toggle="modal" data-target="#modalIcones">Lista de Icones</button>
-												</div>
+												
 											</form>
 										</div>
 										<div class="modal-footer">
@@ -330,24 +327,6 @@ $db = new Database();
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
 
-							<div id="modalIcones" class="modal fade">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-											<h4 class="modal-title">Icones</h4>
-										</div>
-										<div class="modal-body">
-											<p> Lista de Icones</p>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-										</div>
-									</div><!-- /.modal-content -->
-								</div><!-- /.modal-dialog -->
-							</div><!-- /.modal -->
 
 							<div class="copy">
 								<p> &copy; 2016 Omega Inc. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>	    </div>
