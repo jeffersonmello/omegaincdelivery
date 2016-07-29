@@ -75,7 +75,7 @@ $db = new Database();
 		var searchfield = $("#searchBar").val();
 
 		if (searchfield.length < 1) {
-			$('#divcat').load('ajax/tab_produtos.php', function(){
+			$('#divcat').load('ajax/produtos/tab_produtos.php', function(){
 				setTimeout(reloadtable, 5000);
 			});
 		}
@@ -87,23 +87,51 @@ $db = new Database();
 		var campoguid			= $("#campoguid");
 		var botaosalvar		= $("#botaosalvar");
 		var botaoeditar		= $("#botaoatualizar");
-		var inputguid			= $("#guid");
-		var campodescricao= $("#descricao");
-		var campoicone		= $("#icone");
+
+		var inputguid					= $("#guid");
+		var campocategoria		= $("#categoria");
+		var campodescricao		= $("#descricao");
+		var campoimagem				= $("#img");
+		var subdesc						= $("#subdesc");
+		var selected					= $("#optionSelected");
+		var preco							= $("#preco");
 
 		if (operacao == "editar"){
 			$.ajax({
-				url:"ajax/populate_categoria.php",
+				url:"ajax/produtos/populate_produto.php",
 				type:"POST",
 				data:"guid="+guid,
 				success: function (dados){
 					$.each(dados, function(index){
-						var descricao = dados[index].descricao;
-						var icone			= dados[index].iconecategoria;
-						campodescricao.val(descricao);
-						campoicone.val(icone);
+						var guid_categoria		= dados[index].guid_categoria;
+						var descricaoproduto	= dados[index].descricao;
+						var imagemproduto			= dados[index].imgproduto;
+						var subdescricao			= dados[index].subdescricao;
+						var precoproduto			= dados[index].preco;
+						var guid_produto			= dados[index].guid;
+
+						$.ajax({
+							url:"ajax/produtos/getCategoria.php",
+							type:"POST",
+							data:"guid="+guid_categoria,
+							success: function (dados){
+								$.each(dados, function(index){
+									var categorianame = dados[index].descricao;
+
+									selected.val(guid_categoria);
+									selected.html(categorianame);
+									campocategoria.find('#option_'+guid_categoria).remove();
+								});
+							}
+						});
+
+						inputguid.val(guid_produto);
+						campodescricao.val(descricaoproduto);
+						campoimagem.val(imagemproduto);
+						subdesc.val(subdescricao);
+						preco.val(precoproduto);
 					})
-					titulomodal.html("Atualizando Categoria");
+					titulomodal.html("Atualizando Produto");
 					campoguid.hide();
 					botaoeditar.show();
 					botaosalvar.hide();
@@ -113,23 +141,27 @@ $db = new Database();
 			});
 		} else if (operacao == "salvar") {
 			$('#formCategoria')[0].reset();
-			titulomodal.html("Nova Categoria");
+			titulomodal.html("Novo Produto");
 			campoguid.hide();
 			botaoeditar.hide();
 			botaosalvar.show();
+			selected.hide();
 			modall.modal('show');
 		}
 	}
 
 	function salvar(operacao, guid){
-		var descricao = $("#descricao").val();
-		var icone 		= $("#icone").val();
-		var id 				= $("#guid").val();
+		var campocategoria		= $("#cat").val();
+		var campodescricao		= $("#descricao").val();
+		var campoimagem				= $("#img").val();
+		var subdesc						= $("#subdesc").val();
+		var preco							= $("#preco").val();
+		var guidd 						= $("#guid").val();
 
 		$.ajax({
-			url:"ajax/cad_categoria.php",
+			url:"ajax/produtos/produto.php",
 			type:"POST",
-			data:"descricao="+descricao+"&icone="+icone+"&operacao="+operacao+"&guid="+id+"&guidd="+guid,
+			data:"descricao="+campodescricao+"&imagem="+campoimagem+"&subdesc="+subdesc+"&categoria="+campocategoria+"&operacao="+operacao+"&guid="+guidd+"&preco="+preco,
 			success: function (result){
 				$('#modal').modal('hide');
 				if (result == 1) {
@@ -149,8 +181,25 @@ $db = new Database();
 			table.search( this.value ).draw();
 		})
 	}
-	</script>
-	<script>
+
+	function previewFile(){
+		var preview = document.querySelector('img[id=imageview]');
+		var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+		var reader  = new FileReader();
+		var imgee		= document.querySelector('input[type=file]').files[0]['name'];
+
+		reader.onloadend = function () {
+			preview.src = reader.result;
+		}
+
+		if (file) {
+			reader.readAsDataURL(file);
+		} else {
+			preview.src = "";
+			$("#img").val(imgee);
+		}
+	}
+
 	$(function () {
 		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
 
@@ -221,7 +270,7 @@ $db = new Database();
 
 				</div>
 
-				<div class="navbar-default sidebar" role="navigation">
+				<div  class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
 						<ul class="nav" id="side-menu">
 							<ul class="nav" id="side-menu">
@@ -279,7 +328,7 @@ $db = new Database();
 					<br>
 
 					<div class="banner">
-						<h2>Produtos <button type="button" onclick="openModal('salvar',0)" class="btn btn-primary pull-right">Novo</button><br></h2>
+						<h2>Produtos <button type="button" onclick="openModal('salvar',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
 					</div>
 
 					<div class="blank">
@@ -306,16 +355,49 @@ $db = new Database();
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Descrição</label>
-													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome da Categoria">
+													<label for="exampleInputEmail1">Categoria</label>
+													<select class="form-control" id="cat">
+														<?php
+														$db->connect();
+														$db->select('cad_categorias');
+														$res = $db->getResult();
+														foreach ($res as $output) {
+															$guid_categoria		= $output["guid"];
+															$desc_categoria		= $output["descricao"];
+
+															echo "<option id='option_'+$guid_categoria' value='$guid_categoria'>$desc_categoria</option>";
+														}
+														?>
+														<option id="optionSelected" selected='selected' value=""></option>
+													</select>
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Embed de icone</label>
-													<input type="text" class="form-control" id="icone" name="icone" placeholder="Cole o embed do icone deseja">
-													<small class="text-muted">Clique no botão abaixo para ver a lista de icones.</small>
+													<label for="exampleInputEmail1">Imagem</label>
+													<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
+													<label class="custom-file">
+														<input type="file" id="imgfile" onchange="previewFile()" class="custom-file-input">
+														<span class="custom-file-control"></span>
+													</label>
 												</fieldset>
-												
+												<div id="imagefield">
+													<img id="imageview" src="" height="200" alt="Image preview...">
+												</div>
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Descrição</label>
+													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome do Produto">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Subdescrição</label>
+													<input type="text" class="form-control" id="subdesc" name="subdesc" placeholder="Subdescrição do Produto">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Preço</label>
+													<input type="text" class="form-control" id="preco" name="preco" placeholder="Preço do Produto">
+												</fieldset>
+
 											</form>
 										</div>
 										<div class="modal-footer">

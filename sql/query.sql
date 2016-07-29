@@ -14,7 +14,7 @@ create table cad_produtos (
 	guid_categoria int not null,
 	imgproduto varchar(700),
 	descricao varchar(500) not null,
-	subdescricao	varchar(500),
+	subdescricao varchar(500),
 	preco float,
 	primary key (guid),
 	foreign key (guid_categoria) references cad_categorias (guid)

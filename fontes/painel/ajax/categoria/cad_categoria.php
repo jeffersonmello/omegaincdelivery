@@ -2,7 +2,7 @@
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
-include('../class/mysql_crud.php');
+include('../../class/mysql_crud.php');
 
 $descricao  = $_POST["descricao"];
 $icone      = $_POST["icone"];

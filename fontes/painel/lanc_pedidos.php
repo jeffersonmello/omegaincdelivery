@@ -27,7 +27,7 @@ $db = new Database();
 ?>
 <html>
 <head>
-	<title>Omega Inc. | Delivery | Categorias</title>
+	<title>Omega Inc. | Delivery | Pedidos</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -75,8 +75,7 @@ $db = new Database();
 		var searchfield = $("#searchBar").val();
 
 		if (searchfield.length < 1) {
-			$('#divcat').load('ajax/categoria/tab_categorias.php', function(){
-				setTimeout(reloadtable, 5000);
+			$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){
 			});
 		}
 	}
@@ -85,52 +84,64 @@ $db = new Database();
 		var modall 				= $('#modal');
 		var titulomodal		= $("#titulomodal");
 		var campoguid			= $("#campoguid");
-		var botaosalvar		= $("#botaosalvar");
 		var botaoeditar		= $("#botaoatualizar");
-		var inputguid			= $("#guid");
-		var campodescricao= $("#descricao");
-		var campoicone		= $("#icone");
+		var selected			= $("#optionSelected");
+
+		var inputguid					= $("#guid");
+		var campostatus				= $("#cat");
+
 
 		if (operacao == "editar"){
 			$.ajax({
-				url:"ajax/categoria/populate_categoria.php",
+				url:"ajax/pedidos/populate_pedidoAberto.php",
 				type:"POST",
 				data:"guid="+guid,
 				success: function (dados){
 					$.each(dados, function(index){
-						var descricao = dados[index].descricao;
-						var icone			= dados[index].iconecategoria;
-						campodescricao.val(descricao);
-						campoicone.val(icone);
+						var guidPedido				= dados[index].guid;
+						var statusPedido			= dados[index].status;
+						var nomePedido				= dados[index].nome;
+						var enderecoPedido		= dados[index].endereco;
+						var totalPedido				= dados[index].total;
+						var dataPedido				= dados[index].data;
+						var telefonePedido		= dados[index].telefone;
+						var numerocasaPedido	= dados[index].numero;
+						var formaPagamento		= dados[index].formaPagamento;
+						var observacaoPedido	= dados[index].observacao;
+						var cpfClientePedido	= dados[index].cpf;
+						var entregarPedido		= dados[index].entregar;
+						var tokenPedido				= dados[index].token;
+
+						if (statusPedido == 1) {
+							var statuspedidotext = "Processando";
+						}
+
+						selected.val(statusPedido);
+						selected.html(statuspedidotext);
 					})
-					titulomodal.html("Atualizando Categoria");
+					titulomodal.html("Pedido #"+guid);
 					campoguid.hide();
 					botaoeditar.show();
-					botaosalvar.hide();
 					inputguid.val(guid);
 					modall.modal('show');
 				}
 			});
-		} else if (operacao == "salvar") {
-			$('#formCategoria')[0].reset();
-			titulomodal.html("Nova Categoria");
-			campoguid.hide();
-			botaoeditar.hide();
-			botaosalvar.show();
-			modall.modal('show');
 		}
 	}
 
 	function salvar(operacao, guid){
-		var descricao = $("#descricao").val();
-		var icone 		= $("#icone").val();
-		var id 				= $("#guid").val();
+		var campocategoria		= $("#cat").val();
+		var campodescricao		= $("#descricao").val();
+		var campoimagem				= $("#img").val();
+		var subdesc						= $("#subdesc").val();
+		var preco							= $("#preco").val();
 
 		$.ajax({
-			url:"ajax/cad_categoria.php",
+			url:"ajax/produtos/produto.php",
 			type:"POST",
-			data:"descricao="+descricao+"&icone="+icone+"&operacao="+operacao+"&guid="+id+"&guidd="+guid,
+			data:"descricao="+campodescricao+"&imagem="+campoimagem+"&subdesc="+subdesc+"&categoria="+campocategoria+"&operacao="+operacao+"&guid="+guid+"&preco="+preco,
 			success: function (result){
+				alert(campocategoria);
 				$('#modal').modal('hide');
 				if (result == 1) {
 					toastr.success('Registro Deletado com Sucesso', 'OK')
@@ -143,15 +154,14 @@ $db = new Database();
 	}
 
 	function search(){
-		var table = $('#categorias').DataTable();
+		var table = $('#pedidosAbertos').DataTable();
 
 		$('#searchBar').on( 'keyup', function () {
 			table.search( this.value ).draw();
 		})
 	}
-	</script>
-	
-	<script>
+
+
 	$(function () {
 		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
 
@@ -218,7 +228,7 @@ $db = new Database();
 
 				</div>
 
-				<div class="navbar-default sidebar" role="navigation">
+				<div  class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
 						<ul class="nav" id="side-menu">
 							<ul class="nav" id="side-menu">
@@ -268,7 +278,7 @@ $db = new Database();
 						<h2>
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
-							<span>Cadastro de Categorias</span>
+							<span>Pedidos</span>
 						</h2>
 					</div>
 					<!--//banner-->
@@ -276,7 +286,7 @@ $db = new Database();
 					<br>
 
 					<div class="banner">
-						<h2>Categorias <button type="button" onclick="openModal('salvar',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
+						<h2>Pedidos Abertos</h2>
 					</div>
 
 					<div class="blank">
@@ -293,58 +303,60 @@ $db = new Database();
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
-											<h4 class="modal-title" id="titulomodal">Cadastro de Categorias</h4>
+											<h4 class="modal-title" id="titulomodal">Pedidos</h4>
 										</div>
 										<div class="modal-body">
-											<form id="formCategoria">
-												<fieldset id="campoguid" class="form-group">
-													<label for="exampleInputEmail1">GUID</label>
-													<input type="text" class="form-control" id="guid" name="guid" placeholder="">
-												</fieldset>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Descrição</label>
-													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome da Categoria">
-												</fieldset>
+											<!-- Nav tabs -->
+											<ul class="nav nav-tabs" role="tablist">
+												<li class="nav-item">
+													<a class="nav-link active" data-toggle="tab" href="#pedido" role="tab">Pedido</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" data-toggle="tab" href="#endereco" role="tab">Endereço</a>
+												</li>
+											</ul>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Embed de icone</label>
-													<input type="text" class="form-control" id="icone" name="icone" placeholder="Cole o embed do icone deseja">
-													<small class="text-muted">Clique no botão abaixo para ver a lista de icones.</small>
-												</fieldset>
 
-												<div class="form-group">
-													<button type="button" class="btn btn-secondary btn-block" data-toggle="modal" data-target="#modalIcones">Lista de Icones</button>
+											<!-- Tab panes -->
+											<div class="tab-content">
+												<div class="tab-pane active" id="pedido" role="tabpanel">
+													<form id="formCategoria">
+														<fieldset id="campoguid" class="form-group">
+															<label for="exampleInputEmail1">GUID</label>
+															<input type="text" class="form-control" id="guid" name="guid" placeholder="">
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label for="exampleInputEmail1">Status</label>
+															<select class="form-control" id="cat">
+																<option id="optionSelected" selected='selected' value=""></option>
+																<option value="2">Em Produção</option>
+																<option value="3">Pronto</option>
+																<option value="4">Aguardando Retirada</option>
+																<option value="5">Saiu Para Entrega</option>
+																<option value="6">Entregue</option>
+																<option value="7">Cliente não Estava</option>
+																<option value="8">Cancelados</option>
+																<option value="9">Devolvido</option>
+															</select>
+														</fieldset>
+
+													</form>
 												</div>
-											</form>
+												<div class="tab-pane" id="endereco" role="tabpanel">...</div>
+											</div>
+
+
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-											<button id="botaosalvar" type="button" onclick="salvar(1, 0)"class="btn btn-primary" hidden="">Salvar</button>
 											<button id="botaoatualizar" type="button" onclick="salvar(2, 0)"class="btn btn-primary" hidden="">Salvar</button>
 										</div>
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
 
-							<div id="modalIcones" class="modal fade">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-											<h4 class="modal-title">Icones</h4>
-										</div>
-										<div class="modal-body">
-											<p> Lista de Icones</p>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-										</div>
-									</div><!-- /.modal-content -->
-								</div><!-- /.modal-dialog -->
-							</div><!-- /.modal -->
 
 							<div class="copy">
 								<p> &copy; 2016 Omega Inc. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>	    </div>

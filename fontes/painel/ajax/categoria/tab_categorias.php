@@ -1,6 +1,6 @@
 <script>
 $(document).ready(function(){
-  $('#produtos').DataTable({
+  $('#categorias').DataTable({
     "language": {
       "sEmptyTable": "Nenhum registro encontrado",
       "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -34,7 +34,7 @@ $(document).ready(function(){
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
-include('../class/mysql_crud.php');
+include('../../class/mysql_crud.php');
 
 $db = new Database();
 
@@ -42,40 +42,28 @@ echo '<table id="categorias" class="table table-hover table-bordered">'
 ,'<thead class="thead-default">'
 ,'<tr>'
 ,'<th width="15px" >#</th>'
-,'<th>Categoria</th>'
 ,'<th>Descrição</th>'
-,'<th>Subdescrição</th>'
-,'<th>Imagem</th>'
-,'<th width="50px">Ações</th>'
+,'<th width="24px">Icone</th>'
+,'<th>Ações</th>'
 ,'</tr>'
 ,'</thead>'
 ,'<tbody>';
 
 $db->connect();
-$db->select('cad_produtos');
+$db->select('cad_categorias');
 $res = $db->getResult();
 foreach ($res as $output) {
-  $guid           = $output["guid"];
-  $guidcategoria  = $output["guid_categoria"];
-  $imagem         = $output["imgproduto"];
-  $descricao      = $output["descricao"];
-  $subdescricao   = $output["subdescricao"];
-
-  $db->sql("SELECT * FROM cad_categorias WHERE guid = $guidcategoria LIMIT 1");
-  $res = $db->getResult();
-  foreach ($res as $output) {
-    $categoria = $output["descricao"];
-  }
+  $guid = $output["guid"];
+  $descricao = $output["descricao"];
+  $icone 	= $output["iconecategoria"];
 
   echo "<tr>";
   echo "<td width='15px'>$guid</td>";
-  echo "<td>$categoria</td>";
   echo "<td>$descricao</td>";
-  echo "<td>$subdescricao</td>";
-  echo "<td>$imagem</td>";
-  echo "<td width='50px'>
-  <button type='button' onclick='openModal(\"editar\",". $guid .")' class='btn btn-secondary btn-sm'><i class='material-icons'>mode_edit</i></button>
-  <button type='button' onclick='salvar(3,". $guid .")'class='btn btn-secondary btn-sm'><i class='material-icons'>delete</i></button>
+  echo "<td width='24px'>$icone</td>";
+  echo "<td width='65px'>
+  <button type='button' onclick='openModal(\"editar\",". $guid .")' class='btn btn-secondary btn-xs'><i class='material-icons'>mode_edit</i></button>
+  <button type='button' onclick='salvar(3,". $guid .")'class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>
   </td>";
   echo "</tr>";
 }
