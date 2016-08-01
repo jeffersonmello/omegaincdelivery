@@ -25,7 +25,8 @@ $(document).ready(function(){
       }
     },
     "bLengthChange": false,
-    'sDom': '<"top">rt<"bottom"lp><"clear">' ,
+     "iDisplayLength": 5,
+    'sDom': '<"top">rt<"bottom"lp>i' ,
   });
 })
 </script>
@@ -77,7 +78,7 @@ foreach ($res as $output) {
   echo "<td>$data</td>";
   echo "<td>Processando</td>";
   echo "<td width='65px'>
-  <button type='button' onclick='openModal(\"editar\",". $guid .")' class='btn btn-secondary btn-xs'><i class='material-icons'>mode_edit</i></button>
+  <button type='button' onclick='openModal(\"editar\",". $guid .")' class='btn btn-secondary btn-xs'><i class='material-icons'>remove_red_eye</i></button>
   <button type='button' onclick='salvar(3,". $guid .")'class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>
   </td>";
   echo "</tr>";

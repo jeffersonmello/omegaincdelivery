@@ -236,7 +236,7 @@ $db = new Database();
               <!-- Inicio do Conteudo -->
 
               <div class="card demo-card-header-pic">
-                <div style="background-image:url(http://www.pizzaaltafrequencia.com.br/content/img/Logo_Delivery.png)" valign="bottom" class="card-header color-white no-border">Delivery Nome da Loja</div>
+                <div style="background-image:url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/6bb33613489499.562747b282f8d.png)" valign="bottom" class="card-header color-white no-border">Delivery Nome da Loja</div>
                 <div class="card-content-block">
                   <div class="card-content-inner">
 

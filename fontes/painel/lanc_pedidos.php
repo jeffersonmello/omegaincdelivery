@@ -69,6 +69,7 @@ $db = new Database();
 	<script>
 	$(document).ready(function(){
 		reloadtable();
+		reloadtable();
 	})
 
 	function reloadtable(){
@@ -80,6 +81,17 @@ $db = new Database();
 		}
 	}
 
+	function dataformatada(data){
+    var dia = data.getDate();
+    if (dia.toString().length == 1)
+      dia = "0"+dia;
+    var mes = data.getMonth()+1;
+    if (mes.toString().length == 1)
+      mes = "0"+mes;
+    var ano = data.getFullYear();
+    return dia+"/"+mes+"/"+ano;
+}
+
 	function openModal(operacao, guid){
 		var modall 				= $('#modal');
 		var titulomodal		= $("#titulomodal");
@@ -89,6 +101,16 @@ $db = new Database();
 
 		var inputguid					= $("#guid");
 		var campostatus				= $("#cat");
+		var campotoken				= $("#token");
+		var campodata					= $("#data");
+		var campototal				= $("#total");
+		var campoendereco			= $("#enderecoo");
+		var camponumero				= $("#numero");
+		var campobairro				= $("#bairro");
+		var camponome					= $("#nome");
+		var campotelefone			= $("#telefone");
+		var campopagamento		= $("#pagamentoO");
+		var campoobs					= $("#obss");
 
 
 		if (operacao == "editar"){
@@ -111,13 +133,39 @@ $db = new Database();
 						var cpfClientePedido	= dados[index].cpf;
 						var entregarPedido		= dados[index].entregar;
 						var tokenPedido				= dados[index].token;
+						var bairroPedido			= dados[index].bairro;
+						var pagamentotext 		= 0;
 
 						if (statusPedido == 1) {
 							var statuspedidotext = "Processando";
 						}
 
+						if (formaPagamento == 0) {
+							pagamentotext = "Dinheiro";
+						} else {
+							pagamentotext = "Cartão/Crédito/Débito";
+						}
+
+						totalPedido	= parseFloat(totalPedido).toFixed(2);
+						dataPedido	= dataformatada(dataPedido);
+
+						$('#formPedido')[0].reset();
+						$('#formEndereco')[0].reset();
+						$('#formaPagamento')[0].reset();
+
 						selected.val(statusPedido);
 						selected.html(statuspedidotext);
+						//totalPedido = (totalPedido.toFixed(2));
+						campototal.val(totalPedido);
+						campotoken.val(tokenPedido);
+						campodata.val(dataPedido);
+						campoendereco.val(enderecoPedido);
+						camponumero.val(numerocasaPedido);
+						campobairro.val(bairroPedido);
+						camponome.val(nomePedido);
+						campotelefone.val(telefonePedido);
+						campopagamento.val(pagamentotext);
+						campoobs.val(observacaoPedido);
 					})
 					titulomodal.html("Pedido #"+guid);
 					campoguid.hide();
@@ -313,7 +361,13 @@ $db = new Database();
 													<a class="nav-link active" data-toggle="tab" href="#pedido" role="tab">Pedido</a>
 												</li>
 												<li class="nav-item">
-													<a class="nav-link" data-toggle="tab" href="#endereco" role="tab">Endereço</a>
+													<a class="nav-link" data-toggle="tab" href="#endereco" role="tab">Endereço/Cliente</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" data-toggle="tab" href="#pagamento" role="tab">Pagamento/Obs</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" data-toggle="tab" href="#itens" role="tab">Itens do Pedido</a>
 												</li>
 											</ul>
 
@@ -321,14 +375,14 @@ $db = new Database();
 											<!-- Tab panes -->
 											<div class="tab-content">
 												<div class="tab-pane active" id="pedido" role="tabpanel">
-													<form id="formCategoria">
+													<form id="formPedido">
 														<fieldset id="campoguid" class="form-group">
-															<label for="exampleInputEmail1">GUID</label>
+															<label>GUID</label>
 															<input type="text" class="form-control" id="guid" name="guid" placeholder="">
 														</fieldset>
 
 														<fieldset class="form-group">
-															<label for="exampleInputEmail1">Status</label>
+															<label>Status</label>
 															<select class="form-control" id="cat">
 																<option id="optionSelected" selected='selected' value=""></option>
 																<option value="2">Em Produção</option>
@@ -340,11 +394,80 @@ $db = new Database();
 																<option value="8">Cancelados</option>
 																<option value="9">Devolvido</option>
 															</select>
+															<small class="form-text text-muted">Altere o status do pedido do cliente</small>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Token</label>
+															<input class="form-control" id="token" type="text"  disabled>
+															<small class="form-text text-muted">Token para que o cliente consulte o status do pedido</small>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Data do Pedido</label>
+															<input class="form-control" id="data" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<div class="form-group">
+																<label>Valor total do Pedido</label>
+																<div class="input-group">
+																	<div class="input-group-addon">R$</div>
+																	<input class="form-control" id="total" type="text"  disabled>
+																</div>
+															</div>
+														</fieldset>
+													</form>
+												</div>
+												<div class="tab-pane" id="endereco" role="tabpanel">
+													<form id="formEndereco">
+
+														<fieldset class="form-group">
+															<label>Endereço</label>
+															<input class="form-control" id="enderecoo" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Número</label>
+															<input class="form-control" id="numero" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Bairro</label>
+															<input class="form-control" id="bairro" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Cliente</label>
+															<input class="form-control" id="nome" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Telefone</label>
+															<input class="form-control" id="telefone" type="text"  disabled>
 														</fieldset>
 
 													</form>
 												</div>
-												<div class="tab-pane" id="endereco" role="tabpanel">...</div>
+												<div class="tab-pane" id="pagamento" role="tabpanel">
+													<form id="formaPagamento">
+
+														<fieldset class="form-group">
+															<label>Forma de Pagamento</label>
+															<input class="form-control" id="pagamentoO" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
+															<label>Observação</label>
+															<textarea class="form-control" id="obss" type="text"  disabled rows="3"></textarea>
+														</fieldset>
+
+													</form>
+												</div>
+
+												<div class="tab-pane" id="itens" role="tabpanel">
+
+												</div>
 											</div>
 
 
