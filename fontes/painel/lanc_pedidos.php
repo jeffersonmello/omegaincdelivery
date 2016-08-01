@@ -65,6 +65,8 @@ $db = new Database();
 	<!--Import Google Icon Font-->
 	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+	<!--MomentJS -->
+	<script src="http://momentjs.com/downloads/moment.min.js"></script>
 
 	<script>
 	$(document).ready(function(){
@@ -80,17 +82,6 @@ $db = new Database();
 			});
 		}
 	}
-
-	function dataformatada(data){
-    var dia = data.getDate();
-    if (dia.toString().length == 1)
-      dia = "0"+dia;
-    var mes = data.getMonth()+1;
-    if (mes.toString().length == 1)
-      mes = "0"+mes;
-    var ano = data.getFullYear();
-    return dia+"/"+mes+"/"+ano;
-}
 
 	function openModal(operacao, guid){
 		var modall 				= $('#modal');
@@ -147,7 +138,7 @@ $db = new Database();
 						}
 
 						totalPedido	= parseFloat(totalPedido).toFixed(2);
-						dataPedido	= dataformatada(dataPedido);
+						dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
 
 						$('#formPedido')[0].reset();
 						$('#formEndereco')[0].reset();

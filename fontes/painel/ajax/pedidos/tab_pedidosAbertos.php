@@ -69,6 +69,8 @@ foreach ($res as $output) {
   setlocale(LC_MONETARY,"pt_BR", "ptb");
   $total = money_format('%n', $total);
 
+  $data = date("d-m-Y", strtotime($data));
+
   echo "<tr>";
   echo "<td width='15px'>$guid</td>";
   echo "<td>$nome</td>";
