@@ -68,6 +68,9 @@ $db = new Database();
 	<!--MomentJS -->
 	<script src="http://momentjs.com/downloads/moment.min.js"></script>
 
+	<!--AccountJS -->
+	<script src="js/accounting.min.js"></script>
+
 	<script>
 	$(document).ready(function(){
 		reloadtable();
@@ -75,12 +78,8 @@ $db = new Database();
 	})
 
 	function reloadtable(){
-		var searchfield = $("#searchBar").val();
-
-		if (searchfield.length < 1) {
 			$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){
 			});
-		}
 	}
 
 	function openModal(operacao, guid){
@@ -137,7 +136,8 @@ $db = new Database();
 							pagamentotext = "Cartão/Crédito/Débito";
 						}
 
-						totalPedido	= parseFloat(totalPedido).toFixed(2);
+						totalPedido	= accounting.formatMoney(totalPedido, " ");
+						//totalPedido	= parseFloat(totalPedido).toFixed(2);
 						dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
 
 						$('#formPedido')[0].reset();
@@ -192,13 +192,6 @@ $db = new Database();
 		})
 	}
 
-	function search(){
-		var table = $('#pedidosAbertos').DataTable();
-
-		$('#searchBar').on( 'keyup', function () {
-			table.search( this.value ).draw();
-		})
-	}
 
 
 	$(function () {
@@ -238,8 +231,7 @@ $db = new Database();
 					</section>
 
 					<div class=" navbar-left-right">
-						<input id="searchBar" type="text"  onkeyup="search()" placeholder="Pesquisar...">
-						<i class="fa fa-search"></i>
+
 					</div>
 					<div class="clearfix"> </div>
 				</div>

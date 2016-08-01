@@ -8,7 +8,7 @@ $(document).ready(function(){
       "sInfoFiltered": "(Filtrados de _MAX_ registros)",
       "sInfoPostFix": "",
       "sInfoThousands": ".",
-      "sLengthMenu": "_MENU_ resultados por página",
+      "sLengthMenu": "_MENU_ resultados/página",
       "sLoadingRecords": "Carregando...",
       "sProcessing": "Processando...",
       "sZeroRecords": "Nenhum registro encontrado",
@@ -24,12 +24,12 @@ $(document).ready(function(){
         "sSortDescending": ": Ordenar colunas de forma descendente"
       }
     },
-    "bLengthChange": false,
      "iDisplayLength": 5,
-    'sDom': '<"top">rt<"bottom"lp>i' ,
+    'sDom': '<"top"f>rt<"bottom"p>i' ,
   });
 })
 </script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap4.min.css"/>
 
 <?php
 ini_set( 'display_errors', true );
