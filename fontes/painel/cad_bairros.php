@@ -85,9 +85,9 @@ $db = new Database();
 				$("#descricao").val(bairro)
 			});
 		});
+
+
 	})
-
-
 
 	function reloadtable(){
 		$('#divcat').load('ajax/bairro/tab_bairros.php', function(){
@@ -100,8 +100,10 @@ $db = new Database();
 		var campoguid			= $("#campoguid");
 		var botaoeditar		= $("#botaoatualizar");
 		var botaosalvar		= $("#botaosalvar");
-		var selected			= $("#optionSelected");
 
+		var inputguid			= $("#guid");
+		var campobairro		= $("#descricao");
+		var campotaxa			= $("#preco");
 
 
 		if (operacao == "Novo"){
@@ -114,72 +116,107 @@ $db = new Database();
 		} else
 		if (operacao == "editar"){
 			$.ajax({
-				url:"ajax/pedidos/populate_pedidoAberto.php",
+				url:"ajax/bairro/populate_bairro.php",
 				type:"POST",
 				data:"guid="+guid,
 				success: function (dados){
 					$.each(dados, function(index){
-						var guidPedido				= dados[index].guid;
-						var statusPedido			= dados[index].status;
+						var guidbairro				= dados[index].guid;
+						var descricaobairro		= dados[index].descricao;
+						var taxaentregabairro = dados[index].taxaEntrega;
 
+						taxaentregabairro	= accounting.formatMoney(taxaentregabairro, "", 2, ".", ",");
 
-						totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
-						//totalPedido	= parseFloat(totalPedido).toFixed(2);
-						dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
+						$('#formBairro')[0].reset();
+						inputguid.val(guidbairro);
+						campobairro.val(descricaobairro);
+						campotaxa.val(taxaentregabairro);
 
-						$('#formPedido')[0].reset();
-						$('#formEndereco')[0].reset();
-						$('#formaPagamento')[0].reset();
-
-						selected.val(statusPedido);
-						selected.html(statuspedidotext);
-						//totalPedido = (totalPedido.toFixed(2));
-						campototal.val(totalPedido);
-						campotoken.val(tokenPedido);
-						campodata.val(dataPedido);
-						campoendereco.val(enderecoPedido);
-						camponumero.val(numerocasaPedido);
-						campobairro.val(bairroPedido);
-						camponome.val(nomePedido);
-						campotelefone.val(telefonePedido);
-						campopagamento.val(pagamentotext);
-						campoobs.val(observacaoPedido);
 					})
-					titulomodal.html("Pedido #"+guid);
+					titulomodal.html("Atualizando Bairro "+(campobairro.val()));
 					campoguid.hide();
+					botaosalvar.hide();
 					botaoeditar.show();
-					inputguid.val(guid);
 					modall.modal('show');
 				}
 			});
 		}
 	}
 
+	function replacedot(){
+		var preco = $("#preco").val();
+		preco = preco.replace(",", ".");
+		$("#preco").val(preco);
+	};
+
 	function salvar(operacao, guid){
-		var campocategoria		= $("#cat").val();
+		var campotaxa					= $("#preco").val();
 		var campodescricao		= $("#descricao").val();
-		var campoimagem				= $("#img").val();
-		var subdesc						= $("#subdesc").val();
-		var preco							= $("#preco").val();
+		var guidupdate				= $("#guid").val();
 
-		$.ajax({
-			url:"ajax/produtos/produto.php",
-			type:"POST",
-			data:"descricao="+campodescricao+"&imagem="+campoimagem+"&subdesc="+subdesc+"&categoria="+campocategoria+"&operacao="+operacao+"&guid="+guid+"&preco="+preco,
-			success: function (result){
-				alert(campocategoria);
-				$('#modal').modal('hide');
-				if (result == 1) {
-					toastr.success('Registro Deletado com Sucesso', 'OK')
-				} else {
-					toastr.success('Registro Salvo com Sucesso', 'OK')
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"newestOnTop": false,
+			"progressBar": true,
+			"positionClass": "toast-top-right",
+			"preventDuplicates": false,
+			"onclick": null,
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		};
+
+		if (campodescricao.length < 1){
+			toastr.warning('O Campo Nome do Bairro não pode ficar em branco', 'Atenção');
+			$("#descricao").focus();
+		} else if (campotaxa.length < 1) {
+			toastr.warning('O Campo Taxa não pode ficar em branco', 'Atenção');
+			$("#preco").focus();
+		} else {
+
+			if (operacao == 3){
+				var deleteresult			 = confirm("Deseja deletar ?");
+				if (deleteresult == true) {
+					$.ajax({
+						url:"ajax/bairro/bairros.php",
+						type:"POST",
+						data:"descricao="+campodescricao+"&taxa="+campotaxa+"&guid="+guid+"&operacao="+operacao,
+						success: function (result){
+							$('#modal').modal('hide');
+							if (result == 1) {
+								toastr.success('Registro Deletado com Sucesso', 'OK')
+							} else {
+								toastr.success('Registro Salvo com Sucesso', 'OK')
+							}
+							reloadtable();
+						}
+					})
 				}
-				reloadtable();
+			} else {
+				$.ajax({
+					url:"ajax/bairro/bairros.php",
+					type:"POST",
+					data:"descricao="+campodescricao+"&taxa="+campotaxa+"&guid="+guid+"&operacao="+operacao+"&guidupdate="+guidupdate,
+					success: function (result){
+						if (result == 4) {
+							toastr.warning('Já Existe um registro cadastrado para este bairro', 'Atenção');
+							$("#descricao").focus();
+						} else {
+							toastr.success('Registro Salvo com Sucesso', 'OK')
+							$('#modal').modal('hide');
+						}
+						reloadtable();
+					}
+				})
 			}
-		})
+		}
 	}
-
-
 
 	$(function () {
 		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
@@ -334,7 +371,7 @@ $db = new Database();
 
 												<fieldset id="pesquisabairro" class="form-group">
 													<label>Pesquisar Bairro por CEP</label>
-													<input type="text" class="form-control" id="cep" name="cep" placeholder="Digite o CEP">
+													<input style="color: green" type="text" class="form-control" id="cep" name="cep" placeholder="Digite o CEP">
 												</fieldset>
 
 
@@ -344,8 +381,13 @@ $db = new Database();
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Taxa de Entrega</label>
-													<input type="text" class="form-control" id="preco" name="preco" placeholder="Taxa de Entrega">
+													<div class="form-group">
+														<label for="exampleInputEmail1">Taxa de Entrega</label>
+														<div class="input-group">
+															<div class="input-group-addon">R$</div>
+															<input type="text" onkeypress="replacedot();"  class="form-control" id="preco" name="preco" placeholder="Taxa de Entrega">
+														</div>
+													</div>
 												</fieldset>
 
 											</form>
@@ -359,26 +401,6 @@ $db = new Database();
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
 
-							<!-- Modal Delete-->
-							<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-											<h4 class="modal-title" id="myModalLabel">Exclusão de Registro</h4>
-										</div>
-										<div class="modal-body">
-											Tem certeza que deseja excluir este registro ?
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-											<button type="button" class="btn btn-primary">Excluir</button>
-										</div>
-									</div>
-								</div>
-							</div>
 
 
 							<div class="copy">
