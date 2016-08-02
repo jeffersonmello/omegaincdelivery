@@ -76,12 +76,6 @@ $db = new Database();
 		reloadtable();
 		reloadtable();
 
-		document.getElementById("cep").onkeyup = function(e) {
-	    var chr = String.fromCharCode(e.which);
-	    if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
-	    return false;
-	  };
-
 		$("#cep").blur(function(){
 			$("#descricao").val("...")
 
