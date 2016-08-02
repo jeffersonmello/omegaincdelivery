@@ -1,4 +1,31 @@
 /* Cor dos icones*/
+#mainprincipal{
+    width:100%;
+    height:100%;
+    background:#ccc;
+}
+#content{
+    font-size:1em;
+    background:#f1f1f1;
+    width:100%;
+    height:100%;
+
+}
+
+#content img{
+    width:60%;
+}
+
+#content.kbactive{
+    font-size:.8em;
+}
+
+#content.kbactive img{
+    width:30%!important;
+}
+#content.kbactive input[type="text"],#content.kbactive input[type="tel"], #content.kbactive input[type="email"]{
+    width:30%;
+}
 
 .color-icon {
   color : #B6B6B6;

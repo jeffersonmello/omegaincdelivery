@@ -78,8 +78,8 @@ $db = new Database();
 	})
 
 	function reloadtable(){
-			$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){
-			});
+		$('#divcat').load('ajax/bairros/tab_bairros.php', function(){
+		});
 	}
 
 	function openModal(operacao, guid){
@@ -336,129 +336,46 @@ $db = new Database();
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
-											<h4 class="modal-title" id="titulomodal">Pedidos</h4>
+											<h4 class="modal-title" id="titulomodal">Cadastro de Produtos</h4>
 										</div>
 										<div class="modal-body">
+											<form id="formCategoria">
+												<fieldset id="campoguid" class="form-group">
+													<label for="exampleInputEmail1">GUID</label>
+													<input type="text" class="form-control" id="guid" name="guid" placeholder="">
+												</fieldset>
 
-											<!-- Nav tabs -->
-											<ul class="nav nav-tabs" role="tablist">
-												<li class="nav-item">
-													<a class="nav-link active" data-toggle="tab" href="#pedido" role="tab">Pedido</a>
-												</li>
-												<li class="nav-item">
-													<a class="nav-link" data-toggle="tab" href="#endereco" role="tab">Endereço/Cliente</a>
-												</li>
-												<li class="nav-item">
-													<a class="nav-link" data-toggle="tab" href="#pagamento" role="tab">Pagamento/Obs</a>
-												</li>
-												<li class="nav-item">
-													<a class="nav-link" data-toggle="tab" href="#itens" role="tab">Itens do Pedido</a>
-												</li>
-											</ul>
-
-
-											<!-- Tab panes -->
-											<div class="tab-content">
-												<div class="tab-pane active" id="pedido" role="tabpanel">
-													<form id="formPedido">
-														<fieldset id="campoguid" class="form-group">
-															<label>GUID</label>
-															<input type="text" class="form-control" id="guid" name="guid" placeholder="">
-														</fieldset>
-
-														<fieldset class="form-group">
-															<label>Status</label>
-															<select class="form-control" id="cat">
-																<option id="optionSelected" selected='selected' value=""></option>
-																<option value="2">Em Produção</option>
-																<option value="3">Pronto</option>
-																<option value="4">Aguardando Retirada</option>
-																<option value="5">Saiu Para Entrega</option>
-																<option value="6">Entregue</option>
-																<option value="7">Cliente não Estava</option>
-																<option value="8">Cancelados</option>
-																<option value="9">Devolvido</option>
-															</select>
-															<small class="form-text text-muted">Altere o status do pedido do cliente</small>
-														</fieldset>
-
-														<fieldset class="form-group">
-															<label>Token</label>
-															<input class="form-control" id="token" type="text"  disabled>
-															<small class="form-text text-muted">Token para que o cliente consulte o status do pedido</small>
-														</fieldset>
-
-														<fieldset class="form-group">
-															<label>Data do Pedido</label>
-															<input class="form-control" id="data" type="text"  disabled>
-														</fieldset>
-
-														<fieldset class="form-group">
-															<div class="form-group">
-																<label>Valor total do Pedido</label>
-																<div class="input-group">
-																	<div class="input-group-addon">R$</div>
-																	<input class="form-control" id="total" type="text"  disabled>
-																</div>
-															</div>
-														</fieldset>
-													</form>
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Imagem</label>
+													<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
+													<label class="custom-file">
+														<input type="file" id="imgfile" onchange="previewFile()" class="custom-file-input">
+														<span class="custom-file-control"></span>
+													</label>
+												</fieldset>
+												<div id="imagefield">
+													<img id="imageview" src="" height="200" alt="Image preview...">
 												</div>
-												<div class="tab-pane" id="endereco" role="tabpanel">
-													<form id="formEndereco">
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Descrição</label>
+													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome do Produto">
+												</fieldset>
 
-														<fieldset class="form-group">
-															<label>Endereço</label>
-															<input class="form-control" id="enderecoo" type="text"  disabled>
-														</fieldset>
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Subdescrição</label>
+													<input type="text" class="form-control" id="subdesc" name="subdesc" placeholder="Subdescrição do Produto">
+												</fieldset>
 
-														<fieldset class="form-group">
-															<label>Número</label>
-															<input class="form-control" id="numero" type="text"  disabled>
-														</fieldset>
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Preço</label>
+													<input type="text" class="form-control" id="preco" name="preco" placeholder="Preço do Produto">
+												</fieldset>
 
-														<fieldset class="form-group">
-															<label>Bairro</label>
-															<input class="form-control" id="bairro" type="text"  disabled>
-														</fieldset>
-
-														<fieldset class="form-group">
-															<label>Cliente</label>
-															<input class="form-control" id="nome" type="text"  disabled>
-														</fieldset>
-
-														<fieldset class="form-group">
-															<label>Telefone</label>
-															<input class="form-control" id="telefone" type="text"  disabled>
-														</fieldset>
-
-													</form>
-												</div>
-												<div class="tab-pane" id="pagamento" role="tabpanel">
-													<form id="formaPagamento">
-
-														<fieldset class="form-group">
-															<label>Forma de Pagamento</label>
-															<input class="form-control" id="pagamentoO" type="text"  disabled>
-														</fieldset>
-
-														<fieldset class="form-group">
-															<label>Observação</label>
-															<textarea class="form-control" id="obss" type="text"  disabled rows="3"></textarea>
-														</fieldset>
-
-													</form>
-												</div>
-
-												<div class="tab-pane" id="itens" role="tabpanel">
-
-												</div>
-											</div>
-
-
+											</form>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+											<button id="botaosalvar" type="button" onclick="salvar(1, 0)"class="btn btn-primary" hidden="">Salvar</button>
 											<button id="botaoatualizar" type="button" onclick="salvar(2, 0)"class="btn btn-primary" hidden="">Salvar</button>
 										</div>
 									</div><!-- /.modal-content -->

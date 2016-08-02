@@ -31,7 +31,30 @@ session_destroy();
 
     <!--Import Fontawesome Icon Font-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <script type="text/javascript">
+    $(function(){
 
+        $('input').on('focus',function(){
+            if(!$('#content').hasClass('kbactive')){
+              addClass();
+            }
+        });
+
+        $('input').on('blur',function(){
+              removeClass();
+        });
+
+        function addClass(){ //Adds keyboard active class
+           $('#content').addClass('kbactive');
+        }
+
+        function removeClass(){ //Removes keyboard active class
+            $('#content').removeClass('kbactive');
+        }
+
+   })
+
+    </script>
   </head>
   <body>
     <!-- Status bar overlay for fullscreen mode-->
@@ -47,7 +70,7 @@ session_destroy();
 
     <!-- Views-->
     <div class="views">
-      <div class="view view-main">
+      <div class="view view-main mainprincipal">
 
         <!-- Top Navbar-->
         <div class="navbar">
