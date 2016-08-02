@@ -75,10 +75,22 @@ $db = new Database();
 	$(document).ready(function(){
 		reloadtable();
 		reloadtable();
+
+		$("#cep").blur(function(){
+			$("#descricao").val("...")
+
+			consulta = $("#cep").val()
+			$.getJSON("//viacep.com.br/ws/"+ consulta +"/json/?callback=?", function(dados) {
+				bairro=(dados.bairro);
+				$("#descricao").val(bairro)
+			});
+		});
 	})
 
+
+
 	function reloadtable(){
-		$('#divcat').load('ajax/bairros/tab_bairros.php', function(){
+		$('#divcat').load('ajax/bairro/tab_bairros.php', function(){
 		});
 	}
 
@@ -87,22 +99,19 @@ $db = new Database();
 		var titulomodal		= $("#titulomodal");
 		var campoguid			= $("#campoguid");
 		var botaoeditar		= $("#botaoatualizar");
+		var botaosalvar		= $("#botaosalvar");
 		var selected			= $("#optionSelected");
 
-		var inputguid					= $("#guid");
-		var campostatus				= $("#cat");
-		var campotoken				= $("#token");
-		var campodata					= $("#data");
-		var campototal				= $("#total");
-		var campoendereco			= $("#enderecoo");
-		var camponumero				= $("#numero");
-		var campobairro				= $("#bairro");
-		var camponome					= $("#nome");
-		var campotelefone			= $("#telefone");
-		var campopagamento		= $("#pagamentoO");
-		var campoobs					= $("#obss");
 
 
+		if (operacao == "Novo"){
+			titulomodal.html("Cadastro de Bairro");
+			campoguid.hide();
+			botaosalvar.show();
+			botaoeditar.hide();
+			$('#formBairro')[0].reset();
+			modall.modal('show');
+		} else
 		if (operacao == "editar"){
 			$.ajax({
 				url:"ajax/pedidos/populate_pedidoAberto.php",
@@ -112,29 +121,7 @@ $db = new Database();
 					$.each(dados, function(index){
 						var guidPedido				= dados[index].guid;
 						var statusPedido			= dados[index].status;
-						var nomePedido				= dados[index].nome;
-						var enderecoPedido		= dados[index].endereco;
-						var totalPedido				= dados[index].total;
-						var dataPedido				= dados[index].data;
-						var telefonePedido		= dados[index].telefone;
-						var numerocasaPedido	= dados[index].numero;
-						var formaPagamento		= dados[index].formaPagamento;
-						var observacaoPedido	= dados[index].observacao;
-						var cpfClientePedido	= dados[index].cpf;
-						var entregarPedido		= dados[index].entregar;
-						var tokenPedido				= dados[index].token;
-						var bairroPedido			= dados[index].bairro;
-						var pagamentotext 		= 0;
 
-						if (statusPedido == 1) {
-							var statuspedidotext = "Processando";
-						}
-
-						if (formaPagamento == 0) {
-							pagamentotext = "Dinheiro";
-						} else {
-							pagamentotext = "Cartão/Crédito/Débito";
-						}
 
 						totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
 						//totalPedido	= parseFloat(totalPedido).toFixed(2);
@@ -311,7 +298,7 @@ $db = new Database();
 						<h2>
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
-							<span>Pedidos</span>
+							<span>Bairros </span>
 						</h2>
 					</div>
 					<!--//banner-->
@@ -319,7 +306,7 @@ $db = new Database();
 					<br>
 
 					<div class="banner">
-						<h2>Pedidos Abertos</h2>
+						<h2>Bairros <button type="button" onclick="openModal('Novo',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
 					</div>
 
 					<div class="blank">
@@ -336,39 +323,29 @@ $db = new Database();
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
-											<h4 class="modal-title" id="titulomodal">Cadastro de Produtos</h4>
+											<h4 class="modal-title" id="titulomodal">Cadastro de Bairros</h4>
 										</div>
 										<div class="modal-body">
-											<form id="formCategoria">
+											<form id="formBairro">
 												<fieldset id="campoguid" class="form-group">
-													<label for="exampleInputEmail1">GUID</label>
+													<label>GUID</label>
 													<input type="text" class="form-control" id="guid" name="guid" placeholder="">
 												</fieldset>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Imagem</label>
-													<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
-													<label class="custom-file">
-														<input type="file" id="imgfile" onchange="previewFile()" class="custom-file-input">
-														<span class="custom-file-control"></span>
-													</label>
+												<fieldset id="pesquisabairro" class="form-group">
+													<label>Pesquisar Bairro por CEP</label>
+													<input type="text" class="form-control" id="cep" name="cep" placeholder="Digite o CEP">
 												</fieldset>
-												<div id="imagefield">
-													<img id="imageview" src="" height="200" alt="Image preview...">
-												</div>
+
+
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Descrição</label>
-													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome do Produto">
+													<label for="exampleInputEmail1">Nome do Bairro</label>
+													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Nome do Bairro">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Subdescrição</label>
-													<input type="text" class="form-control" id="subdesc" name="subdesc" placeholder="Subdescrição do Produto">
-												</fieldset>
-
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Preço</label>
-													<input type="text" class="form-control" id="preco" name="preco" placeholder="Preço do Produto">
+													<label for="exampleInputEmail1">Taxa de Entrega</label>
+													<input type="text" class="form-control" id="preco" name="preco" placeholder="Taxa de Entrega">
 												</fieldset>
 
 											</form>
@@ -381,6 +358,27 @@ $db = new Database();
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
+
+							<!-- Modal Delete-->
+							<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+											<h4 class="modal-title" id="myModalLabel">Exclusão de Registro</h4>
+										</div>
+										<div class="modal-body">
+											Tem certeza que deseja excluir este registro ?
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+											<button type="button" class="btn btn-primary">Excluir</button>
+										</div>
+									</div>
+								</div>
+							</div>
 
 
 							<div class="copy">
