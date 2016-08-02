@@ -27,7 +27,7 @@ $db = new Database();
 ?>
 <html>
 <head>
-	<title>Omega Inc. | Delivery | Pedidos</title>
+	<title>Omega Inc. | Delivery | Bairros</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -75,6 +75,12 @@ $db = new Database();
 	$(document).ready(function(){
 		reloadtable();
 		reloadtable();
+
+		document.getElementById("cep").onkeyup = function(e) {
+	    var chr = String.fromCharCode(e.which);
+	    if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
+	    return false;
+	  };
 
 		$("#cep").blur(function(){
 			$("#descricao").val("...")
