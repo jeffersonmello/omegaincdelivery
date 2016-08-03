@@ -191,10 +191,8 @@ $db = new Database();
 							$('#modal').modal('hide');
 							if (result == 1) {
 								toastr.success('Registro Deletado com Sucesso', 'OK')
-							} else {
-								toastr.success('Registro Salvo com Sucesso', 'OK')
+								reloadtable();
 							}
-							reloadtable();
 						}
 					})
 				}
