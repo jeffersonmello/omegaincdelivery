@@ -227,11 +227,11 @@ $db = new Database();
 
 												<fieldset class="form-group">
 													<label for="exampleInputEmail1">Nível de Acesso</label>
-													<select class="custom-select">
+													<select class="form-control" id="nivel">
 														<option id="selectedOption" selected></option>
-														<option value="1">1 - Usuário Comun</option>
-														<option value="2">2 - Operador de Pedidos</option>
-														<option value="3">3 - Administrador</option>
+														<option id="u1" value="1">1 - Usuário Comun</option>
+														<option id="u2" value="2">2 - Operador de Pedidos</option>
+														<option id="u3" value="3">3 - Administrador</option>
 													</select>
 												</fieldset>
 

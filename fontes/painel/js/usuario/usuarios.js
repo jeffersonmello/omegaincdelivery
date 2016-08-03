@@ -17,37 +17,61 @@ function openModal(operacao, guid){
   var botaosalvar		= $("#botaosalvar");
 
   var inputguid			= $("#guid");
-
+  var campousuario  = $("#usuario");
+  var camposenha    = $("#senha");
+  var camaponome    = $("#nome");
+  var camponivel    = $("#nivel");
+  var selected      = $("#selectedOption");
 
 
   if (operacao == "Novo"){
-    titulomodal.html("Cadastro de Bairro");
+    titulomodal.html("Cadastro de Usuário");
+    selected.hide();
     campoguid.hide();
     botaosalvar.show();
     botaoeditar.hide();
-    $('#formBairro')[0].reset();
+    $('#formUsuarios')[0].reset();
     modall.modal('show');
   } else
   if (operacao == "editar"){
     $.ajax({
-      url:"ajax/bairro/populate_bairro.php",
+      url:"ajax/usuarios/populate_usuario.php",
       type:"POST",
       data:"guid="+guid,
       success: function (dados){
         $.each(dados, function(index){
-          var guidbairro				= dados[index].guid;
-          var descricaobairro		= dados[index].descricao;
-          var taxaentregabairro = dados[index].taxaEntrega;
+          var guidusuario				= dados[index].guid;
+          var usuario       		= dados[index].usuario;
+          var senha      		    = dados[index].senha;
+          var nome              = dados[index].nome;
+          var nivel             = dados[index].nivel;
+          var niveltext         = 0;
 
-          taxaentregabairro	= accounting.formatMoney(taxaentregabairro, "", 2, ".", ",");
+          $('#formUsuarios')[0].reset();
+          if (nivel == 1) {
+            niveltext = "1 - Usuário Comun";
+            $("#u1").hide();
+          } else if (nivel == 2) {
+            niveltext = "2 - Operador de Pedidos";
+            $("#u2").hide();
+          } else if (nivel == 3) {
+            niveltext = "3 - Administrador";
+            $("#u3").hide();
+          } else {
+            niveltext = "Nenhum nível selecionado";
+          }
+          selected.show();
+          selected.html(niveltext);
+          selected.val(nivel);
 
-          $('#formBairro')[0].reset();
-          inputguid.val(guidbairro);
-          campobairro.val(descricaobairro);
-          campotaxa.val(taxaentregabairro);
+          inputguid.val(guidusuario);
+          campousuario.val(usuario);
+          camposenha.val(senha);
+          camaponome.val(nome);
+
 
         })
-        titulomodal.html("Atualizando Bairro "+(campobairro.val()));
+        titulomodal.html("Atualizando Usuário "+(campousuario.val()));
         campoguid.hide();
         botaosalvar.hide();
         botaoeditar.show();
