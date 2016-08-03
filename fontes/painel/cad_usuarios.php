@@ -211,18 +211,28 @@ $db = new Database();
 
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Nome do Bairro</label>
-													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Nome do Bairro">
+													<label for="exampleInputEmail1">Usuário</label>
+													<input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nome de usuário para acesso">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<div class="form-group">
-														<label for="exampleInputEmail1">Taxa de Entrega</label>
-														<div class="input-group">
-															<div class="input-group-addon">R$</div>
-															<input type="text" onkeypress="replacedot();"  class="form-control" id="preco" name="preco" placeholder="Taxa de Entrega">
-														</div>
-													</div>
+													<label for="exampleInputEmail1">Senha</label>
+													<input type="password" class="form-control" id="senha" name="senha" placeholder="Senha de acesso">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Nome</label>
+													<input type="text" class="form-control" id="nome" name="nome" placeholder="Seu Nome">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label for="exampleInputEmail1">Nível de Acesso</label>
+													<select class="custom-select">
+														<option id="selectedOption" selected></option>
+														<option value="1">1 - Usuário Comun</option>
+														<option value="2">2 - Operador de Pedidos</option>
+														<option value="3">3 - Administrador</option>
+													</select>
 												</fieldset>
 
 											</form>

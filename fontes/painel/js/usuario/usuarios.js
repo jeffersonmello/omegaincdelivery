@@ -17,8 +17,7 @@ function openModal(operacao, guid){
   var botaosalvar		= $("#botaosalvar");
 
   var inputguid			= $("#guid");
-  var campobairro		= $("#descricao");
-  var campotaxa			= $("#preco");
+
 
 
   if (operacao == "Novo"){
