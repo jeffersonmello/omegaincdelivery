@@ -81,16 +81,14 @@ function openModal(operacao, guid){
   }
 }
 
-function replacedot(){
-  var preco = $("#preco").val();
-  preco = preco.replace(",", ".");
-  $("#preco").val(preco);
-};
 
 function salvar(operacao, guid){
-  var campotaxa					= $("#preco").val();
-  var campodescricao		= $("#descricao").val();
+  var campousuario			= $("#usuario").val();
+  var camposenha    		= $("#senha").val();
+  var camaponome     		= $("#nome").val();
+  var camponivel        = $("#nivel").val();
   var guidupdate				= $("#guid").val();
+
 
   toastr.options = {
     "closeButton": true,
@@ -110,21 +108,30 @@ function salvar(operacao, guid){
     "hideMethod": "fadeOut"
   };
 
-  if (campodescricao.length < 1){
-    toastr.warning('O Campo Nome do Bairro não pode ficar em branco', 'Atenção');
-    $("#descricao").focus();
-  } else if (campotaxa.length < 1) {
-    toastr.warning('O Campo Taxa não pode ficar em branco', 'Atenção');
-    $("#preco").focus();
-  } else {
+  if (campousuario.length < 1){
+    toastr.warning('O Campo Usuário não pode ficar em branco', 'Atenção');
+    $("#usuario").focus();
+  } else if (camposenha.length < 1) {
+    toastr.warning('O Campo Senha não pode ficar em branco', 'Atenção');
+    $("#senha").focus();
+  }
+  else if (camaponome.length < 1) {
+    toastr.warning('O Campo Nome não pode ficar em branco', 'Atenção');
+    $("#nome").focus();
+  }
+  else if (camponivel.length < 1) {
+    toastr.warning('O Campo Nível de Acesso não pode ficar em branco', 'Atenção');
+    $("#nivel").focus();
+  }
+   else {
 
     if (operacao == 3){
       var deleteresult			 = confirm("Deseja deletar ?");
       if (deleteresult == true) {
         $.ajax({
-          url:"ajax/bairro/bairros.php",
+          url:"ajax/usuarios/usuario.php",
           type:"POST",
-          data:"descricao="+campodescricao+"&taxa="+campotaxa+"&guid="+guid+"&operacao="+operacao,
+          data:"usuario="+campousuario+"&senha="+camposenha+"&nome="+camaponome+"&nivel="+camponivel+"&guid="+guid+"&operacao="+operacao,
           success: function (result){
             $('#modal').modal('hide');
             if (result == 1) {
@@ -136,12 +143,12 @@ function salvar(operacao, guid){
       }
     } else {
       $.ajax({
-        url:"ajax/bairro/bairros.php",
+        url:"ajax/usuarios/usuario.php",
         type:"POST",
-        data:"descricao="+campodescricao+"&taxa="+campotaxa+"&guid="+guid+"&operacao="+operacao+"&guidupdate="+guidupdate,
+        data:"usuario="+campousuario+"&senha="+camposenha+"&nome="+camaponome+"&nivel="+camponivel+"&guid="+guid+"&operacao="+operacao+"&guidupdate="+guidupdate,
         success: function (result){
           if (result == 4) {
-            toastr.warning('Já Existe um registro cadastrado para este bairro', 'Atenção');
+            toastr.warning('Já Existe um usuario cadastrado com esse nome de usuario', 'Atenção');
             $("#descricao").focus();
           } else {
             toastr.success('Registro Salvo com Sucesso', 'OK')
