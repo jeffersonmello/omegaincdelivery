@@ -84,8 +84,8 @@ create table adm_usuarios (
 create table adm_empresa (
 	guid int not null auto_increment,
 	nome varchar(500) not null,
-	cnpj varchar(15),
-	inscricaoestd varchar(15),
+	cnpj varchar(18),
+	inscricaoestd varchar(20),
 	telefone varchar(20),
 	email varchar(50),
 	endereco varchar(500),

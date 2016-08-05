@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
 <?php
-ob_start();// Inicia Buffer
+ob_start();
 
-session_start(); 	//A seção deve ser iniciada em todas as páginas
-if (!isset($_SESSION['usuarioID'])) {		//Verifica se há seções
-	session_destroy();						//Destroi a seção por segurança
-	header("Location: index.php"); exit;	//Redireciona o visitante para login
+session_start();
+if (!isset($_SESSION['usuarioID'])) {
+	session_destroy();
+	header("Location: index.php"); exit;
 }
 
 // Dados do usuario logado
@@ -15,19 +15,19 @@ $login_usuario 	= $_SESSION["email"];
 $nivel_usuario  = $_SESSION["nivelUsuario"];
 
 
-// Funções para não exibir alguns erros de conexao
+
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
-// Inclui a classe de CRUD mysql
+
 include('class/mysql_crud.php');
 
-// Cria o objeto Database
+
 $db = new Database();
 ?>
 <html>
 <head>
-	<title>Omega Inc. | Delivery | Usuarios</title>
+	<title>Omega Inc. | Delivery | Empresa</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -71,8 +71,7 @@ $db = new Database();
 	<!--AccountJS -->
 	<script src="js/accounting.min.js"></script>
 
-	<script src="js/usuario/usuarios.min.js"></script>
-	<script src="js/omega.js"></script>
+	<script src="js/empresa/empresas.min.js"></script>
 </head>
 <body>
 	<div id="wrapper">
@@ -174,7 +173,7 @@ $db = new Database();
 						<h2>
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
-							<span>Usuarios </span>
+							<span>Empresas </span>
 						</h2>
 					</div>
 					<!--//banner-->
@@ -182,7 +181,7 @@ $db = new Database();
 					<br>
 
 					<div class="banner">
-						<h2>Usuários <button type="button" onclick="openModal('Novo',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
+						<h2>Empresas <button type="button" onclick="openModal('Novo',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
 					</div>
 
 					<div class="blank">
@@ -199,10 +198,10 @@ $db = new Database();
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
-											<h4 class="modal-title" id="titulomodal">Cadastro de Usuários</h4>
+											<h4 class="modal-title" id="titulomodal">Cadastro de Empresa</h4>
 										</div>
 										<div class="modal-body">
-											<form id="formUsuarios">
+											<form id="formEmpresas">
 
 												<fieldset id="campoguid" class="form-group">
 													<label>GUID</label>
@@ -211,27 +210,41 @@ $db = new Database();
 
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Usuário</label>
-													<input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nome de usuário para acesso">
+													<label>Nome da Empresa</label>
+													<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome da Empresa">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Senha</label>
-													<input type="password" class="form-control" id="senha" name="senha" placeholder="Senha de acesso">
+													<label>CNPJ</label>
+													<input type="text" onkeyup="formatacnpj();" maxlength="18" class="form-control" id="cnpj" name="cnpj">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Nome</label>
-													<input type="text" class="form-control" id="nome" name="nome" placeholder="Seu Nome">
+													<label>Inscrição Estadual</label>
+													<input type="text" class="form-control" id="inscestd" name="inscesdt">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Nível de Acesso</label>
-													<select class="form-control" id="nivel">
+													<label>Telefone</label>
+													<input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone da Empresa">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label>E-mail</label>
+													<input type="email" class="form-control" id="email" name="email" placeholder="E-mail da empresa">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label>Endereço</label>
+													<input type="text" class="form-control" id="endereco" name="endereco" placeholder="Endereço da empresa">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label>Empresa Padrão</label>
+													<select class="form-control" id="padrao">
 														<option id="selectedOption" selected></option>
-														<option id="u1" value="1">1 - Usuário Comun</option>
-														<option id="u2" value="2">2 - Operador de Pedidos</option>
-														<option id="u3" value="3">3 - Administrador</option>
+														<option id="u1" value="1">Sim</option>
+														<option id="u2" value="2">Não</option>
 													</select>
 												</fieldset>
 
