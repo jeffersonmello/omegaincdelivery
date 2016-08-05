@@ -26,9 +26,17 @@ if ($operacao == 1) {
   }
 
 } else if ($operacao == 2) {
+  $db->sql("SELECT * FROM atd_bairros WHERE descricao = '$descricao'");
+  $ress = $db->getResult();
+  $ress = $db->numRows();
+
+  if ($ress >= 1){
+    $return = 4;
+  } else {
   $db->connect();
   $db->update('atd_bairros',array('descricao'=>$descricao, 'taxaEntrega'=>$taxa),'guid='.$guidupd);
   $res = $db->getResult();
+}
 } elseif ($operacao == 3) {
   $db->connect();
   $db->delete('atd_bairros','guid='.$guid);

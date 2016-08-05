@@ -221,7 +221,7 @@ $db = new Database();
 
 												<fieldset class="form-group">
 													<label>Inscrição Estadual</label>
-													<input type="text" class="form-control" id="inscestd" name="inscesdt">
+													<input type="text" class="form-control" maxlength="20" id="inscestd" name="inscesdt">
 												</fieldset>
 
 												<fieldset class="form-group">

@@ -28,9 +28,17 @@ if ($operacao == 1) {
   }
 
 } else if ($operacao == 2) {
+  $db->sql("SELECT * FROM adm_usuarios WHERE usuario = '$usuario'");
+  $ress = $db->getResult();
+  $ress = $db->numRows();
+
+  if ($ress >= 1){
+    $return = 4;
+  } else {
   $db->connect();
   $db->update('adm_usuarios',array('usuario'=>$usuario, 'senha'=>$senha, 'nome'=>$nome, 'nivel'=>$nivel),'guid='.$guidupd);
   $res = $db->getResult();
+}
 } elseif ($operacao == 3) {
   $db->connect();
   $db->delete('adm_usuarios','guid='.$guid);
