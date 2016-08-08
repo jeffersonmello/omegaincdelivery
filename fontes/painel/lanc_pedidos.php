@@ -78,8 +78,8 @@ $db = new Database();
 	})
 
 	function reloadtable(){
-			$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){
-			});
+		$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){
+		});
 	}
 
 	function openModal(operacao, guid){
@@ -162,6 +162,7 @@ $db = new Database();
 					campoguid.hide();
 					botaoeditar.show();
 					inputguid.val(guid);
+					addProdtolist(guid, (campobairro.val()));
 					modall.modal('show');
 				}
 			});
@@ -192,7 +193,87 @@ $db = new Database();
 		})
 	}
 
+	function abrirfechar(operacao){
+		$.ajax({
+			url:"ajax/abre_fecha/abrefecha.php",
+			type:"POST",
+			data:"operacao="+operacao,
+			success: function (dados){
+				location.reload();
+			}
+		})
+	}
 
+	function mesmo(guidProd, guidPedido){
+		var campqtde =  $("#qtdeListProd_"+guidProd);
+
+		$.ajax({
+			url: "ajax/pedidos/mesmo.php",
+			type: "POST",
+			data: "produto="+guidProd+"&pedido="+guidPedido,
+			success: function (dados){
+				campqtde.html(dados);
+			}
+		})
+	}
+
+	// Função que retorna o valor da taxa de entrega
+	function getBairroTax(bairro){
+		var listaprodutos = $("#listprods");
+
+		$.ajax({
+			url:	"ajax/pedidos/taxa.php",
+			type:	"POST",
+			data: "bairro="+bairro,
+			success: function (dados){
+				var taxa = dados;
+
+				taxa = accounting.formatMoney(taxa, "R$ ", 2, ".", ",");
+				listaprodutos.append(' <li class="list-group-item">Taxa de Entrega: '+taxa+' </li>');
+			}
+		})
+
+	}
+
+	// Função que adiciona os produtos na lista do modal
+	// guidPedido: Número do pedido para identificar os produtos vinculados a ele
+	// TODO: falta adicionar como ultimo li a taxa de entrega, para retornar a taxa de entrega deve se criar outra função
+	// getBairroTax
+	function addProdtolist(guidPedido, bairro){
+		var listaprodutos = $("#listprods");
+
+		$.ajax({
+			url:"ajax/pedidos/addprodstolist.php",
+			type:"POST",
+			data:"pedido="+guidPedido,
+			success: function (dados){
+				$.each(dados, function(index){
+					var len    			= dados.length;
+					var preco				= dados[index].valorproduto;
+
+					preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
+
+					listaprodutos.empty();
+
+					for (var i=0; i < len; i++){
+						var guidprod		= dados[index].guidproduto;
+						var currentiten = $("#idLIProd_"+guidprod);
+
+						if ($(currentiten, listaprodutos).length){
+							mesmo(guidprod, guidPedido)
+						} else {
+							listaprodutos.append('<li id="idLIProd_'+guidprod+'" class="list-group-item">'+dados[index].nomeproduto+' | Preço: '+preco+'<span class="badge" id="qtdeListProd_'+guidprod+'" >1</span></li>');
+						}
+					}
+				});
+				getBairroTax(bairro);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("Status: " + textStatus); alert("Error: " + errorThrown);
+				console.log(arguments);
+			}
+		})
+	}
 
 	$(function () {
 		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
@@ -207,8 +288,6 @@ $db = new Database();
 
 	});
 	</script>
-
-
 
 </head>
 <body>
@@ -231,7 +310,19 @@ $db = new Database();
 					</section>
 
 					<div class=" navbar-left-right">
-
+						<?php
+						$db->connect();
+						$db->sql("SELECT * FROM adm_empresa WHERE padrao = 1");
+						$res = $db->getResult();
+						foreach ($res as $output) {
+							$abertofechado = $output["aberto"];
+						}
+						if ($abertofechado == 1){
+							echo '<button type="button" onclick="abrirfechar(0);" class="btn btn-danger">Fechar Loja</button>';
+						} else {
+							echo '<button type="button" onclick="abrirfechar(1);" class="btn btn-success">Abrir Loja</button>';
+						}
+						?>
 					</div>
 					<div class="clearfix"> </div>
 				</div>
@@ -261,45 +352,9 @@ $db = new Database();
 
 				<div  class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
-						<ul class="nav" id="side-menu">
-							<ul class="nav" id="side-menu">
-
-								<li>
-									<a href="dashboard.php" class=" hvr-bounce-to-right"><i class="fa fa-dashboard nav_icon "></i><span class="nav-label">Dashboards</span> </a>
-								</li>
-
-								<li>
-									<a href="#" class=" hvr-bounce-to-right"><i class="fa fa-plus-square nav_icon"></i> <span class="nav-label">Cadastros</span><span class="fa arrow"></span></a>
-									<ul class="nav nav-second-level">
-										<li><a href="cad_categoria.php" class=" hvr-bounce-to-right"> <i class="fa fa-indent nav_icon"></i>Cadastro de Categorias</a></li>
-
-										<li><a href="cad_produtos.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Cadastro de Produtos</a></li>
-
-										<li><a href="cad_bairros.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Cadastro de Bairros</a></li>
-
-										<li><a href="cad_usuarios.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Cadastro de Usuários</a></li>
-
-										<li><a href="cad_empresa.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Empresa</a></li>
-									</ul>
-								</li>
-
-								<li>
-									<a href="#" class=" hvr-bounce-to-right"><i class="fa fa-paper-plane nav_icon"></i> <span class="nav-label">Lançamentos</span><span class="fa arrow"></span></a>
-									<ul class="nav nav-second-level">
-										<li><a href="lanc_pedidos.php" class=" hvr-bounce-to-right"> <i class="fa fa-indent nav_icon"></i>Pedidos</a></li>
-
-										<li><a href="lanc_pedidos.php" class=" hvr-bounce-to-right"> <i class="fa fa-indent nav_icon"></i>Abrir/Fechar Estabelecimento</a></li>
-									</ul>
-								</li>
-
-								<li>
-									<a href="#" class=" hvr-bounce-to-right"><i class="fa fa-cog nav_icon"></i> <span class="nav-label">Settings</span><span class="fa arrow"></span></a>
-									<ul class="nav nav-second-level">
-										<li><a href="sair.php" class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
-									</ul>
-								</li>
-							</ul>
-						</ul>
+						<?php
+						include('class/menu.php');
+						?>
 					</div>
 				</div>
 			</nav>
@@ -451,7 +506,8 @@ $db = new Database();
 												</div>
 
 												<div class="tab-pane" id="itens" role="tabpanel">
-
+													<ul id="listprods" class="list-group list-group-alternate">
+													</ul>
 												</div>
 											</div>
 

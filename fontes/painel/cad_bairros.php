@@ -72,7 +72,18 @@ $db = new Database();
 	<script src="js/accounting.min.js"></script>
 
 	<script src="js/bairro/bairro.min.js"></script>
-
+	<script type="text/javascript">
+	function abrirfechar(operacao){
+                $.ajax({
+                        url:"ajax/abre_fecha/abrefecha.php",
+                        type:"POST",
+                        data:"operacao="+operacao,
+                        success: function (dados){
+                                location.reload();
+                        }
+                })
+        }
+	</script>
 </head>
 <body>
 	<div id="wrapper">
@@ -94,7 +105,19 @@ $db = new Database();
 					</section>
 
 					<div class=" navbar-left-right">
-
+						<?php
+						$db->connect();
+						$db->sql("SELECT * FROM adm_empresa WHERE padrao = 1");
+						$res = $db->getResult();
+						foreach ($res as $output) {
+							$abertofechado = $output["aberto"];
+						}
+						if ($abertofechado == 1){
+							echo '<button type="button" onclick="abrirfechar(0);" class="btn btn-danger">Fechar Loja</button>';
+						} else {
+							echo '<button type="button" onclick="abrirfechar(1);" class="btn btn-success">Abrir Loja</button>';
+						}
+						?>
 					</div>
 					<div class="clearfix"> </div>
 				</div>
@@ -125,43 +148,9 @@ $db = new Database();
 				<div  class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
 						<ul class="nav" id="side-menu">
-							<ul class="nav" id="side-menu">
-
-								<li>
-									<a href="dashboard.php" class=" hvr-bounce-to-right"><i class="fa fa-dashboard nav_icon "></i><span class="nav-label">Dashboards</span> </a>
-								</li>
-
-								<li>
-									<a href="#" class=" hvr-bounce-to-right"><i class="fa fa-plus-square nav_icon"></i> <span class="nav-label">Cadastros</span><span class="fa arrow"></span></a>
-									<ul class="nav nav-second-level">
-										<li><a href="cad_categoria.php" class=" hvr-bounce-to-right"> <i class="fa fa-indent nav_icon"></i>Cadastro de Categorias</a></li>
-
-										<li><a href="cad_produtos.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Cadastro de Produtos</a></li>
-
-										<li><a href="cad_bairros.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Cadastro de Bairros</a></li>
-
-										<li><a href="cad_usuarios.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Cadastro de Usuários</a></li>
-
-										<li><a href="cad_empresa.php" class=" hvr-bounce-to-right"><i class="fa fa-indent nav_icon"></i>Empresa</a></li>
-									</ul>
-								</li>
-
-								<li>
-									<a href="#" class=" hvr-bounce-to-right"><i class="fa fa-paper-plane nav_icon"></i> <span class="nav-label">Lançamentos</span><span class="fa arrow"></span></a>
-									<ul class="nav nav-second-level">
-										<li><a href="lanc_pedidos.php" class=" hvr-bounce-to-right"> <i class="fa fa-indent nav_icon"></i>Pedidos</a></li>
-
-										<li><a href="lanc_pedidos.php" class=" hvr-bounce-to-right"> <i class="fa fa-indent nav_icon"></i>Abrir/Fechar Estabelecimento</a></li>
-									</ul>
-								</li>
-
-								<li>
-									<a href="#" class=" hvr-bounce-to-right"><i class="fa fa-cog nav_icon"></i> <span class="nav-label">Settings</span><span class="fa arrow"></span></a>
-									<ul class="nav nav-second-level">
-										<li><a href="sair.php" class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
-									</ul>
-								</li>
-							</ul>
+							<?php
+								include('class/menu.php');
+							?>
 						</ul>
 					</div>
 				</div>

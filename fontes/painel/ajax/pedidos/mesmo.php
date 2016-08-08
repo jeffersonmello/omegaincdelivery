@@ -4,10 +4,10 @@ header('content-type: application/json; charset=utf-8');
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
-include('../class/mysql_crud.php');
+include('../../class/mysql_crud.php');
 
-$guid_produto = $_POST["guidprod"];
-$guid_pedido  = $_POST["guidpedido"];
+$guid_produto = $_POST["produto"];
+$guid_pedido  = $_POST["pedido"];
 
 $db = new Database();
 $db->connect();

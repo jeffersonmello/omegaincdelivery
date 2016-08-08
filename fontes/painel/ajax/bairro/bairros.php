@@ -5,7 +5,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 include('../../class/mysql_crud.php');
 
 $guid             = $_POST["guid"];
-$guidupd             = $_POST["guidupdate"];
+$guidupd          = $_POST["guidupdate"];
 $descricao        = $_POST["descricao"];
 $taxa             = $_POST["taxa"];
 $operacao         = $_POST["operacao"];
