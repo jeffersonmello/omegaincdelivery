@@ -54,7 +54,7 @@ $db = new Database();
 
   <!--AccountJS -->
   <script src="js/accounting.min.js"></script>
-  
+
   <script type="text/javascript">
   $(document).ready(function(){
     totaliza();
@@ -80,7 +80,7 @@ $db = new Database();
               var imageem     = ('"'+dados[index].imgproduto+'"');
               var descricaao  = ('"'+dados[index].descricao+'"');
               var preeco      = dados[index].preco;
-              preeco = = parseFloat(preeco).toFixed(2);
+              preeco = parseFloat(preeco).toFixed(2);
               produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dados[index].guid+","+descricaao+","+dados[index].preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
             }
           });
@@ -149,6 +149,9 @@ $db = new Database();
         function adicionarCarrinho(guid, nome, preco, imagem){
           var currentiten   = $("#listacarrinho_"+guid);
           var listacarrinho = $("#teste");
+          var botaoadd      = $("#buttonADD");
+
+          botaoadd.css("pointer-events", "none");
 
           $.ajax({
             url:("ajax/adicionacarrinho.php"),
@@ -163,6 +166,7 @@ $db = new Database();
                   totaliza();
                 }
               }
+              botaoadd.css("pointer-events", "auto");
             }})
           }
 
@@ -348,7 +352,7 @@ $db = new Database();
                                     ,'<div class="item-inner">'
                                     ,'<div class="item-title-row">';
                                     echo "<div class='item-title'>$produto_nome</div>";
-                                    echo "<div class='item-after'><span href='#' onclick='adicionarCarrinho($produto_guid,\"$produto_nome\",$preco_value,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
+                                    echo "<div class='item-after'><span href='#' id='buttonADD' onclick='adicionarCarrinho($produto_guid,\"$produto_nome\",$preco_value,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
                                     echo "</div>";
                                     echo "<div class='item-subtitle'>$produto_preco</div>";
                                     echo "<div class='item-text'>Lorem ipsum dolor sit amet...</div>";

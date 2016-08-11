@@ -1,6 +1,6 @@
 <script>
 $(document).ready(function(){
-  $('#pedidosAbertos').DataTable({
+  $('#pedidosEntregues').DataTable({
     "language": {
       "sEmptyTable": "Nenhum registro encontrado",
       "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -39,7 +39,7 @@ include('../../class/mysql_crud.php');
 
 $db = new Database();
 
-echo '<table id="pedidosAbertos" class="table table-hover table-bordered">'
+echo '<table id="pedidosEntregues" class="table table-hover table-bordered">'
 ,'<thead class="thead-default">'
 ,'<tr>'
 ,'<th width="15px" >#</th>'
@@ -55,7 +55,7 @@ echo '<table id="pedidosAbertos" class="table table-hover table-bordered">'
 ,'<tbody>';
 
 $db->connect();
-$db->sql("SELECT * FROM lanc_pedidos WHERE status='1' AND entregar = '1'");
+$db->sql("SELECT * FROM lanc_pedidos WHERE status='6' AND entregar = '1'");
 $res = $db->getResult();
 foreach ($res as $output) {
   $guid           = $output["guid"];
@@ -78,7 +78,7 @@ foreach ($res as $output) {
   echo "<td>$numero</td>";
   echo "<td>$total</td>";
   echo "<td>$data</td>";
-  echo "<td>Processando</td>";
+  echo "<td>Entegue</td>";
   echo "<td width='65px'>
   <button type='button' onclick='openModal(\"editar\",". $guid .")' class='btn btn-secondary btn-xs'><i class='material-icons'>remove_red_eye</i></button>
   <button type='button' onclick='salvar(3,". $guid .")' class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>

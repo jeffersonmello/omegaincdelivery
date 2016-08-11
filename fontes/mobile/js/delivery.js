@@ -29,6 +29,7 @@ $(document).ready(function(){
   });
 });
 
+
 var timeout = setTimeout(verifica, 2000);
 function verifica(){
   $.ajax({
@@ -41,6 +42,14 @@ function verifica(){
     }})
     timeout = setTimeout(verifica, 2000);
   }
+
+  $("#email").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        verifica();
+    }
+});
+
 
   function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -71,16 +71,120 @@ $db = new Database();
 	<!--AccountJS -->
 	<script src="js/accounting.min.js"></script>
 
-	<script>
+	<!--pdf -->
+	<script src="js/jspdf.min.js"></script>
+
+	<script type="text/javascript">
 	$(document).ready(function(){
 		reloadtable();
 		reloadtable();
+		verificaNovoPedido();
 	})
 
 	function reloadtable(){
-		$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){
-		});
+		$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){});
+		$('#producaodiv').load('ajax/pedidos/tab_pedidosEmProducao.php', function(){});
+		$('#entregadiv').load('ajax/pedidos/tab_pedidosEntrega.php', function(){});
+		$('#entregues').load('ajax/pedidos/tab_pedidosEntregues.php', function(){});
 	}
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+		if (Notification.permission !== "granted")
+		Notification.requestPermission();
+	});
+
+	function inprimir(guid){
+		$.ajax({
+			url: "ajax/pedidos/populate_pedidoAberto.php",
+			type: "POST",
+			data: "guid="+guid,
+			success: function (dados){
+				$.each(dados, function(index, dado){
+					var guidPedido				= dado.guid;
+					var statusPedido			= dado.status;
+					var nomePedido				= dado.nome;
+					var enderecoPedido		= dado.endereco;
+					var totalPedido				= dado.total;
+					var dataPedido				= dado.data;
+					var telefonePedido		= dado.telefone;
+					var numerocasaPedido	= dado.numero;
+					var formaPagamento		= dado.formaPagamento;
+					var observacaoPedido	= dado.observacao;
+					var cpfClientePedido	= dado.cpf;
+					var entregarPedido		= dado.entregar;
+					var tokenPedido				= dado.token;
+					var bairroPedido			= dado.bairro;
+					var pagamentotext 		= 0;
+
+					if (statusPedido == 1) {
+						var statuspedidotext = "Processando";
+					}
+
+					if (formaPagamento == 0) {
+						pagamentotext = "Dinheiro";
+					} else {
+						pagamentotext = "Cartão/Crédito/Débito";
+					}
+
+					totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
+					//totalPedido	= parseFloat(totalPedido).toFixed(2);
+					dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
+
+					var doc = new jsPDF();
+
+					doc.setFontSize(14);
+					doc.text(70, 10, ("Número Pedido: "+guidPedido));
+					doc.text(70, 20, ("Cliente: "+nomePedido));
+					doc.text(70, 30, ("Endereco: "+enderecoPedido));
+					doc.text(70, 40, ("Número: "+numerocasaPedido));
+					doc.text(70, 50, ("Telefone: "+telefonePedido));
+					doc.text(70, 60, ("Pagamento: "+pagamentotext));
+					doc.text(70, 70, ("--------------------------------------------------------------------------"));
+
+
+					$.ajax({
+						url:"ajax/pedidos/addprodstolist.php",
+						type:"POST",
+						data:"pedido="+guidPedido,
+						success: function (dados){
+							var linha				= 70;
+
+							$.each(dados, function(index, dado){
+								var preco				= dado.valorproduto;
+
+								preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
+
+								linha = linha + 10;
+								doc.text(70, (linha), ((dado.nomeproduto)+" | Preço: "+preco));
+							});
+
+							doc.text(70, (linha+10), ("--------------------------------------------------------------------------"));
+							doc.text(70, (linha+20), ("Total do Pedido: R$ "+ totalPedido));
+							var string = doc.output('dataurlnewwindow');
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert("Status: " + textStatus); alert("Error: " + errorThrown);
+							console.log(arguments);
+						}
+					});
+					//doc.save('Test.pdf');
+				});
+			}
+		})
+	}
+
+	function showAll(){
+		$("#u2").show();
+		$("#u3").show();
+		$("#u4").show();
+		$("#u5").show();
+		$("#u6").show();
+		$("#u7").show();
+		$("#u8").show();
+		$("#u9").show();
+	}
+
 
 	function openModal(operacao, guid){
 		var modall 				= $('#modal');
@@ -101,6 +205,7 @@ $db = new Database();
 		var campotelefone			= $("#telefone");
 		var campopagamento		= $("#pagamentoO");
 		var campoobs					= $("#obss");
+		var campototal2				= $("#total2");
 
 
 		if (operacao == "editar"){
@@ -127,7 +232,39 @@ $db = new Database();
 						var pagamentotext 		= 0;
 
 						if (statusPedido == 1) {
-							var statuspedidotext = "Processando";
+							var statuspedidotext = "Processando"
+						} else if (statusPedido == 2) {
+							statuspedidotext = "Em Produção";
+							showAll();
+							$("#u2").hide();
+						} else if (statusPedido == 3) {
+							statuspedidotext = "Pronto";
+							showAll();
+							$("#u3").hide();
+						} else if (statusPedido == 4 ) {
+							statuspedidotext = "Aguardando para busca";
+							showAll();
+							$("#u4").hide();
+						} else if (statusPedido == 5) {
+							statuspedidotext = "Saiu para Entrega";
+							showAll();
+							$("#u5").hide();
+						} else if (statusPedido == 6) {
+							statuspedidotext = "Entegue";
+							showAll();
+							$("#u6").hide();
+						} else if (statusPedido == 7) {
+							statuspedidotext = "Cliente não estava";
+							showAll();
+							$("#u7").hide();
+						} else if (statusPedido == 8) {
+							statuspedidotext = "Cancelado";
+							showAll();
+							$("#u8").hide();
+						} else if (statusPedido == 9) {
+							statuspedidotext = "Devolvido";
+							showAll();
+							$("#u9").hide();
 						}
 
 						if (formaPagamento == 0) {
@@ -157,6 +294,7 @@ $db = new Database();
 						campotelefone.val(telefonePedido);
 						campopagamento.val(pagamentotext);
 						campoobs.val(observacaoPedido);
+						campototal2.val(totalPedido);
 					})
 					titulomodal.html("Pedido #"+guid);
 					campoguid.hide();
@@ -169,19 +307,59 @@ $db = new Database();
 		}
 	}
 
+	function notifyMe(pedido) {
+		if (!Notification) {
+			alert('Desktop notifications not available in your browser. Try Chromium.');
+			return;
+		}
+
+		if (Notification.permission !== "granted")
+		Notification.requestPermission();
+		else {
+			var notification = new Notification(('Novo Pedido #'+pedido), {
+				icon: 'https://cdn0.iconfinder.com/data/icons/shop-payment-vol-4/128/shop-65-512.png',
+				body: ("Novo Pedido Realiazdo Número: "+pedido),
+			});
+
+			var player = document.getElementById('audio');
+			var musica = "http://mobile.kingofeletro.com.br/android/painel/sound.mp3";
+
+			player.src = musica;
+			player.play();
+
+			notification.onclick = function () {
+				window.focus()
+			};
+			toastr.options = {
+				"closeButton": true,
+				"debug": true,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": true,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "60000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+			toastr["info"]("Pedido Recebido para visualizar clique <div><button type='button' onclick='openModal(\"editar\", "+pedido+");' class='btn btn-outline-info btn-sm'>Aqui</button>", "Novo Pedido")
+		}
+	}
+
 	function salvar(operacao, guid){
-		var campocategoria		= $("#cat").val();
-		var campodescricao		= $("#descricao").val();
-		var campoimagem				= $("#img").val();
-		var subdesc						= $("#subdesc").val();
-		var preco							= $("#preco").val();
+		var categoria 			  = $("#cat").val();
+		var guidupdate				= $("#guid").val();
 
 		$.ajax({
-			url:"ajax/produtos/produto.php",
+			url:"ajax/pedidos/pedido.php",
 			type:"POST",
-			data:"descricao="+campodescricao+"&imagem="+campoimagem+"&subdesc="+subdesc+"&categoria="+campocategoria+"&operacao="+operacao+"&guid="+guid+"&preco="+preco,
+			data: "guidupdate="+guidupdate+"&categoria="+categoria+"&operacao="+operacao,
 			success: function (result){
-				alert(campocategoria);
 				$('#modal').modal('hide');
 				if (result == 1) {
 					toastr.success('Registro Deletado com Sucesso', 'OK')
@@ -202,6 +380,21 @@ $db = new Database();
 				location.reload();
 			}
 		})
+	}
+
+	var timeout = setTimeout(verificaNovoPedido, 2000);
+	function verificaNovoPedido(){
+		$.ajax({
+			url: "ajax/pedidos/verificaNovoPedido.php",
+			type: "POST",
+			success: function (dados){
+				if (dados != 0){
+					notifyMe(dados);
+					reloadtable();
+				}
+			}
+		})
+		timeout = setTimeout(verificaNovoPedido, 2000);
 	}
 
 	function mesmo(guidProd, guidPedido){
@@ -247,15 +440,16 @@ $db = new Database();
 			type:"POST",
 			data:"pedido="+guidPedido,
 			success: function (dados){
+				listaprodutos.empty();
+
 				$.each(dados, function(index){
 					var len    			= dados.length;
 					var preco				= dados[index].valorproduto;
 
 					preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
 
-					listaprodutos.empty();
 
-					for (var i=0; i < len; i++){
+					for (var i=0; i <= len; i++){
 						var guidprod		= dados[index].guidproduto;
 						var currentiten = $("#idLIProd_"+guidprod);
 
@@ -367,22 +561,75 @@ $db = new Database();
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
 							<span>Pedidos</span>
+							<div class="hidden">
+								<audio id="audio"  src="" controls="controls" align=""> </audio>
+							</div>
 						</h2>
 					</div>
 					<!--//banner-->
 					<!--faq-->
 					<br>
-
-					<div class="banner">
-						<h2>Pedidos Abertos</h2>
-					</div>
-
 					<div class="blank">
 
 						<div class="blank-page">
-							<div id="divcat">
 
+							<!-- Nav tabs -->
+							<ul class="nav nav-tabs" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" onclick="reloadtable();" data-toggle="tab" href="#pedidosabertos" role="tab">Pedidos Abertos</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtable();" data-toggle="tab" href="#producao" role="tab">Em Produção</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtable();" data-toggle="tab" href="#saiuentrega" role="tab">Saiu para Entrega</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtable();" data-toggle="tab" href="#concluidos" role="tab">Concluidos</a>
+								</li>
+							</ul>
+
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div class="tab-pane active" id="pedidosabertos" role="tabpanel">
+									<div class="banner">
+										<h2>Pedidos Abertos <b>Para Entregar</b></h2>
+									</div>
+
+									<div id="divcat">
+
+									</div>
+								</div>
+								<div class="tab-pane" id="producao" role="tabpanel">
+									<div class="banner">
+										<h2>Pedidos Em Produção <b>Para Entregar</b></h2>
+									</div>
+
+									<div id="producaodiv">
+
+									</div>
+								</div>
+								<div class="tab-pane" id="saiuentrega" role="tabpanel">
+									<div class="banner">
+										<h2>Saidos Para Entrega</h2>
+									</div>
+
+									<div id="entregadiv">
+
+									</div>
+								</div>
+								<div class="tab-pane" id="concluidos" role="tabpanel">
+									<div class="banner">
+										<h2>Entregues</h2>
+									</div>
+
+									<div id="entregues">
+
+									</div>
+								</div>
 							</div>
+
+
 
 							<div id="modal" class="modal fade">
 								<div class="modal-dialog" role="document">
@@ -425,14 +672,14 @@ $db = new Database();
 															<label>Status</label>
 															<select class="form-control" id="cat">
 																<option id="optionSelected" selected='selected' value=""></option>
-																<option value="2">Em Produção</option>
-																<option value="3">Pronto</option>
-																<option value="4">Aguardando Retirada</option>
-																<option value="5">Saiu Para Entrega</option>
-																<option value="6">Entregue</option>
-																<option value="7">Cliente não Estava</option>
-																<option value="8">Cancelados</option>
-																<option value="9">Devolvido</option>
+																<option id="u2" value="2">Em Produção</option>
+																<option id="u3" value="3">Pronto</option>
+																<option id="u4" value="4">Aguardando Retirada</option>
+																<option id="u5" value="5">Saiu Para Entrega</option>
+																<option id="u6" value="6">Entregue</option>
+																<option id="u7" value="7">Cliente não Estava</option>
+																<option id="u8" value="8">Cancelados</option>
+																<option id="u9" value="9">Devolvido</option>
 															</select>
 															<small class="form-text text-muted">Altere o status do pedido do cliente</small>
 														</fieldset>
@@ -508,6 +755,11 @@ $db = new Database();
 												<div class="tab-pane" id="itens" role="tabpanel">
 													<ul id="listprods" class="list-group list-group-alternate">
 													</ul>
+
+													<fieldset class="form-group">
+														<label>Total</label>
+														<input class="form-control" id="total2" type="text"  disabled>
+													</fieldset>
 												</div>
 											</div>
 
