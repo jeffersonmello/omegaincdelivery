@@ -41,6 +41,7 @@ $db = new Database();
 
   <!--jquery-->
   <script   src="js/jquery-3.0.0.min.js"></script>
+  <script src="js/searchOrder.min.js"></script>
 
 
   <!--Import Google Icon Font-->
@@ -218,8 +219,83 @@ $db = new Database();
             <div class="panel-overlay"></div>
             <!-- Left panel with reveal effect-->
             <div class="panel panel-left panel-reveal">
+              <div class="navbar">
+                <div class="navbar-inner">
+                  <div class="left"></div>
+                  <div class="center">Menu</div>
+                  <div class="right"></div>
+                </div>
+              </div>
+
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <a href="#" data-popup=".popup-check" class="item-link open-popup">
+                      <div class="item-inner">
+                        <div class="item-title">Consultar Pedido</div>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-popup=".popup-about" class="item-link open-popup">
+                      <div class="item-inner">
+                        <div class="item-title">Sobre</div>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- About Popup -->
+            <div class="popup popup-about">
               <div class="content-block">
-                <p>Left panel content goes here</p>
+                <p>Sobre o Aplicativo</p>
+                <p><a href="#" class="close-popup">Fechar</a></p>
+                <p>Informaões da empresa que administra o aplicativo. <br>
+                  Sobre a empresa <br>
+                </p>
+                <p>Desenvolvimento</p>
+                <p>Este aplicativo foi desenvolvido por Copyright Omega Inc. Todos os direitos Reservados<br>
+                </p>
+              </div>
+            </div>
+
+            <!-- Check Popup -->
+            <div class="popup popup-check">
+              <div class="content-block">
+                <p>Consultar Pedido</p>
+                <p><a href="#" onclick="clearTimeLine()" class="close-popup">Fechar</a></p>
+                <div class="list-block">
+                  <ul>
+
+                    <li class="item-content">
+                      <div class="item-media"><i class="material-icons color-icon">search</i></div>
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="text"  id="numeropedido" placeholder="Numero do Pedido"  required>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="item-content">
+                      <div class="item-media"><i class="material-icons color-icon">lock_outline</i></div>
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="text"  id="token" placeholder="Token"  required>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li>
+                      <p class="buttons-row">
+                        <a type="submit" href="" onclick="searchOrder()"  class="button button-fill button-raised color-green">Pesquisar</a>
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+                <div id="container">
+                </div>
               </div>
             </div>
 

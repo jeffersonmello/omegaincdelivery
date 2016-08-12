@@ -133,14 +133,14 @@ $db = new Database();
 
 					var doc = new jsPDF();
 
-					doc.setFontSize(14);
+					doc.setFontSize(8);
 					doc.text(70, 10, ("Número Pedido: "+guidPedido));
-					doc.text(70, 20, ("Cliente: "+nomePedido));
-					doc.text(70, 30, ("Endereco: "+enderecoPedido));
-					doc.text(70, 40, ("Número: "+numerocasaPedido));
-					doc.text(70, 50, ("Telefone: "+telefonePedido));
-					doc.text(70, 60, ("Pagamento: "+pagamentotext));
-					doc.text(70, 70, ("--------------------------------------------------------------------------"));
+					doc.text(70, 14, ("Cliente: "+nomePedido));
+					doc.text(70, 18, ("Endereco: "+enderecoPedido));
+					doc.text(70, 22, ("Número: "+numerocasaPedido));
+					doc.text(70, 26, ("Telefone: "+telefonePedido));
+					doc.text(70, 30, ("Pagamento: "+pagamentotext));
+					doc.text(70, 34, ("--------------------------------------------------------------------------"));
 
 
 					$.ajax({
@@ -148,19 +148,19 @@ $db = new Database();
 						type:"POST",
 						data:"pedido="+guidPedido,
 						success: function (dados){
-							var linha				= 70;
+							var linha				= 34;
 
 							$.each(dados, function(index, dado){
 								var preco				= dado.valorproduto;
 
 								preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
 
-								linha = linha + 10;
+								linha = linha + 4;
 								doc.text(70, (linha), ((dado.nomeproduto)+" | Preço: "+preco));
 							});
 
-							doc.text(70, (linha+10), ("--------------------------------------------------------------------------"));
-							doc.text(70, (linha+20), ("Total do Pedido: R$ "+ totalPedido));
+							doc.text(70, (linha+4), ("--------------------------------------------------------------------------"));
+							doc.text(70, (linha+8), ("Total do Pedido: R$ "+ totalPedido));
 							var string = doc.output('dataurlnewwindow');
 						},
 						error: function(XMLHttpRequest, textStatus, errorThrown) {

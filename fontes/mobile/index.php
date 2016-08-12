@@ -111,7 +111,7 @@ session_destroy();
   <div class="popup popup-check">
     <div class="content-block">
       <p>Consultar Pedido</p>
-      <p><a href="#" class="close-popup">Fechar</a></p>
+      <p><a href="#" onclick="clearTimeLine()" class="close-popup">Fechar</a></p>
       <div class="list-block">
         <ul>
 
@@ -196,6 +196,16 @@ session_destroy();
                             <div class="item-inner">
                               <div class="item-input">
                                 <input style="color: green" type="text" id="endereco" name="endereco" placeholder="" disabled>
+                              </div>
+                            </div>
+                          </li>
+
+                          <li class="item-content">
+                            <div class="item-inner">
+                              <div class="item-input">
+                                <p class="buttons-row">
+                                  <a href="" onclick="" class="button button-fill button-raised color-bluegray">Usar Minha Localização</a>
+                                </p>
                               </div>
                             </div>
                           </li>

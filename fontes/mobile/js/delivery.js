@@ -43,7 +43,7 @@ function verifica(){
     timeout = setTimeout(verifica, 2000);
   }
 
-  $("#email").keypress(function(event) {
+  $("#email").keydown(function(event) {
     if (event.which == 13) {
         event.preventDefault();
         verifica();
