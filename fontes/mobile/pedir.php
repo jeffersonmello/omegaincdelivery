@@ -109,7 +109,7 @@ $db = new Database();
         data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
         success:function(dados){
           valor = accounting.formatMoney(valor, "R$", 2, ".", ",")
-          $("#idvaloresqtde_"+guid).html(valor)+" ("+dados+")");
+          $("#idvaloresqtde_"+guid).html((valor)+" ("+dados+")");
           totaliza();
         }})
       }
@@ -122,7 +122,7 @@ $db = new Database();
           data: "guidpedido="+<?php echo $guid_pedido; ?>+"&taxa="+<?php echo $taxa; ?>,
           success:function(dados){
             var valor = dados;
-            valor = accounting.formatMoney(valor, "R$", 2, ".", ",")
+            valor = accounting.formatMoney(valor, "R$ ", 2, ".", ",")
             $("#total").html(valor);
           }})
         }
@@ -165,7 +165,8 @@ $db = new Database();
                 mesmo(guid,preco);
               } else {
                 if (dados == 1){
-                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+(preco.toFixed(2))+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
+                  preco = accounting.formatMoney(preco, "R$", 2, ".", ",")
+                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>"+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
                   totaliza();
                 }
               }
