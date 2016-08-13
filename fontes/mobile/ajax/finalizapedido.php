@@ -255,7 +255,7 @@ Token do Pedido: $token
 </table>
 <!-- /button -->
 <p>Delivery</p>
-<p><a href='http://pristonspnbr.tk/'>www.delivery.com</a></p>
+<p><a href='http://delivery.tk/'>www.delivery.com</a></p>
 </td>
 </tr>
 </table>
@@ -270,7 +270,7 @@ Token do Pedido: $token
 // emails para quem será enviado o formulário
 $emailenviar = $cliente_email;
 $destino = $emailenviar;
-$assunto = "Pedido Através do Aplicativo";
+$assunto = "Pedido Recebido";
 
 // É necessário indicar que o formato do e-mail é html
 $headers  = 'MIME-Version: 1.0' . "\r\n";

@@ -81,8 +81,8 @@ $db = new Database();
               var imageem     = ('"'+dados[index].imgproduto+'"');
               var descricaao  = ('"'+dados[index].descricao+'"');
               var preeco      = dados[index].preco;
-              preeco = parseFloat(preeco).toFixed(2);
-              produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dados[index].guid+","+descricaao+","+dados[index].preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>R$ "+dados[index].preco+"</div></div></li>");
+              preeco = accounting.formatMoney(preeco, "R$", 2, ".", ",");
+              produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dados[index].guid+","+descricaao+","+dados[index].preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>"+dados[index].preco+"</div></div></li>");
             }
           });
         }})
@@ -108,7 +108,8 @@ $db = new Database();
         type: "POST",
         data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
         success:function(dados){
-          $("#idvaloresqtde_"+guid).html("R$ "+(valor.toFixed(2, '.', ','))+" ("+dados+")");
+          valor = accounting.formatMoney(valor, "R$", 2, ".", ",")
+          $("#idvaloresqtde_"+guid).html(valor)+" ("+dados+")");
           totaliza();
         }})
       }
@@ -121,7 +122,8 @@ $db = new Database();
           data: "guidpedido="+<?php echo $guid_pedido; ?>+"&taxa="+<?php echo $taxa; ?>,
           success:function(dados){
             var valor = dados;
-            $("#total").html("R$ "+(valor.toFixed(2)));
+            valor = accounting.formatMoney(valor, "R$", 2, ".", ",")
+            $("#total").html(valor);
           }})
         }
 
