@@ -36,6 +36,7 @@ create table cad_produtos (
 **/
 create table lanc_pedidos (
 	guid int not null auto_increment,
+	guidresposta int, -- New --
 	eguid int,
 	nome varchar(500),
 	email varchar(500),
@@ -47,13 +48,16 @@ create table lanc_pedidos (
 	endereco varchar(750),
 	numero varchar(100),
 	data date,
+	dataalteracao datetime, -- New --
 	entregar int not null,
 	status int not null,
 	formaPagamento int not null,
+	troco varchar(250), -- New --
 	observacao text,
 	notificado int not null default 0,
 	visualizado int not null default 0,
-	primary key (guid)
+	primary key (guid),
+	foreign key (guidresposta) references lanc_respostas (guid)
 );
 
 create table lanc_listprodpedido (
@@ -63,6 +67,13 @@ create table lanc_listprodpedido (
 	primary key (guid),
 	foreign key (guid_produto) references cad_produtos (guid),
 	foreign key (guid_pedido) references lanc_pedidos (guid)
+);
+
+create table lanc_respostas (
+	guid int not null auto_increment,
+	usertype int not null,
+	mensagem text,
+	primary key (guid)
 );
 
 create table atd_bairros (

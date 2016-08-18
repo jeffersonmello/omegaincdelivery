@@ -82,7 +82,7 @@ $db = new Database();
               var descricaao  = ('"'+dados[index].descricao+'"');
               var preeco      = dados[index].preco;
               preeco = accounting.formatMoney(preeco, "R$", 2, ".", ",");
-              produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dados[index].guid+","+descricaao+","+dados[index].preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>"+dados[index].preco+"</div></div></li>");
+              produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dados[index].guid+","+descricaao+","+dados[index].preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>"+preeco+"</div></div></li>");
             }
           });
         }})
@@ -93,7 +93,7 @@ $db = new Database();
         var categorias    = $(".categorias"); // Lista de categorias
         var produtos      = $("#listaprodutos");
         var itemproduto   = $(".itempesquisa");
-        var pesquisas = $('#search').val();
+        var pesquisas     = $('#search').val();
 
         if (pesquisas.length < 1) {
           $(itemproduto, produtos).remove();
@@ -108,7 +108,7 @@ $db = new Database();
         type: "POST",
         data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
         success:function(dados){
-          valor = accounting.formatMoney(valor, "R$", 2, ".", ",")
+          valor = accounting.formatMoney(valor, "R$ ", 2, ".", ",")
           $("#idvaloresqtde_"+guid).html((valor)+" ("+dados+")");
           totaliza();
         }})
@@ -165,8 +165,8 @@ $db = new Database();
                 mesmo(guid,preco);
               } else {
                 if (dados == 1){
-                  preco = accounting.formatMoney(preco, "R$", 2, ".", ",")
-                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>"+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
+                  preco = accounting.formatMoney(preco, "", 2, ".", ",");
+                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
                   totaliza();
                 }
               }
