@@ -20,8 +20,8 @@
 	<script src="js/login.min.js"> </script>
 
 	<!--Toastr-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+	<script src="js/toastr.min.js"></script>
+	<link href="css/toastr.min.css" rel="stylesheet"/>
 
 </head>
 <body>

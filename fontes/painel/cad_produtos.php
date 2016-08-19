@@ -53,8 +53,8 @@ $db = new Database();
 	<script src="js/screenfull.js"></script>
 
 	<!--Toastr-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+	<script src="js/toastr.min.js"></script>
+	<link href="css/toastr.min.css" rel="stylesheet"/>
 
 	<!--DataTables-->
 	<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
@@ -125,6 +125,7 @@ $db = new Database();
 							}
 						});
 
+						$("#imageview").attr('src', imagemproduto);
 						inputguid.val(guid_produto);
 						campodescricao.val(descricaoproduto);
 						campoimagem.val(imagemproduto);
@@ -141,6 +142,7 @@ $db = new Database();
 			});
 		} else if (operacao == "salvar") {
 			$('#formCategoria')[0].reset();
+			$("#imageview").attr('src', '');
 			titulomodal.html("Novo Produto");
 			campoguid.hide();
 			botaoeditar.hide();
@@ -183,49 +185,25 @@ $db = new Database();
 	}
 
 	function abrirfechar(operacao){
-								$.ajax({
-												url:"ajax/abre_fecha/abrefecha.php",
-												type:"POST",
-												data:"operacao="+operacao,
-												success: function (dados){
-																location.reload();
-												}
-								})
-				}
-
-	function previewFile(){
-		var preview = document.querySelector('img[id=imageview]');
-		var file    = document.querySelector('input[type=file]').files[0]; //sames as here
-		var reader  = new FileReader();
-		var imgee		= document.querySelector('input[type=file]').files[0]['name'];
-
-		reader.onloadend = function () {
-			preview.src = reader.result;
-		}
-
-		if (file) {
-			reader.readAsDataURL(file);
-		} else {
-			preview.src = "";
-			$("#img").val(imgee);
-		}
+		$.ajax({
+			url:"ajax/abre_fecha/abrefecha.php",
+			type:"POST",
+			data:"operacao="+operacao,
+			success: function (dados){
+				location.reload();
+			}
+		})
 	}
 
 	$(function () {
 		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
-
 		if (!screenfull.enabled) {
 			return false;
 		}
 
-
-
 		$('#toggle').click(function () {
 			screenfull.toggle($('#container')[0]);
 		});
-
-
-
 	});
 	</script>
 
@@ -328,7 +306,7 @@ $db = new Database();
 
 							</div>
 
-							<div id="modal" class="modal fade">
+							<div id="modal" class="modal fade bd-example-modal-lg">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										<div class="modal-header">
@@ -365,14 +343,14 @@ $db = new Database();
 												<fieldset class="form-group">
 													<label for="exampleInputEmail1">Imagem</label>
 													<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
-													<label class="custom-file">
-														<input type="file" id="imgfile" onchange="previewFile()" class="custom-file-input">
-														<span class="custom-file-control"></span>
-													</label>
+													<input id="sortpicture" type="file" name="sortpic" />
+													<button type="button" class="btn btn-secondary" id="upload">Upload</button>
 												</fieldset>
+
 												<div id="imagefield">
 													<img id="imageview" src="" height="200" alt="Image preview...">
 												</div>
+
 												<fieldset class="form-group">
 													<label for="exampleInputEmail1">Descrição</label>
 													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome do Produto">
@@ -399,6 +377,26 @@ $db = new Database();
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
 
+							<script type="text/javascript">
+							$('#upload').on('click', function() {
+								var file_data = $('#sortpicture').prop('files')[0];
+								var form_data = new FormData();
+								form_data.append('file', file_data);
+								$.ajax({
+									url: 'ajax/uploadFile.php',
+									dataType: 'text',
+									cache: false,
+									contentType: false,
+									processData: false,
+									data: form_data,
+									type: 'post',
+									success: function(php_script_response){
+										$("#imageview").attr('src', php_script_response);
+										$("#img").val(php_script_response);
+									}
+								});
+							});
+							</script>
 
 							<div class="copy">
 								<p> &copy; 2016 Omega Inc. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>	    </div>

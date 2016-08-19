@@ -405,6 +405,7 @@ $db = new Database();
                                   a.iconecategoria as icone,
                                   b.guid as guidprod,
                                   b.guid_categoria,
+                                  b.subdescricao,
                                   b.imgproduto as imagem,
                                   b.descricao as produto,
                                   b.preco
@@ -419,6 +420,7 @@ $db = new Database();
                                     $produto_imagem           = $output["imagem"];
                                     $produto_nome             = $output["produto"];
                                     $produto_preco            = $output["preco"];
+                                    $subdescricao             = $output["subdescricao"];
 
                                     $preco_value = $produto_preco;
 
@@ -434,7 +436,7 @@ $db = new Database();
                                     echo "<div class='item-after'><span href='#' id='buttonADD' onclick='adicionarCarrinho($produto_guid,\"$produto_nome\",$preco_value,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
                                     echo "</div>";
                                     echo "<div class='item-subtitle'>$produto_preco</div>";
-                                    echo "<div class='item-text'>Lorem ipsum dolor sit amet...</div>";
+                                    echo "<div class='item-text'>$subdescricao</div>";
                                     echo '</div>'
                                     ,'</li>';
 
