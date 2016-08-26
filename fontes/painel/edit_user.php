@@ -30,7 +30,7 @@ foreach ($res as $output) {
 
 
 // Configurações da página
-$nivel_pagina    = 3;
+$nivel_pagina    = 1;
 
 // Rotina de verificação nivel de usuario
 if ($nivel_usuario < $nivel_pagina){
@@ -43,7 +43,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 ?>
 <html>
 <head>
-	<title>Omega Inc. | Delivery | Usuarios</title>
+	<title>Omega Inc. | Delivery | Bairros</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -87,10 +87,12 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 	<!--AccountJS -->
 	<script src="js/accounting.min.js"></script>
 
-	<script src="js/usuario/usuarios.min.js"></script>
-	<script src="js/omega.js"></script>
-
+	<script src="js/usuario/profile.min.js"></script>
 	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#campoguid").hide();
+	})
+
 	function abrirfechar(operacao){
 		$.ajax({
 			url:"ajax/abre_fecha/abrefecha.php",
@@ -167,9 +169,11 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
 				<div  class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
-						<?php
-						include('class/menu.php');
-						?>
+						<ul class="nav" id="side-menu">
+							<?php
+							include('class/menu.php');
+							?>
+						</ul>
 					</div>
 				</div>
 			</nav>
@@ -181,7 +185,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 						<h2>
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
-							<span>Usuarios </span>
+							<span>Meu perfil </span>
 						</h2>
 					</div>
 					<!--//banner-->
@@ -189,115 +193,85 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 					<br>
 
 					<div class="banner">
-						<h2>Usuários <button type="button" onclick="openModal('Novo',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
+						<h2>Meu Perfil</h2>
 					</div>
 
 					<div class="blank">
 
 						<div class="blank-page">
-							<div id="divcat">
+							<!--grid-->
+							<div class="grid-form">
+								<div class="grid-form1">
+									<h3 id="forms-example" class="">Meu Perfil</h3>
+									<form id="formUsuarios">
 
-							</div>
+										<fieldset id="campoguid" class="form-group">
+											<label>GUID</label>
+											<input type="text" value="<?php echo $id_usuario?>" class="form-control" id="guid" name="guid" placeholder="">
+										</fieldset>
 
-							<div id="modal" class="modal fade">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-											<h4 class="modal-title" id="titulomodal">Cadastro de Usuários</h4>
+										<fieldset class="form-group">
+											<label>Imagem</label>
+											<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
+											<input id="sortpicture" type="file" name="sortpic" accept="image/*" />
+											<button type="button" class="btn btn-secondary" id="upload">Upload</button>
+										</fieldset>
+
+										<div id="imagefield">
+											<img id="imageview" src="<?php echo $imagem_usuario ?>" height="200" alt="...">
 										</div>
-										<div class="modal-body">
-											<form id="formUsuarios">
-
-												<fieldset id="campoguid" class="form-group">
-													<label>GUID</label>
-													<input type="text" class="form-control" id="guid" name="guid" placeholder="">
-												</fieldset>
-
-												<fieldset class="form-group">
-													<label>Imagem</label>
-													<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
-													<input id="sortpicture" type="file" name="sortpic" accept="image/*" />
-													<button type="button" class="btn btn-secondary" id="upload">Upload</button>
-												</fieldset>
-
-												<div id="imagefield">
-													<img id="imageview" src="" height="200" alt="...">
-												</div>
 
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Usuário</label>
-													<input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nome de usuário para acesso">
-												</fieldset>
+										<fieldset class="form-group">
+											<label>Usuário</label>
+											<input type="text" value="<?php echo $login_usuario ?>" class="form-control" id="usuario" name="usuario" placeholder="Nome de usuário para acesso" disabled>
+										</fieldset>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Senha</label>
-													<input type="password" class="form-control" id="senha" name="senha" placeholder="Senha de acesso">
-												</fieldset>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Nome</label>
-													<input type="text" class="form-control" id="nome" name="nome" placeholder="Seu Nome">
-												</fieldset>
+										<fieldset class="form-group">
+											<label>Nome</label>
+											<input type="text" value="<?php echo $nome_usuario?>" class="form-control" id="nome"  placeholder="Seu Nome">
+										</fieldset>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Nível de Acesso</label>
-													<select class="form-control" id="nivel">
-														<option id="selectedOption" selected></option>
-														<option id="u1" value="1">1 - Usuário Comun</option>
-														<option id="u2" value="2">2 - Operador de Pedidos</option>
-														<option id="u3" value="3">3 - Administrador</option>
-													</select>
-												</fieldset>
+										<button id="botaoatualizar" type="button" onclick="salvar(2, 0)"class="btn btn-primary" hidden="">Salvar</button>
+									</form>
+								</div>
+								<!----->
 
-											</form>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-											<button id="botaosalvar" type="button" onclick="salvar(1, 0)"class="btn btn-primary" hidden="">Salvar</button>
-											<button id="botaoatualizar" type="button" onclick="salvar(2, 0)"class="btn btn-primary" hidden="">Salvar</button>
-										</div>
-									</div><!-- /.modal-content -->
-								</div><!-- /.modal-dialog -->
-							</div><!-- /.modal -->
-
-							<script type="text/javascript">
-							$('#upload').on('click', function() {
-								var file_data = $('#sortpicture').prop('files')[0];
-								var form_data = new FormData();
-								form_data.append('file', file_data);
-								$.ajax({
-									url: 'ajax/uploadFile.php',
-									dataType: 'text',
-									cache: false,
-									contentType: false,
-									processData: false,
-									data: form_data,
-									type: 'post',
-									success: function(php_script_response){
-										$("#imageview").attr('src', php_script_response);
-										$("#img").val(php_script_response);
-									}
+								<script type="text/javascript">
+								$('#upload').on('click', function() {
+									var file_data = $('#sortpicture').prop('files')[0];
+									var form_data = new FormData();
+									form_data.append('file', file_data);
+									$.ajax({
+										url: 'ajax/uploadFile.php',
+										dataType: 'text',
+										cache: false,
+										contentType: false,
+										processData: false,
+										data: form_data,
+										type: 'post',
+										success: function(php_script_response){
+											$("#imageview").attr('src', php_script_response);
+											$("#img").val(php_script_response);
+										}
+									});
 								});
-							});
-							</script>
+								</script>
 
-							<div class="copy">
-								<p> &copy; 2016 Omega Inc. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>	    </div>
+								<div class="copy">
+									<p> &copy; 2016 Omega Inc. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>	    </div>
+								</div>
+
+
 							</div>
-
-
+							<div class="clearfix"> </div>
 						</div>
-						<div class="clearfix"> </div>
-					</div>
 
-					<!---->
-					<!--scrolling js-->
-					<script src="js/jquery.nicescroll.js"></script>
-					<script src="js/scripts.js"></script>
-					<!--//scrolling js-->
-				</body>
-				</html>
+						<!---->
+						<!--scrolling js-->
+						<script src="js/jquery.nicescroll.js"></script>
+						<script src="js/scripts.js"></script>
+						<!--//scrolling js-->
+					</body>
+					</html>

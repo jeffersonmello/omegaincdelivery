@@ -21,12 +21,13 @@ session_destroy();
   <link rel="stylesheet" href="css/framework7.material.colors.min.css">
 
   <!-- Path to your custom app styles-->
-  <link rel="stylesheet" href="css/delivery.css">
+  <link rel="stylesheet" href="css/delivery.min.css">
 
   <!--jquery-->
   <script   src="js/jquery-3.0.0.min.js"></script>
 
   <script src="js/searchOrder.min.js"></script>
+  <script src="js/omega.min.js"></script>
 
   <!--Import Google Icon Font-->
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -104,6 +105,29 @@ session_destroy();
       <p>Desenvolvimento</p>
       <p>Este aplicativo foi desenvolvido por Copyright Omega Inc. Todos os direitos Reservados<br>
       </p>
+
+      <p>Click the button to get your coordinates.</p>
+
+      <button onclick="getLocation()">Try It</button>
+
+      <p id="demo"></p>
+
+      <script>
+      var x = document.getElementById("demo");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        x.innerHTML = "Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude;
+      }
+      </script>
     </div>
   </div>
 
@@ -169,11 +193,12 @@ session_destroy();
               <div class="view">
                 <div class="page">
 
-                  <br>
-                  <br>
+
 
                   <!-- page-content has additional login-screen content -->
                   <div class="page-content login-screen-content">
+                    <br>
+                    <br>
                     <div class="login-screen-title">Delivery</div>
 
 
@@ -200,79 +225,79 @@ session_destroy();
                             </div>
                           </li>
 
-                          <li class="item-content">
-                            <div class="item-inner">
-                              <div class="item-input">
-                                <p class="buttons-row">
-                                  <a href="" onclick="" class="button button-fill button-raised color-bluegray">Usar Minha Localização</a>
-                                </p>
-                              </div>
-                            </div>
-                          </li>
-
-                          <li class="item-content">
-                            <div class="item-media"><i class="material-icons color-icon">person</i></div>
-                            <div class="item-inner">
-                              <div class="item-input">
-                                <input type="text" id="nome" name="nome" placeholder="Seu Nome" required>
-                              </div>
-                            </div>
-                          </li>
-
-                          <li class="item-content">
-                            <div class="item-media"><i class="material-icons color-icon">email</i></div>
-                            <div class="item-inner">
-                              <div class="item-input">
-                                <input type="email" id="email" name="email" placeholder="Seu Email" required>
-                              </div>
-                            </div>
-                          </li>
-
-                          <input name="cep" type="hidden" id="cep" value="" size="15" maxlength="8" />
-                          <input name="rua" type="hidden" id="rua" size="60" />
-                          <input name="bairro" type="hidden" id="bairro" class="form-control" size="60" />
-                          <input name="cidade" type="hidden" id="cidade" size="60" />
-
-                        </ul>
-                      </div>
-                      <div class="list-block">
-                        <ul>
-                          <li>
-                            <p class="buttons-row">
-                              <a type="submit" href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
-                            </p>
-                          </li>
-                        </ul>
-                      </div>
-                    </form><!-- fim login page -->
-
-                    <br>
-
-                    <div class="content-block">
-                      <div class="content-block-inner">
-                        <p class="color-icon">
-                          Horário de Atendimento: Ter. à Dom. das 18h as 00h.<br>
-                          Telefone:<br>
-                          Email:
+                          <!--  <li class="item-content">
+                          <div class="item-inner">
+                          <div class="item-input">
+                          <p class="buttons-row">
+                          <a href="" onclick="" class="button button-fill button-raised color-bluegray">Usar Minha Localização</a>
                         </p>
                       </div>
                     </div>
+                  </li> -->
 
-                  </div>
-                </div>
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">person</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" onfocus="position('#nome')" id="nome" name="nome" placeholder="Seu Nome" required>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">email</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="email" onfocus="position('#email')" id="email" name="email" placeholder="Seu Email" required>
+                      </div>
+                    </div>
+                  </li>
+
+                  <input name="cep" type="hidden" id="cep" value="" size="15" maxlength="8" />
+                  <input name="rua" type="hidden" id="rua" size="60" />
+                  <input name="bairro" type="hidden" id="bairro" class="form-control" size="60" />
+                  <input name="cidade" type="hidden" id="cidade" size="60" />
+
+                </ul>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <p class="buttons-row">
+                      <a type="submit" href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </form><!-- fim login page -->
+
+            <br>
+
+            <div class="content-block">
+              <div class="content-block-inner">
+                <p class="color-icon">
+                  Horário de Atendimento: Ter. à Dom. das 18h as 00h.<br>
+                  Telefone:<br>
+                  Email:
+                </p>
               </div>
             </div>
+
           </div>
         </div>
       </div>
-
     </div>
-    <!-- Path to Framework7 Library JS-->
-    <script type="text/javascript" src="js/framework7.min.js"></script>
-    <!-- Path to your app js-->
-    <script type="text/javascript" src="js/my-app.js"></script>
+  </div>
+</div>
+</div>
 
-    <!--delivery Js-->
-    <script type="text/javascript" src="js/delivery.min.js" ></script>
-  </body>
-  </html>
+</div>
+<!-- Path to Framework7 Library JS-->
+<script type="text/javascript" src="js/framework7.min.js"></script>
+<!-- Path to your app js-->
+<script type="text/javascript" src="js/my-app.js"></script>
+
+<!--delivery Js-->
+<script type="text/javascript" src="js/delivery.min.js" ></script>
+</body>
+</html>

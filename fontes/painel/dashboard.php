@@ -2,28 +2,44 @@
 <?php
 ob_start();// Inicia Buffer
 
+// Funções para não exibir alguns erros de conexao
+ini_set( 'display_errors', true );
+error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
+
+
 session_start(); 	//A seção deve ser iniciada em todas as páginas
 if (!isset($_SESSION['usuarioID'])) {		//Verifica se há seções
         session_destroy();						//Destroi a seção por segurança
         header("Location: index.php"); exit;	//Redireciona o visitante para login
 }
-
-// Dados do usuario logado
-$id_usuario     = $_SESSION["usuarioID"];
-$nome_usuario 	= $_SESSION["nomeUsuario"];
-$login_usuario 	= $_SESSION["email"];
-$nivel_usuario  = $_SESSION["nivelUsuario"];
-
-
-// Funções para não exibir alguns erros de conexao
-ini_set( 'display_errors', true );
-error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
-
 // Inclui a classe de CRUD mysql
 include('class/mysql_crud.php');
 
 // Cria o objeto Database
 $db = new Database();
+
+// Dados do usuario logado
+$id_usuario     = $_SESSION["usuarioID"];
+
+// Pega valores do usuario
+$db->connect();
+$db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
+$res = $db->getResult();
+foreach ($res as $output) {
+        $nome_usuario 	= $output["nome"];
+        $login_usuario 	= $output["usuario"];
+        $nivel_usuario  = $output["nivel"];
+        $imagem_usuario = $output["imagem"];
+}
+
+// Configurações da página
+$nivel_pagina    = 1;
+
+// Rotina de verificação nivel de usuario
+if ($nivel_usuario < $nivel_pagina){
+        header("Location: 403.html"); exit;
+}
+
 ?>
 <html>
 <head>
@@ -147,17 +163,17 @@ $db = new Database();
                                                 <input type="text"  value="Search..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search...';}">
                                                 <input type="submit" value="" class="fa fa-search">
                                                 <?php
-                                                        $db->connect();
-                                                        $db->sql("SELECT * FROM adm_empresa WHERE padrao = 1");
-                                                        $res = $db->getResult();
-                                                        foreach ($res as $output) {
-                                                                $abertofechado = $output["aberto"];
-                                                        }
-                                                        if ($abertofechado == 1){
-                                                                echo '<button type="button" onclick="abrirfechar(0);" class="btn btn-danger">Fechar Loja</button>';
-                                                        } else {
-                                                                echo '<button type="button" onclick="abrirfechar(1);" class="btn btn-success">Abrir Loja</button>';
-                                                        }
+                                                $db->connect();
+                                                $db->sql("SELECT * FROM adm_empresa WHERE padrao = 1");
+                                                $res = $db->getResult();
+                                                foreach ($res as $output) {
+                                                        $abertofechado = $output["aberto"];
+                                                }
+                                                if ($abertofechado == 1){
+                                                        echo '<button type="button" onclick="abrirfechar(0);" class="btn btn-danger">Fechar Loja</button>';
+                                                } else {
+                                                        echo '<button type="button" onclick="abrirfechar(1);" class="btn btn-success">Abrir Loja</button>';
+                                                }
                                                 ?>
                                         </form>
                                         <div class="clearfix"> </div>
@@ -171,12 +187,14 @@ $db = new Database();
                                         <ul class=" nav_1">
 
                                                 <li class="dropdown">
-                                                        <a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret">Rackham<i class="caret"></i></span><img src="images/wo.jpg"></a>
+                                                        <a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret"><?php echo $nome_usuario ?><i class="caret"></i></span><img width="60px" height="60px" src="<?php
+                                                        if ($imagem_usuario != "" ){
+                                                                echo $imagem_usuario;
+                                                        } else {
+                                                                echo ("images/default.png") ;
+                                                        } ?>"></a>
                                                         <ul class="dropdown-menu " role="menu">
-                                                                <li><a href="profile.html"><i class="fa fa-user"></i>Edit Profile</a></li>
-                                                                <li><a href="inbox.html"><i class="fa fa-envelope"></i>Inbox</a></li>
-                                                                <li><a href="calendar.html"><i class="fa fa-calendar"></i>Calender</a></li>
-                                                                <li><a href="inbox.html"><i class="fa fa-clipboard"></i>Tasks</a></li>
+                                                                <li><a href="edit_user.php"><i class="fa fa-user"></i>Editar usuario</a></li>
                                                         </ul>
                                                 </li>
 
@@ -189,7 +207,7 @@ $db = new Database();
                                 <div class="navbar-default sidebar" role="navigation">
                                         <div class="sidebar-nav navbar-collapse">
                                                 <?php
-                                                        include('class/menu.php');
+                                                include('class/menu.php');
                                                 ?>
                                         </div>
                                 </div>

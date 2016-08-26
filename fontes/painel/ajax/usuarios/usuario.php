@@ -11,6 +11,8 @@ $senha            = md5($_POST["senha"]);
 $nome             = $_POST["nome"];
 $nivel            = $_POST["nivel"];
 $operacao         = $_POST["operacao"];
+$salvarsenha      = $_POST["salvasenha"];
+$imagem           = $_POST["imagem"];
 
 $db = new Database();
 $db->connect();
@@ -23,22 +25,20 @@ if ($operacao == 1) {
   if ($ress >= 1){
     $return = 4;
   } else {
-    $db->insert('adm_usuarios',array('usuario'=>$usuario, 'senha'=>$senha, 'nome'=>$nome, 'nivel'=>$nivel));
+    $db->insert('adm_usuarios',array('usuario'=>$usuario, 'senha'=>$senha, 'nome'=>$nome, 'nivel'=>$nivel, 'imagem'=>$imagem));
     $res = $db->getResult();
   }
 
 } else if ($operacao == 2) {
-  $db->sql("SELECT * FROM adm_usuarios WHERE usuario = '$usuario'");
-  $ress = $db->getResult();
-  $ress = $db->numRows();
-
-  if ($ress >= 1){
-    $return = 4;
-  } else {
-  $db->connect();
-  $db->update('adm_usuarios',array('usuario'=>$usuario, 'senha'=>$senha, 'nome'=>$nome, 'nivel'=>$nivel),'guid='.$guidupd);
-  $res = $db->getResult();
-}
+    if ($salvarsenha == 0) {
+      $db->connect();
+      $db->update('adm_usuarios',array('usuario'=>$usuario, 'nome'=>$nome, 'nivel'=>$nivel, 'imagem'=>$imagem),'guid='.$guidupd);
+      $res = $db->getResult();
+    } else {
+      $db->connect();
+      $db->update('adm_usuarios',array('usuario'=>$usuario, 'senha'=>$senha, 'nome'=>$nome, 'nivel'=>$nivel, 'imagem'=>$imagem),'guid='.$guidupd);
+      $res = $db->getResult();
+    }
 } elseif ($operacao == 3) {
   $db->connect();
   $db->delete('adm_usuarios','guid='.$guid);

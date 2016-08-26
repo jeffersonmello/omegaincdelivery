@@ -3,6 +3,7 @@ $(document).ready(function(){
   reloadtable();
 
 })
+var valorsenha = 0;
 
 function reloadtable(){
   $('#divcat').load('ajax/usuarios/tab_usuarios.php', function(){
@@ -21,7 +22,10 @@ function openModal(operacao, guid){
   var camposenha    = $("#senha");
   var camaponome    = $("#nome");
   var camponivel    = $("#nivel");
+  var campoimagem   = $("#img");
+  var containerimg  = $("#imageview");
   var selected      = $("#selectedOption");
+  valorsenha = camposenha.val();
 
 
   if (operacao == "Novo"){
@@ -31,6 +35,7 @@ function openModal(operacao, guid){
     botaosalvar.show();
     botaoeditar.hide();
     $('#formUsuarios')[0].reset();
+    containerimg.attr('src', '');
     modall.modal('show');
   } else
   if (operacao == "editar"){
@@ -46,6 +51,7 @@ function openModal(operacao, guid){
           var nome              = dados[index].nome;
           var nivel             = dados[index].nivel;
           var niveltext         = 0;
+          var imagem            = dados[index].imagem;
 
           $('#formUsuarios')[0].reset();
           if (nivel == 1) {
@@ -63,6 +69,9 @@ function openModal(operacao, guid){
           selected.show();
           selected.html(niveltext);
           selected.val(nivel);
+
+          campoimagem.val(imagem);
+          containerimg.attr('src', imagem);
 
           inputguid.val(guidusuario);
           campousuario.val(usuario);
@@ -88,8 +97,17 @@ function salvar(operacao, guid){
   var camaponome     		= $("#nome").val();
   var camponivel        = $("#nivel").val();
   var guidupdate				= $("#guid").val();
+  var salvarsenha       = 0;
+  var campoimagem       = $("#img").val();
 
-
+  if (camposenha != valorsenha){
+    salvarsenha = 0;
+  } else {
+    salvarsenha = 1;
+  }
+  console.log(salvarsenha);
+  console.log(campoimagem);
+  
   toastr.options = {
     "closeButton": true,
     "debug": false,
@@ -145,7 +163,7 @@ function salvar(operacao, guid){
       $.ajax({
         url:"ajax/usuarios/usuario.php",
         type:"POST",
-        data:"usuario="+campousuario+"&senha="+camposenha+"&nome="+camaponome+"&nivel="+camponivel+"&guid="+guid+"&operacao="+operacao+"&guidupdate="+guidupdate,
+        data:"usuario="+campousuario+"&senha="+camposenha+"&nome="+camaponome+"&nivel="+camponivel+"&guid="+guid+"&operacao="+operacao+"&guidupdate="+guidupdate+"&salvasenha="+salvarsenha+"&imagem="+campoimagem,
         success: function (result){
           if (result == 4) {
             toastr.warning('Já Existe um usuario cadastrado com esse nome de usuario', 'Atenção');

@@ -8,22 +8,37 @@ if (!isset($_SESSION['usuarioID'])) {		//Verifica se há seções
 	header("Location: index.php"); exit;	//Redireciona o visitante para login
 }
 
-// Dados do usuario logado
-$id_usuario 		= $_SESSION["usuarioID"];
-$nome_usuario 	= $_SESSION["nomeUsuario"];
-$login_usuario 	= $_SESSION["email"];
-$nivel_usuario  = $_SESSION["nivelUsuario"];
-
-
-// Funções para não exibir alguns erros de conexao
-ini_set( 'display_errors', true );
-error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
-
 // Inclui a classe de CRUD mysql
 include('class/mysql_crud.php');
 
 // Cria o objeto Database
 $db = new Database();
+
+// Dados do usuario logado
+$id_usuario     = $_SESSION["usuarioID"];
+
+// Pega valores do usuario
+$db->connect();
+$db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
+$res = $db->getResult();
+foreach ($res as $output) {
+        $nome_usuario 	= $output["nome"];
+        $login_usuario 	= $output["usuario"];
+        $nivel_usuario  = $output["nivel"];
+        $imagem_usuario = $output["imagem"];
+}
+
+// Configurações da página
+$nivel_pagina    = 1;
+
+// Rotina de verificação nivel de usuario
+if ($nivel_usuario < $nivel_pagina){
+        header("Location: 403.html"); exit;
+}
+
+// Funções para não exibir alguns erros de conexao
+ini_set( 'display_errors', true );
+error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 ?>
 <html>
 <head>
@@ -257,12 +272,14 @@ $db = new Database();
 					<ul class=" nav_1">
 
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret">Rackham<i class="caret"></i></span><img src="images/wo.jpg"></a>
+							<a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret"><?php echo $nome_usuario ?><i class="caret"></i></span><img width="60px" height="60px" src="<?php
+							if ($imagem_usuario != "" ){
+								echo $imagem_usuario;
+							} else {
+								echo ("images/default.png") ;
+							} ?>"></a>
 							<ul class="dropdown-menu " role="menu">
-								<li><a href="profile.html"><i class="fa fa-user"></i>Edit Profile</a></li>
-								<li><a href="inbox.html"><i class="fa fa-envelope"></i>Inbox</a></li>
-								<li><a href="calendar.html"><i class="fa fa-calendar"></i>Calender</a></li>
-								<li><a href="inbox.html"><i class="fa fa-clipboard"></i>Tasks</a></li>
+								<li><a href="edit_user.php"><i class="fa fa-user"></i>Editar usuario</a></li>
 							</ul>
 						</li>
 
@@ -318,12 +335,12 @@ $db = new Database();
 										<div class="modal-body">
 											<form id="formCategoria">
 												<fieldset id="campoguid" class="form-group">
-													<label for="exampleInputEmail1">GUID</label>
+													<label>GUID</label>
 													<input type="text" class="form-control" id="guid" name="guid" placeholder="">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Categoria</label>
+													<label>Categoria</label>
 													<select class="form-control" id="cat">
 														<?php
 														$db->connect();
@@ -341,28 +358,28 @@ $db = new Database();
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Imagem</label>
+													<label>Imagem</label>
 													<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
-													<input id="sortpicture" type="file" name="sortpic" />
+													<input id="sortpicture" type="file" name="sortpic" accept="image/*" />
 													<button type="button" class="btn btn-secondary" id="upload">Upload</button>
 												</fieldset>
 
 												<div id="imagefield">
-													<img id="imageview" src="" height="200" alt="Image preview...">
+													<img id="imageview" src="" height="200" alt="...">
 												</div>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Descrição</label>
+													<label>Descrição</label>
 													<input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição/Nome do Produto">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Subdescrição</label>
+													<label>Subdescrição</label>
 													<input type="text" class="form-control" id="subdesc" name="subdesc" placeholder="Subdescrição do Produto">
 												</fieldset>
 
 												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Preço</label>
+													<label>Preço</label>
 													<input type="text" class="form-control" id="preco" name="preco" placeholder="Preço do Produto">
 												</fieldset>
 

@@ -8,22 +8,38 @@ if (!isset($_SESSION['usuarioID'])) {		//Verifica se há seções
 	header("Location: index.php"); exit;	//Redireciona o visitante para login
 }
 
-// Dados do usuario logado
-$id_usuario 		= $_SESSION["usuarioID"];
-$nome_usuario 	= $_SESSION["nomeUsuario"];
-$login_usuario 	= $_SESSION["email"];
-$nivel_usuario  = $_SESSION["nivelUsuario"];
-
-
-// Funções para não exibir alguns erros de conexao
-ini_set( 'display_errors', true );
-error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
-
 // Inclui a classe de CRUD mysql
 include('class/mysql_crud.php');
 
 // Cria o objeto Database
 $db = new Database();
+
+// Dados do usuario logado
+$id_usuario     = $_SESSION["usuarioID"];
+
+// Pega valores do usuario
+$db->connect();
+$db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
+$res = $db->getResult();
+foreach ($res as $output) {
+        $nome_usuario 	= $output["nome"];
+        $login_usuario 	= $output["usuario"];
+        $nivel_usuario  = $output["nivel"];
+        $imagem_usuario = $output["imagem"];
+}
+
+
+// Configurações da página
+$nivel_pagina    = 2;
+
+// Rotina de verificação nivel de usuario
+if ($nivel_usuario < $nivel_pagina){
+	header("Location: 403.html"); exit;
+}
+
+// Funções para não exibir alguns erros de conexao
+ini_set( 'display_errors', true );
+error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 ?>
 <html>
 <head>
@@ -74,415 +90,8 @@ $db = new Database();
 	<!--pdf -->
 	<script src="js/jspdf.min.js"></script>
 
-	<script type="text/javascript">
-	$(document).ready(function(){
-		reloadtable();
-		reloadtable();
-		verificaNovoPedido();
-	})
-
-	function reloadtable(){
-		$('#divcat').load('ajax/pedidos/tab_pedidosAbertos.php', function(){});
-		$('#producaodiv').load('ajax/pedidos/tab_pedidosEmProducao.php', function(){});
-		$('#entregadiv').load('ajax/pedidos/tab_pedidosEntrega.php', function(){});
-		$('#entregues').load('ajax/pedidos/tab_pedidosEntregues.php', function(){});
-	}
-
-
-	document.addEventListener('DOMContentLoaded', function () {
-		if (Notification.permission !== "granted")
-		Notification.requestPermission();
-	});
-
-	function inprimir(guid){
-		$.ajax({
-			url: "ajax/pedidos/populate_pedidoAberto.php",
-			type: "POST",
-			data: "guid="+guid,
-			success: function (dados){
-				$.each(dados, function(index, dado){
-					var guidPedido				= dado.guid;
-					var statusPedido			= dado.status;
-					var nomePedido				= dado.nome;
-					var enderecoPedido		= dado.endereco;
-					var totalPedido				= dado.total;
-					var dataPedido				= dado.data;
-					var telefonePedido		= dado.telefone;
-					var numerocasaPedido	= dado.numero;
-					var formaPagamento		= dado.formaPagamento;
-					var observacaoPedido	= dado.observacao;
-					var cpfClientePedido	= dado.cpf;
-					var entregarPedido		= dado.entregar;
-					var tokenPedido				= dado.token;
-					var bairroPedido			= dado.bairro;
-					var pagamentotext 		= 0;
-
-					if (statusPedido == 1) {
-						var statuspedidotext = "Processando";
-					}
-
-					if (formaPagamento == 0) {
-						pagamentotext = "Dinheiro";
-					} else {
-						pagamentotext = "Cartão/Crédito/Débito";
-					}
-
-					totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
-					//totalPedido	= parseFloat(totalPedido).toFixed(2);
-					dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
-
-					var doc = new jsPDF();
-
-					doc.setFontSize(8);
-					doc.text(70, 10, ("Número Pedido: "+guidPedido));
-					doc.text(70, 14, ("Cliente: "+nomePedido));
-					doc.text(70, 18, ("Endereco: "+enderecoPedido));
-					doc.text(70, 22, ("Número: "+numerocasaPedido));
-					doc.text(70, 26, ("Telefone: "+telefonePedido));
-					doc.text(70, 30, ("Pagamento: "+pagamentotext));
-					doc.text(70, 34, ("--------------------------------------------------------------------------"));
-
-
-					$.ajax({
-						url:"ajax/pedidos/addprodstolist.php",
-						type:"POST",
-						data:"pedido="+guidPedido,
-						success: function (dados){
-							var linha				= 34;
-
-							$.each(dados, function(index, dado){
-								var preco				= dado.valorproduto;
-
-								preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
-
-								linha = linha + 4;
-								doc.text(70, (linha), ((dado.nomeproduto)+" | Preço: "+preco));
-							});
-
-							doc.text(70, (linha+4), ("--------------------------------------------------------------------------"));
-							doc.text(70, (linha+8), ("Total do Pedido: R$ "+ totalPedido));
-							var string = doc.output('dataurlnewwindow');
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown) {
-							alert("Status: " + textStatus); alert("Error: " + errorThrown);
-							console.log(arguments);
-						}
-					});
-					//doc.save('Test.pdf');
-				});
-			}
-		})
-	}
-
-	function showAll(){
-		$("#u2").show();
-		$("#u3").show();
-		$("#u4").show();
-		$("#u5").show();
-		$("#u6").show();
-		$("#u7").show();
-		$("#u8").show();
-		$("#u9").show();
-	}
-
-
-	function openModal(operacao, guid){
-		var modall 				= $('#modal');
-		var titulomodal		= $("#titulomodal");
-		var campoguid			= $("#campoguid");
-		var botaoeditar		= $("#botaoatualizar");
-		var selected			= $("#optionSelected");
-
-		var inputguid					= $("#guid");
-		var campostatus				= $("#cat");
-		var campotoken				= $("#token");
-		var campodata					= $("#data");
-		var campototal				= $("#total");
-		var campoendereco			= $("#enderecoo");
-		var camponumero				= $("#numero");
-		var campobairro				= $("#bairro");
-		var camponome					= $("#nome");
-		var campotelefone			= $("#telefone");
-		var campopagamento		= $("#pagamentoO");
-		var campoobs					= $("#obss");
-		var campototal2				= $("#total2");
-
-
-		if (operacao == "editar"){
-			$.ajax({
-				url:"ajax/pedidos/populate_pedidoAberto.php",
-				type:"POST",
-				data:"guid="+guid,
-				success: function (dados){
-					$.each(dados, function(index){
-						var guidPedido				= dados[index].guid;
-						var statusPedido			= dados[index].status;
-						var nomePedido				= dados[index].nome;
-						var enderecoPedido		= dados[index].endereco;
-						var totalPedido				= dados[index].total;
-						var dataPedido				= dados[index].data;
-						var telefonePedido		= dados[index].telefone;
-						var numerocasaPedido	= dados[index].numero;
-						var formaPagamento		= dados[index].formaPagamento;
-						var observacaoPedido	= dados[index].observacao;
-						var cpfClientePedido	= dados[index].cpf;
-						var entregarPedido		= dados[index].entregar;
-						var tokenPedido				= dados[index].token;
-						var bairroPedido			= dados[index].bairro;
-						var pagamentotext 		= 0;
-
-						if (statusPedido == 1) {
-							var statuspedidotext = "Processando"
-						} else if (statusPedido == 2) {
-							statuspedidotext = "Em Produção";
-							showAll();
-							$("#u2").hide();
-						} else if (statusPedido == 3) {
-							statuspedidotext = "Pronto";
-							showAll();
-							$("#u3").hide();
-						} else if (statusPedido == 4 ) {
-							statuspedidotext = "Aguardando para busca";
-							showAll();
-							$("#u4").hide();
-						} else if (statusPedido == 5) {
-							statuspedidotext = "Saiu para Entrega";
-							showAll();
-							$("#u5").hide();
-						} else if (statusPedido == 6) {
-							statuspedidotext = "Entegue";
-							showAll();
-							$("#u6").hide();
-						} else if (statusPedido == 7) {
-							statuspedidotext = "Cliente não estava";
-							showAll();
-							$("#u7").hide();
-						} else if (statusPedido == 8) {
-							statuspedidotext = "Cancelado";
-							showAll();
-							$("#u8").hide();
-						} else if (statusPedido == 9) {
-							statuspedidotext = "Devolvido";
-							showAll();
-							$("#u9").hide();
-						}
-
-						if (formaPagamento == 0) {
-							pagamentotext = "Dinheiro";
-						} else {
-							pagamentotext = "Cartão/Crédito/Débito";
-						}
-
-						totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
-						//totalPedido	= parseFloat(totalPedido).toFixed(2);
-						dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
-
-						$('#formPedido')[0].reset();
-						$('#formEndereco')[0].reset();
-						$('#formaPagamento')[0].reset();
-
-						selected.val(statusPedido);
-						selected.html(statuspedidotext);
-						//totalPedido = (totalPedido.toFixed(2));
-						campototal.val(totalPedido);
-						campotoken.val(tokenPedido);
-						campodata.val(dataPedido);
-						campoendereco.val(enderecoPedido);
-						camponumero.val(numerocasaPedido);
-						campobairro.val(bairroPedido);
-						camponome.val(nomePedido);
-						campotelefone.val(telefonePedido);
-						campopagamento.val(pagamentotext);
-						campoobs.val(observacaoPedido);
-						campototal2.val(totalPedido);
-					})
-					titulomodal.html("Pedido #"+guid);
-					campoguid.hide();
-					botaoeditar.show();
-					inputguid.val(guid);
-					addProdtolist(guid, (campobairro.val()));
-					modall.modal('show');
-				}
-			});
-		}
-	}
-
-	function notifyMe(pedido) {
-		if (!Notification) {
-			alert('Desktop notifications not available in your browser. Try Chromium.');
-			return;
-		}
-
-		if (Notification.permission !== "granted")
-		Notification.requestPermission();
-		else {
-			var notification = new Notification(('Novo Pedido #'+pedido), {
-				icon: 'https://cdn0.iconfinder.com/data/icons/shop-payment-vol-4/128/shop-65-512.png',
-				body: ("Novo Pedido Realiazdo Número: "+pedido),
-			});
-
-			var player = document.getElementById('audio');
-			var musica = "http://mobile.kingofeletro.com.br/android/painel/sound.mp3";
-
-			player.src = musica;
-			player.play();
-
-			notification.onclick = function () {
-				window.focus()
-			};
-			toastr.options = {
-				"closeButton": true,
-				"debug": true,
-				"newestOnTop": true,
-				"progressBar": true,
-				"positionClass": "toast-top-right",
-				"preventDuplicates": true,
-				"onclick": null,
-				"showDuration": "300",
-				"hideDuration": "1000",
-				"timeOut": "60000",
-				"extendedTimeOut": "1000",
-				"showEasing": "swing",
-				"hideEasing": "linear",
-				"showMethod": "fadeIn",
-				"hideMethod": "fadeOut"
-			};
-			toastr["info"]("Pedido Recebido para visualizar clique <div><button type='button' onclick='openModal(\"editar\", "+pedido+");' class='btn btn-outline-info btn-sm'>Aqui</button>", "Novo Pedido")
-		}
-	}
-
-	function salvar(operacao, guid){
-		var categoria 			  = $("#cat").val();
-		var guidupdate				= $("#guid").val();
-
-		$.ajax({
-			url:"ajax/pedidos/pedido.php",
-			type:"POST",
-			data: "guidupdate="+guidupdate+"&categoria="+categoria+"&operacao="+operacao,
-			success: function (result){
-				$('#modal').modal('hide');
-				if (result == 1) {
-					toastr.success('Registro Deletado com Sucesso', 'OK')
-				} else {
-					toastr.success('Registro Salvo com Sucesso', 'OK')
-				}
-				reloadtable();
-			}
-		})
-	}
-
-	function abrirfechar(operacao){
-		$.ajax({
-			url:"ajax/abre_fecha/abrefecha.php",
-			type:"POST",
-			data:"operacao="+operacao,
-			success: function (dados){
-				location.reload();
-			}
-		})
-	}
-
-	var timeout = setTimeout(verificaNovoPedido, 2000);
-	function verificaNovoPedido(){
-		$.ajax({
-			url: "ajax/pedidos/verificaNovoPedido.php",
-			type: "POST",
-			success: function (dados){
-				if (dados != 0){
-					notifyMe(dados);
-					reloadtable();
-				}
-			}
-		})
-		timeout = setTimeout(verificaNovoPedido, 2000);
-	}
-
-	function mesmo(guidProd, guidPedido){
-		var campqtde =  $("#qtdeListProd_"+guidProd);
-
-		$.ajax({
-			url: "ajax/pedidos/mesmo.php",
-			type: "POST",
-			data: "produto="+guidProd+"&pedido="+guidPedido,
-			success: function (dados){
-				campqtde.html(dados);
-			}
-		})
-	}
-
-	// Função que retorna o valor da taxa de entrega
-	function getBairroTax(bairro){
-		var listaprodutos = $("#listprods");
-
-		$.ajax({
-			url:	"ajax/pedidos/taxa.php",
-			type:	"POST",
-			data: "bairro="+bairro,
-			success: function (dados){
-				var taxa = dados;
-
-				taxa = accounting.formatMoney(taxa, "R$ ", 2, ".", ",");
-				listaprodutos.append(' <li class="list-group-item">Taxa de Entrega: '+taxa+' </li>');
-			}
-		})
-
-	}
-
-	// Função que adiciona os produtos na lista do modal
-	// guidPedido: Número do pedido para identificar os produtos vinculados a ele
-	// TODO: falta adicionar como ultimo li a taxa de entrega, para retornar a taxa de entrega deve se criar outra função
-	// getBairroTax
-	function addProdtolist(guidPedido, bairro){
-		var listaprodutos = $("#listprods");
-
-		$.ajax({
-			url:"ajax/pedidos/addprodstolist.php",
-			type:"POST",
-			data:"pedido="+guidPedido,
-			success: function (dados){
-				listaprodutos.empty();
-
-				$.each(dados, function(index){
-					var len    			= dados.length;
-					var preco				= dados[index].valorproduto;
-
-					preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
-
-
-					for (var i=0; i <= len; i++){
-						var guidprod		= dados[index].guidproduto;
-						var currentiten = $("#idLIProd_"+guidprod);
-
-						if ($(currentiten, listaprodutos).length){
-							mesmo(guidprod, guidPedido)
-						} else {
-							listaprodutos.append('<li id="idLIProd_'+guidprod+'" class="list-group-item">'+dados[index].nomeproduto+' | Preço: '+preco+'<span class="badge" id="qtdeListProd_'+guidprod+'" >1</span></li>');
-						}
-					}
-				});
-				getBairroTax(bairro);
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				alert("Status: " + textStatus); alert("Error: " + errorThrown);
-				console.log(arguments);
-			}
-		})
-	}
-
-	$(function () {
-		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
-
-		if (!screenfull.enabled) {
-			return false;
-		}
-
-		$('#toggle').click(function () {
-			screenfull.toggle($('#container')[0]);
-		});
-
-	});
-	</script>
-
+	<!--Pedidos JS -->
+	<script src="js/pedidos/pedidos.min.js"></script>
 </head>
 <body>
 	<div id="wrapper">
@@ -529,12 +138,14 @@ $db = new Database();
 					<ul class=" nav_1">
 
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret">Rackham<i class="caret"></i></span><img src="images/wo.jpg"></a>
+							<a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret"><?php echo $nome_usuario ?><i class="caret"></i></span><img width="60px" height="60px" src="<?php
+							if ($imagem_usuario != "" ){
+								echo $imagem_usuario;
+							} else {
+								echo ("images/default.png") ;
+							} ?>"></a>
 							<ul class="dropdown-menu " role="menu">
-								<li><a href="profile.html"><i class="fa fa-user"></i>Edit Profile</a></li>
-								<li><a href="inbox.html"><i class="fa fa-envelope"></i>Inbox</a></li>
-								<li><a href="calendar.html"><i class="fa fa-calendar"></i>Calender</a></li>
-								<li><a href="inbox.html"><i class="fa fa-clipboard"></i>Tasks</a></li>
+								<li><a href="edit_user.php"><i class="fa fa-user"></i>Editar usuario</a></li>
 							</ul>
 						</li>
 
@@ -574,18 +185,30 @@ $db = new Database();
 						<div class="blank-page">
 
 							<!-- Nav tabs -->
-							<ul class="nav nav-tabs" role="tablist">
+							<ul class="nav nav-tabs" id="Mytab" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link active" onclick="reloadtable();" data-toggle="tab" href="#pedidosabertos" role="tab">Pedidos Abertos</a>
+									<a class="nav-link active" onclick="reloadtableAll();" data-toggle="tab" href="#pedidosabertos" role="tab">Pedidos Abertos</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" onclick="reloadtable();" data-toggle="tab" href="#producao" role="tab">Em Produção</a>
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#producao" role="tab">Em Produção</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" onclick="reloadtable();" data-toggle="tab" href="#saiuentrega" role="tab">Saiu para Entrega</a>
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#prontos" role="tab">Prontos</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" onclick="reloadtable();" data-toggle="tab" href="#concluidos" role="tab">Concluidos</a>
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#retirada" role="tab">Aguardando Retirada</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#saiuentrega" role="tab">Saiu para Entrega</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#concluidos" role="tab">Concluidos</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#cancelados" role="tab">Cancelados</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" onclick="reloadtableAll();" data-toggle="tab" href="#devolvidos" role="tab">Devolvidos</a>
 								</li>
 							</ul>
 
@@ -593,22 +216,44 @@ $db = new Database();
 							<div class="tab-content">
 								<div class="tab-pane active" id="pedidosabertos" role="tabpanel">
 									<div class="banner">
-										<h2>Pedidos Abertos <b>Para Entregar</b></h2>
+										<h2><b>Pedidos Abertos</b></h2>
 									</div>
 
 									<div id="divcat">
 
 									</div>
 								</div>
+
 								<div class="tab-pane" id="producao" role="tabpanel">
 									<div class="banner">
-										<h2>Pedidos Em Produção <b>Para Entregar</b></h2>
+										<h2><b>Pedidos Em Produção </b></h2>
 									</div>
 
 									<div id="producaodiv">
 
 									</div>
 								</div>
+
+								<div class="tab-pane" id="prontos" role="tabpanel">
+									<div class="banner">
+										<h2>Prontos <b>Pedido saiu da cozinha, está pronto</b></h2>
+									</div>
+
+									<div id="prontoss">
+
+									</div>
+								</div>
+
+								<div class="tab-pane" id="retirada" role="tabpanel">
+									<div class="banner">
+										<h2>Aguardando Retirada <b>Cliente vai vim buscar</b></h2>
+									</div>
+
+									<div id="agretirada">
+
+									</div>
+								</div>
+
 								<div class="tab-pane" id="saiuentrega" role="tabpanel">
 									<div class="banner">
 										<h2>Saidos Para Entrega</h2>
@@ -618,6 +263,7 @@ $db = new Database();
 
 									</div>
 								</div>
+
 								<div class="tab-pane" id="concluidos" role="tabpanel">
 									<div class="banner">
 										<h2>Entregues</h2>
@@ -627,6 +273,27 @@ $db = new Database();
 
 									</div>
 								</div>
+
+								<div class="tab-pane" id="cancelados" role="tabpanel">
+									<div class="banner">
+										<h2>Cancelados</h2>
+									</div>
+
+									<div id="canceladosdiv">
+
+									</div>
+								</div>
+
+								<div class="tab-pane" id="devolvidos" role="tabpanel">
+									<div class="banner">
+										<h2>Devolvidos</h2>
+									</div>
+
+									<div id="devolvidosdiv">
+
+									</div>
+								</div>
+
 							</div>
 
 
@@ -749,6 +416,11 @@ $db = new Database();
 															<textarea class="form-control" id="obss" type="text"  disabled rows="3"></textarea>
 														</fieldset>
 
+														<fieldset class="form-group">
+															<label>Entregar ?</label>
+															<input class="form-control" id="entregarR" type="text"  disabled>
+														</fieldset>
+
 													</form>
 												</div>
 
@@ -767,6 +439,7 @@ $db = new Database();
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+											<button type="button" class="btn btn-secondary" onclick="getprint()">Imprimir</button>
 											<button id="botaoatualizar" type="button" onclick="salvar(2, 0)"class="btn btn-primary" hidden="">Salvar</button>
 										</div>
 									</div><!-- /.modal-content -->

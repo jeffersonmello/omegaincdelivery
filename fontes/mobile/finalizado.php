@@ -15,6 +15,9 @@ $email_cliente= $_SESSION['emailcliente'];
 $guid_bairro  = $_SESSION['idBairro'];
 $guid_pedido  = $_SESSION['idPedido'];
 $endereco     = $_SESSION['endereco'];
+$total        = $_SESSION['totalpedio'];
+
+$total = money_format('%n', $total);
 
 
 include('class/mysql_crud.php');
@@ -182,6 +185,14 @@ include('class/mysql_crud.php');
                             </div>
                           </li>
 
+                          <li class="item-content">
+                            <div class="item-media"><i class="material-icons color-icon">attach_money</i></div>
+                            <div class="item-inner">
+                              <div class="item-input">
+                                <input type="text" value="<?php echo $total?>" id="total" disabled>
+                              </div>
+                            </div>
+                          </li>
 
                         </ul>
                         <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>

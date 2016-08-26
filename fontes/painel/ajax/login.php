@@ -15,6 +15,7 @@ foreach ($res as $output) {
   $userid   = $output["guid"];
   $usernome = $output["nome"];
   $nivel    = $output["nivel"];
+  $imagem   = $output["imagem"];
 }
 $res = $db->getResult();
 $res = $db->numRows();
@@ -25,9 +26,6 @@ if ($res >= 1){
     session_start();
 
     $_SESSION['usuarioID']    = $userid;
-    $_SESSION['nomeUsuario']  = $usernome;
-    $_SESSION['email']        = $login;
-    $_SESSION['nivelUsuario'] = $nivel; 
   exit;
 } else {
   echo 0;

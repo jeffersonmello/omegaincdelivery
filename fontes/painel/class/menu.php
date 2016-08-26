@@ -23,15 +23,13 @@
     <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-paper-plane nav_icon"></i> <span class="nav-label">Lançamentos</span><span class="fa arrow"></span></a>
     <ul class="nav nav-second-level">
       <li><a href="lanc_pedidos.php" class=" hvr-bounce-to-right"> <i class="fa fa-reply nav_icon"></i>Pedidos</a></li>
-
-      <li><a href="lanc_pedidos.php" class=" hvr-bounce-to-right"> <i class="fa fa-toggle-on nav_icon"></i>Abrir/Fechar</a></li>
     </ul>
   </li>
 
   <li>
     <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-cog nav_icon"></i> <span class="nav-label">Settings</span><span class="fa arrow"></span></a>
     <ul class="nav nav-second-level">
-      <li><a href="sair.php" class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
+      <li><a href="ajax/logout.php"  class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
     </ul>
   </li>
 </ul>

@@ -88,6 +88,7 @@ create table adm_usuarios (
 	usuario varchar(250) not null,
 	senha varchar(250) not null,
 	nome varchar(500) not null,
+	imagem varchar(750),
 	nivel int not null default 0,
 	primary key(guid)
 );

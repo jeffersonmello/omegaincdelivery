@@ -8,22 +8,38 @@ if (!isset($_SESSION['usuarioID'])) {		//Verifica se há seções
 	header("Location: index.php"); exit;	//Redireciona o visitante para login
 }
 
-// Dados do usuario logado
-$id_usuario 		= $_SESSION["usuarioID"];
-$nome_usuario 	= $_SESSION["nomeUsuario"];
-$login_usuario 	= $_SESSION["email"];
-$nivel_usuario  = $_SESSION["nivelUsuario"];
-
-
-// Funções para não exibir alguns erros de conexao
-ini_set( 'display_errors', true );
-error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
-
 // Inclui a classe de CRUD mysql
 include('class/mysql_crud.php');
 
 // Cria o objeto Database
 $db = new Database();
+
+// Dados do usuario logado
+$id_usuario     = $_SESSION["usuarioID"];
+
+// Pega valores do usuario
+$db->connect();
+$db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
+$res = $db->getResult();
+foreach ($res as $output) {
+        $nome_usuario 	= $output["nome"];
+        $login_usuario 	= $output["usuario"];
+        $nivel_usuario  = $output["nivel"];
+        $imagem_usuario = $output["imagem"];
+}
+
+// Configurações da página
+$nivel_pagina    = 1;
+
+// Rotina de verificação nivel de usuario
+if ($nivel_usuario < $nivel_pagina){
+	header("Location: 403.html"); exit;
+}
+
+// Funções para não exibir alguns erros de conexao
+ini_set( 'display_errors', true );
+error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
+
 ?>
 <html>
 <head>
@@ -127,7 +143,7 @@ $db = new Database();
 		var id 				= $("#guid").val();
 
 		$.ajax({
-			url:"ajax/cad_categoria.php",
+			url:"ajax/categoria/cad_categoria.php",
 			type:"POST",
 			data:"descricao="+descricao+"&icone="+icone+"&operacao="+operacao+"&guid="+id+"&guidd="+guid,
 			success: function (result){
@@ -151,29 +167,29 @@ $db = new Database();
 	}
 
 	function abrirfechar(operacao){
-								$.ajax({
-												url:"ajax/abre_fecha/abrefecha.php",
-												type:"POST",
-												data:"operacao="+operacao,
-												success: function (dados){
-																location.reload();
-												}
-								})
-				}
-	</script>
+		$.ajax({
+			url:"ajax/abre_fecha/abrefecha.php",
+			type:"POST",
+			data:"operacao="+operacao,
+			success: function (dados){
+				location.reload();
+			}
+		})
+	}
 
-	<script>
+	function copiaIconeCategoria(code){
+		$("#icone").val(code);
+		$('#modalIcones').modal('hide');
+	}
+
 	$(function () {
 		$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
-
 		if (!screenfull.enabled) {
 			return false;
 		}
-
 		$('#toggle').click(function () {
 			screenfull.toggle($('#container')[0]);
 		});
-
 	});
 	</script>
 
@@ -227,12 +243,14 @@ $db = new Database();
 					<ul class=" nav_1">
 
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret">Rackham<i class="caret"></i></span><img src="images/wo.jpg"></a>
+							<a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret"><?php echo $nome_usuario ?><i class="caret"></i></span><img width="60px" height="60px" src="<?php
+							if ($imagem_usuario != "" ){
+								echo $imagem_usuario;
+							} else {
+								echo ("images/default.png") ;
+							} ?>"></a>
 							<ul class="dropdown-menu " role="menu">
-								<li><a href="profile.html"><i class="fa fa-user"></i>Edit Profile</a></li>
-								<li><a href="inbox.html"><i class="fa fa-envelope"></i>Inbox</a></li>
-								<li><a href="calendar.html"><i class="fa fa-calendar"></i>Calender</a></li>
-								<li><a href="inbox.html"><i class="fa fa-clipboard"></i>Tasks</a></li>
+								<li><a href="edit_user.php"><i class="fa fa-user"></i>Editar usuario</a></li>
 							</ul>
 						</li>
 
@@ -329,7 +347,20 @@ $db = new Database();
 											<h4 class="modal-title">Icones</h4>
 										</div>
 										<div class="modal-body">
-											<p> Lista de Icones</p>
+											<ul class="list-group">
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_pizza</i> - Pizza <button type="button" onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_pizza</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_drink</i> - Bebidas <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_drink</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_movies</i> - Cinema <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_movies</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_library</i> - Livros <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_library</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_mall</i> - Compras Geral <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_mall</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_bar</i> - Bebidas/Bar/Vinhos/Destilados <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_bar</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_florist</i> - Flores <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_florist</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_gas_station</i> - Combustivel <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_gas_station</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_pharmacy</i> - Remédios/Farmacia <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_pharmacy</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_taxi</i> - Taxi <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_taxi</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_offer</i> - Oferta <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_offer</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+												<li class="list-group-item"><p><i class="material-icons color-icon">local_dining</i> - Restaurante/Refeição <button type="button"onclick="copiaIconeCategoria('<i class=\'material-icons color-icon\'>local_dining</i>')" class="btn btn-secondary btn-sm">Copiar</button></p></li>
+											</ul>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>

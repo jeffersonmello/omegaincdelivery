@@ -55,7 +55,7 @@ echo '<table id="pedidosProd" class="table table-hover table-bordered">'
 ,'<tbody>';
 
 $db->connect();
-$db->sql("SELECT * FROM lanc_pedidos WHERE status='2' AND entregar = '1'");
+$db->sql("SELECT * FROM lanc_pedidos WHERE status='2'");
 $res = $db->getResult();
 foreach ($res as $output) {
   $guid           = $output["guid"];

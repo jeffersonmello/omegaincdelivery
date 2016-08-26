@@ -45,7 +45,7 @@ echo '<table id="pedidosAbertos" class="table table-hover table-bordered">'
 ,'<th width="15px" >#</th>'
 ,'<th>Nome</th>'
 ,'<th>Telefone</th>'
-,'<th>Número</th>'
+,'<th>Entregar</th>'
 ,'<th>Total</th>'
 ,'<th>Data</th>'
 ,'<th>Status</th>'
@@ -55,14 +55,14 @@ echo '<table id="pedidosAbertos" class="table table-hover table-bordered">'
 ,'<tbody>';
 
 $db->connect();
-$db->sql("SELECT * FROM lanc_pedidos WHERE status='1' AND entregar = '1'");
+$db->sql("SELECT * FROM lanc_pedidos WHERE status='1'");
 $res = $db->getResult();
 foreach ($res as $output) {
   $guid           = $output["guid"];
   $nome           = $output["nome"];
   $telefone       = $output["telefone"];
   $endereco       = $output["endereco"];
-  $numero         = $output["numero"];
+  $entregar       = $output["entregar"];
   $total          = $output["total"];
   $data           = $output["data"];
 
@@ -71,11 +71,17 @@ foreach ($res as $output) {
 
   $data = date("d-m-Y", strtotime($data));
 
+  if ($entregar == 1) {
+    $entregar = "Sim, Entregar";
+  } else {
+    $entregar = "Não, Virá retirar na loja";
+  }
+
   echo "<tr>";
   echo "<td width='15px'>$guid</td>";
   echo "<td>$nome</td>";
   echo "<td>$telefone</td>";
-  echo "<td>$numero</td>";
+  echo "<td>$entregar</td>";
   echo "<td>$total</td>";
   echo "<td>$data</td>";
   echo "<td>Processando</td>";

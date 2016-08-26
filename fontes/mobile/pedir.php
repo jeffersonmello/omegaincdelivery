@@ -37,7 +37,7 @@ $db = new Database();
   <link rel="stylesheet" href="css/framework7.material.colors.min.css">
 
   <!-- Path to your custom app styles-->
-  <link rel="stylesheet" href="css/delivery.css">
+  <link rel="stylesheet" href="css/delivery.min.css">
 
   <!--jquery-->
   <script   src="js/jquery-3.0.0.min.js"></script>
@@ -166,7 +166,7 @@ $db = new Database();
               } else {
                 if (dados == 1){
                   preco = accounting.formatMoney(preco, "", 2, ".", ",");
-                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
+                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img class='circular' src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
                   totaliza();
                 }
               }
@@ -428,7 +428,7 @@ $db = new Database();
 
                                     echo '<li class="item-content">'
                                     ,'<div class="item-media">';
-                                    echo "<img src='$produto_imagem' width='44'>";
+                                    echo "<img class='circular' src='$produto_imagem' width='44'>";
                                     echo '</div>'
                                     ,'<div class="item-inner">'
                                     ,'<div class="item-title-row">';
