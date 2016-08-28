@@ -19,6 +19,7 @@ $cpf                = $_POST["cpf"];
 $telefone           = $_POST["telefone"];
 $total              = $_POST["total"];
 $token              = rand(111111111, 999999999);
+$troco              = $_POST["troco"];
 
 if ($pagamento == 'Dinheiro') {
   $pagamento = 0;
@@ -35,7 +36,7 @@ if ($entregar == 'Não, Entregar'){
 
 $db = new Database();
 $db->connect();
-$db->update('lanc_pedidos',array('token'=>$token, 'nome'=>$cliente_nome,'email'=>$cliente_email,'endereco'=>$endereco,'entregar'=>$entregar,'formaPagamento'=>$pagamento,'numero'=>$numero_residencia,'observacao'=>$observacao,'status'=>'1','data'=>$data, 'cpf'=>$cpf, 'telefone'=>$telefone, 'total'=>$total),'guid='.$guid_pedido);
+$db->update('lanc_pedidos',array('token'=>$token, 'nome'=>$cliente_nome,'email'=>$cliente_email,'endereco'=>$endereco,'entregar'=>$entregar,'formaPagamento'=>$pagamento,'numero'=>$numero_residencia,'observacao'=>$observacao,'status'=>'1','data'=>$data, 'cpf'=>$cpf, 'telefone'=>$telefone, 'total'=>$total, 'troco'=>$troco),'guid='.$guid_pedido);
 $res = $db->getResult();
 
 $arquivo = "

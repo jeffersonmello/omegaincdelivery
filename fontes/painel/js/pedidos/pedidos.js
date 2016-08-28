@@ -144,6 +144,7 @@ function openModal(operacao, guid){
   var campoobs					= $("#obss");
   var campototal2				= $("#total2");
   var campoentregar     = $("#entregarR");
+  var campotroco        = $("#troco");
 
 
   if (operacao == "editar"){
@@ -152,23 +153,24 @@ function openModal(operacao, guid){
       type:"POST",
       data:"guid="+guid,
       success: function (dados){
-        $.each(dados, function(index){
-          var guidPedido				= dados[index].guid;
-          var statusPedido			= dados[index].status;
-          var nomePedido				= dados[index].nome;
-          var enderecoPedido		= dados[index].endereco;
-          var totalPedido				= dados[index].total;
-          var dataPedido				= dados[index].data;
-          var telefonePedido		= dados[index].telefone;
-          var numerocasaPedido	= dados[index].numero;
-          var formaPagamento		= dados[index].formaPagamento;
-          var observacaoPedido	= dados[index].observacao;
-          var cpfClientePedido	= dados[index].cpf;
-          var entregarPedido		= dados[index].entregar;
-          var tokenPedido				= dados[index].token;
-          var bairroPedido			= dados[index].bairro;
+        $.each(dados, function(index, dado){
+          var guidPedido				= dado.guid;
+          var statusPedido			= dado.status;
+          var nomePedido				= dado.nome;
+          var enderecoPedido		= dado.endereco;
+          var totalPedido				= dado.total;
+          var dataPedido				= dado.data;
+          var telefonePedido		= dado.telefone;
+          var numerocasaPedido	= dado.numero;
+          var formaPagamento		= dado.formaPagamento;
+          var observacaoPedido	= dado.observacao;
+          var cpfClientePedido	= dado.cpf;
+          var entregarPedido		= dado.entregar;
+          var tokenPedido				= dado.token;
+          var bairroPedido			= dado.bairro;
           var pagamentotext 		= 0;
           var entregarText      = 0;
+          var troco             = dado.troco;
 
           if (entregarPedido == 1){
             $("#u4").hide();
@@ -221,6 +223,7 @@ function openModal(operacao, guid){
           }
 
           totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
+          troco	= accounting.formatMoney(troco, "R$ ", 2, ".", ",");
           //totalPedido	= parseFloat(totalPedido).toFixed(2);
           dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
 
@@ -231,6 +234,7 @@ function openModal(operacao, guid){
           selected.val(statusPedido);
           selected.html(statuspedidotext);
           //totalPedido = (totalPedido.toFixed(2));
+          campotroco.val(troco);
           campototal.val(totalPedido);
           campotoken.val(tokenPedido);
           campodata.val(dataPedido);

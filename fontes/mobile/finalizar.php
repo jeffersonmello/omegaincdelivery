@@ -44,7 +44,10 @@ $db = new Database();
 
   <!--jquery-->
   <script src="js/jquery-3.0.0.min.js"></script>
-  
+
+  <!--AccountJS -->
+	<script src="js/accounting.min.js"></script>
+
   <script src="js/searchOrder.min.js"></script>
   <script src="js/omega.min.js"></script>
 
@@ -232,6 +235,7 @@ $db = new Database();
     var hoje              = $("#data").val();
     var cpf               = $("#cpf").val();
     var telefone          = $("#telefone").val();
+    var troco             = $("#troco").val();
 
 
     if (cpf.length < 9) {
@@ -294,7 +298,7 @@ $db = new Database();
       $.ajax({
         url:"ajax/finalizapedido.php",
         type:"POST",
-        data: "endereco="+endereco+"&nome="+nomecliente+"&email="+emailcliente+"&numero="+numeroResidencia+"&pedido="+numeroPedido+"&formapagamento="+formaPgto+"&retirarloja="+retirarLoja+"&observacao="+observacao+"&hoje="+hoje+"&cpf="+cpf+"&telefone="+telefone+"&total="+<?php echo $total ?>,
+        data: "endereco="+endereco+"&nome="+nomecliente+"&email="+emailcliente+"&numero="+numeroResidencia+"&pedido="+numeroPedido+"&formapagamento="+formaPgto+"&retirarloja="+retirarLoja+"&observacao="+observacao+"&hoje="+hoje+"&cpf="+cpf+"&telefone="+telefone+"&troco="+troco+"&total="+<?php echo $total ?>,
         success: function (result){
           if (result == 1){
             location.href='finalizado.php'
@@ -487,7 +491,7 @@ $db = new Database();
                             <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
                             <div class="item-inner">
                               <div class="item-input">
-                                <input onfocus="position('#rua')" type="text" value="<?php echo $endereco?>" id="rua" name="Rua" placeholder="Seu Endereço">
+                                <input onfocus="position('#rua')" type="text" value="<?php echo $endereco?>" id="rua" name="Rua" placeholder="Seu Endereço" disabled>
                               </div>
                             </div>
                           </li>
@@ -533,6 +537,15 @@ $db = new Database();
                             <div class="item-inner">
                               <div class="item-input">
                                 <input type="text" value="<?php echo $data?>" id="data" name="data" placeholder="data">
+                              </div>
+                            </div>
+                          </li>
+
+                          <li class="item-content">
+                            <div class="item-media"><i class="material-icons color-icon">monetization_on</i></div>
+                            <div class="item-inner">
+                              <div class="item-input">
+                                <input onfocus="position('#troco')"  type="text" value="" id="troco"  placeholder="Troco para. ex: 50.00, 20.00" required>
                               </div>
                             </div>
                           </li>

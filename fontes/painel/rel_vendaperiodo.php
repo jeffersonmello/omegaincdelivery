@@ -22,10 +22,10 @@ $db->connect();
 $db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
 $res = $db->getResult();
 foreach ($res as $output) {
-        $nome_usuario 	= $output["nome"];
-        $login_usuario 	= $output["usuario"];
-        $nivel_usuario  = $output["nivel"];
-        $imagem_usuario = $output["imagem"];
+	$nome_usuario 	= $output["nome"];
+	$login_usuario 	= $output["usuario"];
+	$nivel_usuario  = $output["nivel"];
+	$imagem_usuario = $output["imagem"];
 }
 
 
@@ -87,10 +87,27 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 	<!--AccountJS -->
 	<script src="js/accounting.min.js"></script>
 
-	<script src="js/usuario/profile.min.js"></script>
+	<!--pdf -->
+	<script src="js/jspdf.min.js"></script>
+
+	<!--Date Picker -->
+	<script src="js/bootstrap-datepicker.min.js"></script>
+	<script src="js/bootstrap-datepicker.pt-BR.js"></script>
+	<link href="css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+	<link href="css/bootstrap-datepicker.standalone.min.css" rel="stylesheet"/>
+	<link href="css/bootstrap-datepicker3.standalone.min.css" rel="stylesheet"/>
+
+	<script src="js/relatorio/relatorio.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
-		$("#campoguid").hide();
+		$("#datainicial").datepicker({
+			language: "pt-BR",
+			format: 'yyyy-mm-dd'
+		});
+		$("#datafinal").datepicker({
+			language: "pt-BR",
+			format: 'yyyy-mm-dd'
+		});
 	})
 
 	function abrirfechar(operacao){
@@ -185,7 +202,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 						<h2>
 							<a href="dashboard.php">Home</a>
 							<i class="fa fa-angle-right"></i>
-							<span>Meu perfil </span>
+							<span>Relatórios </span>
 						</h2>
 					</div>
 					<!--//banner-->
@@ -193,7 +210,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 					<br>
 
 					<div class="banner">
-						<h2>Meu Perfil</h2>
+						<h2>Relatório de Vendas por período</h2>
 					</div>
 
 					<div class="blank">
@@ -202,62 +219,32 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 							<!--grid-->
 							<div class="grid-form">
 								<div class="grid-form1">
-									<h3 id="forms-example" class="">Meu Perfil</h3>
-									<form id="formUsuarios">
+									<h3 id="forms-example" class="">Periodo de Vendas</h3>
+									<form id="formSearchRel" class="form-inline">
 
-										<fieldset id="campoguid" class="form-group">
-											<label>GUID</label>
-											<input type="text" value="<?php echo $id_usuario?>" class="form-control" id="guid" name="guid" placeholder="">
-										</fieldset>
-
-										<fieldset class="form-group">
-											<label>Imagem</label>
-											<input type="text" class="form-control" id="img" name="img" placeholder="Diretorio da Imagem">
-											<input id="sortpicture" type="file" name="sortpic" accept="image/*" />
-											<button type="button" class="btn btn-secondary" id="upload">Upload</button>
-										</fieldset>
-
-										<div id="imagefield">
-											<img id="imageview" src="<?php echo $imagem_usuario ?>" height="200" alt="...">
+										<div class="form-group">
+											<fieldset class="form-group">
+												<label>Do dia</label>
+												<input type="text"  class="form-control" id="datainicial" placeholder="Data Inicial">
+											</fieldset>
 										</div>
 
+										<div class="form-group">
+											<fieldset class="form-group">
+												<label>Até o dia</label>
+												<input type="text"  class="form-control" id="datafinal" placeholder="Data Final">
+											</fieldset>
+										</div>
 
-										<fieldset class="form-group">
-											<label>Usuário</label>
-											<input type="text" value="<?php echo $login_usuario ?>" class="form-control" id="usuario" name="usuario" placeholder="Nome de usuário para acesso" disabled>
-										</fieldset>
-
-
-										<fieldset class="form-group">
-											<label>Nome</label>
-											<input type="text" value="<?php echo $nome_usuario?>" class="form-control" id="nome"  placeholder="Seu Nome">
-										</fieldset>
-
-										<button id="botaoatualizar" type="button" onclick="salvar(2, 0)"class="btn btn-primary" hidden="">Salvar</button>
+										<button id="botaoatualizar" type="button" onclick="searchRel()"class="btn btn-default" hidden="">Gerar Relatório</button>
 									</form>
+								</div>
+
+								<div id="tablerel">
+
 								</div>
 								<!----->
 
-								<script type="text/javascript">
-								$('#upload').on('click', function() {
-									var file_data = $('#sortpicture').prop('files')[0];
-									var form_data = new FormData();
-									form_data.append('file', file_data);
-									$.ajax({
-										url: 'ajax/uploadFile.php',
-										dataType: 'text',
-										cache: false,
-										contentType: false,
-										processData: false,
-										data: form_data,
-										type: 'post',
-										success: function(php_script_response){
-											$("#imageview").attr('src', php_script_response);
-											$("#img").val(php_script_response);
-										}
-									});
-								});
-								</script>
 
 								<div class="copy">
 									<p> &copy; 2016 Omega Inc. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>	    </div>

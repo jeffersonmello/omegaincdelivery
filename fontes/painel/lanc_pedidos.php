@@ -412,6 +412,11 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 														</fieldset>
 
 														<fieldset class="form-group">
+															<label>Troco para</label>
+															<input class="form-control" id="troco" type="text"  disabled>
+														</fieldset>
+
+														<fieldset class="form-group">
 															<label>Observação</label>
 															<textarea class="form-control" id="obss" type="text"  disabled rows="3"></textarea>
 														</fieldset>

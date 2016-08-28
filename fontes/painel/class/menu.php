@@ -27,9 +27,16 @@
   </li>
 
   <li>
+    <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-line-chart nav_icon"></i> <span class="nav-label">Relatórios</span><span class="fa arrow"></span></a>
+    <ul class="nav nav-second-level">
+      <li><a href="rel_vendaperiodo.php" class=" hvr-bounce-to-right"> <i class="fa fa-pie-chart nav_icon"></i>Vendas por período</a></li>
+    </ul>
+  </li>
+
+  <li>
     <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-cog nav_icon"></i> <span class="nav-label">Settings</span><span class="fa arrow"></span></a>
     <ul class="nav nav-second-level">
-      <li><a href="ajax/logout.php"  class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
+      <li><a href="pajax/logout.php"  class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
     </ul>
   </li>
 </ul>
