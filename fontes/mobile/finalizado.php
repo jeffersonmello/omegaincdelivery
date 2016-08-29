@@ -50,7 +50,11 @@ include('class/mysql_crud.php');
   <!--Import Fontawesome Icon Font-->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-
+  <script>
+    function novopedido(){
+      location.href = 'index.php';
+    }
+  </script>
 </head>
 <body>
   <!-- Status bar overlay for fullscreen mode-->
@@ -195,22 +199,14 @@ include('class/mysql_crud.php');
                           </li>
 
                         </ul>
-                        <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
-                        <script type="text/javascript">
-                        $(document).ready(function(){
-                          makeCode();
-                        });
 
-                        var qrcode = new QRCode(document.getElementById("qrcode"), {
-                          width : 100,
-                          height : 100
-                        });
-
-                        function makeCode () {
-                          var elText = "oi"
-                          qrcode.makeCode(elText.value);
-                        }
-                        </script>
+                        <div class="list-block inset">
+                          <ul>
+                            <li>
+                              <p><a href="#" onclick="novopedido();" class="button button-fill color-green">Novo Pedido</a></p>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
 
                     </form>

@@ -32,6 +32,7 @@ $(document).ready(function(){
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap4.min.css"/>
 
 <?php
+header('Access-Control-Allow-Origin: *');
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 

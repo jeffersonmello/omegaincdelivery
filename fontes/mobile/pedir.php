@@ -60,6 +60,7 @@ $db = new Database();
   $(document).ready(function(){
     totaliza();
 
+    //TODO Ainda está duplicando os itens na pesquisa, mas pelo menos não mais de duas vezes, acredito que seja pelo evento keyup, se fosse keypress nao daria problemas
     $("#search").on( 'keyup', function () {
       var pesquisa      = $("#search").val();
       var categorias    = $(".categorias");
@@ -75,15 +76,17 @@ $db = new Database();
         type: "POST",
         data: "busca="+pesquisa,
         success:function(dados){
-          $.each(dados, function(index){
-            var len    = dados.length;
-            for (var i=0; i < len; i++){
-              var imageem     = ('"'+dados[index].imgproduto+'"');
-              var descricaao  = ('"'+dados[index].descricao+'"');
-              var preeco      = dados[index].preco;
-              preeco = accounting.formatMoney(preeco, "R$", 2, ".", ",");
-              produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img src='"+dados[index].imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dados[index].descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dados[index].guid+","+descricaao+","+dados[index].preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>"+preeco+"</div></div></li>");
-            }
+          var i = 0;
+
+          $.each(dados, function(index, dado){
+            i = i + 1 ;
+
+            var imageem     = ('"'+ dado.imgproduto +'"');
+            var descricaao  = ('"'+ dado.descricao +'"');
+            var preeco      = dado.preco;
+            preeco = accounting.formatMoney(preeco, "R$ ", 2, ".", ",");
+            produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img class='circular' src='"+dado.imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dado.descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dado.guid+","+descricaao+","+dado.preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>"+preeco+"</div></div></li>");
+
           });
         }})
       })
@@ -153,6 +156,9 @@ $db = new Database();
           var currentiten   = $("#listacarrinho_"+guid);
           var listacarrinho = $("#teste");
           var botaoadd      = $("#buttonADD");
+          var myApp = new Framework7({
+            material: true
+          });
 
           botaoadd.css("pointer-events", "none");
 
@@ -161,6 +167,7 @@ $db = new Database();
             type: "POST",
             data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
             success:function(dados){
+              myApp.showPreloader();
               if ($(currentiten, listacarrinho).length){
                 mesmo(guid,preco);
               } else {
@@ -171,6 +178,7 @@ $db = new Database();
                 }
               }
               botaoadd.css("pointer-events", "auto");
+              myApp.hidePreloader();
             }})
           }
 
