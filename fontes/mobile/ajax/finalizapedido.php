@@ -4,6 +4,8 @@ header('content-type: application/json; charset=utf-8');
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
+setlocale(LC_MONETARY,"pt_BR", "ptb");
+
 include('../class/mysql_crud.php');
 
 $guid_pedido        = $_POST["pedido"];
@@ -39,232 +41,208 @@ $db->connect();
 $db->update('lanc_pedidos',array('token'=>$token, 'nome'=>$cliente_nome,'email'=>$cliente_email,'endereco'=>$endereco,'entregar'=>$entregar,'formaPagamento'=>$pagamento,'numero'=>$numero_residencia,'observacao'=>$observacao,'status'=>'1','data'=>$data, 'cpf'=>$cpf, 'telefone'=>$telefone, 'total'=>$total, 'troco'=>$troco),'guid='.$guid_pedido);
 $res = $db->getResult();
 
+
+if ($pagamento == 0) {
+  $pagamento = "Dinheiro";
+} else {
+  $pagamento = "Cartão de Crédito/Débito";
+}
+
+$total = money_format('%n', $total);
+
 $arquivo = "
 <!doctype html>
 <html>
 <head>
 <meta name='viewport' content='width=device-width'>
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-<title>Delivery</title>
-<style>
-/* -------------------------------------
-GLOBAL
-------------------------------------- */
-* {
-  font-family: Roboto, Noto, Helvetica, Arial, sans-serif;
-  font-size: 100%;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0;
+<title>Simple Transactional Email</title>
+<style media='all' type='text/css'>
+@media all {
+  .btn-primary table td:hover {
+    background-color: #34495e !important;
+  }
+  .btn-primary a:hover {
+    background-color: #34495e !important;
+    border-color: #34495e !important;
+  }
 }
 
-img {
-  max-width: 600px;
-  width: 100%;
+@media all {
+  .btn-secondary a:hover {
+    border-color: #34495e !important;
+    color: #34495e !important;
+  }
 }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  height: 100%;
-  -webkit-text-size-adjust: none;
-  width: 100% !important;
+@media only screen and (max-width: 620px) {
+  table[class=body] h1 {
+    font-size: 28px !important;
+    margin-bottom: 10px !important;
+  }
+  table[class=body] h2 {
+    font-size: 22px !important;
+    margin-bottom: 10px !important;
+  }
+  table[class=body] h3 {
+    font-size: 16px !important;
+    margin-bottom: 10px !important;
+  }
+  table[class=body] p,
+  table[class=body] ul,
+  table[class=body] ol,
+  table[class=body] td,
+  table[class=body] span,
+  table[class=body] a {
+    font-size: 16px !important;
+  }
+  table[class=body] .wrapper,
+  table[class=body] .article {
+    padding: 10px !important;
+  }
+  table[class=body] .content {
+    padding: 0 !important;
+  }
+  table[class=body] .container {
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  table[class=body] .header {
+    margin-bottom: 10px !important;
+  }
+  table[class=body] .main {
+    border-left-width: 0 !important;
+    border-radius: 0 !important;
+    border-right-width: 0 !important;
+  }
+  table[class=body] .btn table {
+    width: 100% !important;
+  }
+  table[class=body] .btn a {
+    width: 100% !important;
+  }
+  table[class=body] .img-responsive {
+    height: auto !important;
+    max-width: 100% !important;
+    width: auto !important;
+  }
+  table[class=body] .alert td {
+    border-radius: 0 !important;
+    padding: 10px !important;
+  }
+  table[class=body] .span-2,
+  table[class=body] .span-3 {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  table[class=body] .receipt {
+    width: 100% !important;
+  }
 }
 
-
-/* -------------------------------------
-ELEMENTS
-------------------------------------- */
-a {
-  color: #348eda;
+@media all {
+  .ExternalClass {
+    width: 100%;
+  }
+  .ExternalClass,
+  .ExternalClass p,
+  .ExternalClass span,
+  .ExternalClass font,
+  .ExternalClass td,
+  .ExternalClass div {
+    line-height: 100%;
+  }
+  .apple-link a {
+    color: inherit !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    text-decoration: none !important;
+  }
 }
-
-.btn-primary {
-  Margin-bottom: 10px;
-  width: auto !important;
-}
-
-.btn-primary td {
-  background-color: #348eda;
-  border-radius: 25px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-  font-size: 14px;
-  text-align: center;
-  vertical-align: top;
-}
-
-.btn-primary td a {
-  background-color: #348eda;
-  border: solid 1px #348eda;
-  border-radius: 25px;
-  border-width: 10px 20px;
-  display: inline-block;
-  color: #ffffff;
-  cursor: pointer;
-  font-weight: bold;
-  line-height: 2;
-  text-decoration: none;
-}
-
-.last {
-  margin-bottom: 0;
-}
-
-.first {
-  margin-top: 0;
-}
-
-.padding {
-  padding: 10px 0;
-}
-
-
-/* -------------------------------------
-BODY
-------------------------------------- */
-table.body-wrap {
-  padding: 20px;
-  width: 100%;
-}
-
-table.body-wrap .container {
-  border: 1px solid #f0f0f0;
-}
-
-
-/* -------------------------------------
-FOOTER
-------------------------------------- */
-table.footer-wrap {
-  clear: both !important;
-  width: 100%;
-}
-
-.footer-wrap .container p {
-  color: #666666;
-  font-size: 12px;
-
-}
-
-table.footer-wrap a {
-  color: #999999;
-}
-
-
-/* -------------------------------------
-TYPOGRAPHY
-------------------------------------- */
-h1,
-h2,
-h3 {
-  color: #111111;
-  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-  font-weight: 200;
-  line-height: 1.2em;
-  margin: 40px 0 10px;
-}
-
-h1 {
-  font-size: 36px;
-}
-h2 {
-  font-size: 28px;
-}
-h3 {
-  font-size: 22px;
-}
-
-p,
-ul,
-ol {
-  font-size: 14px;
-  font-weight: normal;
-  margin-bottom: 10px;
-}
-
-ul li,
-ol li {
-  margin-left: 5px;
-  list-style-position: inside;
-}
-
-/* ---------------------------------------------------
-RESPONSIVENESS
------------------------------------------------------- */
-
-/* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
-.container {
-  clear: both !important;
-  display: block !important;
-  Margin: 0 auto !important;
-  max-width: 600px !important;
-}
-
-/* Set the padding on the td rather than the div for Outlook compatibility */
-.body-wrap .container {
-  padding: 20px;
-}
-
-/* This should also be a block element, so that it will fill 100% of the .container */
-.content {
-  display: block;
-  margin: 0 auto;
-  max-width: 600px;
-}
-
-/* Let's make sure tables in the content area are 100% wide */
-.content table {
-  width: 100%;
-}
-
 </style>
 </head>
-
-<body bgcolor='#f6f6f6'>
-
-<!-- body -->
-<table class='body-wrap' bgcolor='#f6f6f6'>
+<body class='' style='font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; background-color: #f6f6f6; margin: 0; padding: 0;'>
+<table border='0' cellpadding='0' cellspacing='0' class='body' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f6f6f6;' width='100%' bgcolor='#f6f6f6'>
 <tr>
-<td></td>
-<td class='container' bgcolor='#FFFFFF'>
+<td style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top'>&nbsp;</td>
+<td class='container' style='font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto !important; max-width: 580px; padding: 10px; width: 580px;' width='580' valign='top'>
+<div class='content' style='box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;'>
 
-<!-- content -->
-<div class='content'>
-<table>
+
+<span class='preheader' style='color: transparent;  height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;'>Recebemos o Seu Pedido.</span>
+<table class='main' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #fff; border-radius: 3px;' width='100%'>
+
+
 <tr>
-<td>
-<h1>Pedido Realizado no Aplicativo Delivery</h1><br>
-<p><b>Olá recebemos o seu pedido !</b></p>
-<p>Seu pedido realizado através do aplicativo foi recebido<br>
-O Estado atual do seu pedido é: <b>Processando</b><br>
-Número do seu Pedido: $guid_pedido <br>
-Token do Pedido: $token
-</p><br>
+<td class='wrapper' style='font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;' valign='top'>
+<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;' width='100%'>
+<tr>
+<td style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top'>
+<p style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;'>Olá <b> $cliente_nome </b>, Recebemos o seu pedido, segue abaixo as informações: <br>
+Status atual: <b> Processando  </b>
 <br>
-
-
+Pagamento: <b> $pagamento  </b>
 <br>
-
-
+Num do seu Pedido: <b> $guid_pedido  </b>
+<br>
+Token do Pedido: <b> $token </b>
+<br>
+Total: <b> $total  </b>
+<br
 </p>
-<!-- button -->
-<table class='btn-primary' cellpadding='0' cellspacing='0' border='0'>
+<table border='0' cellpadding='0' cellspacing='0' class='btn btn-primary' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;' width='100%'>
+<tbody>
 <tr>
-<td>
+<td align='left' style='font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;' valign='top'>
+<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;'>
+<tbody>
+<tr>
+<td ></td>
+  </tr>
+  </tbody>
+  </table>
+  </td>
+  </tr>
+  </tbody>
+  </table>
+  <p style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;'>Este e-mail foi enviado por que você fez um pedido no aplicativo delivery</p>
+  <p style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;'>Obrigado por nos Escolher !</p>
+  </td>
+  </tr>
+  </table>
+  </td>
+  </tr>
 
-</td>
-</tr>
-</table>
-<!-- /button -->
-<p>Delivery</p>
-<p><a href='http://delivery.tk/'>www.delivery.com</a></p>
-</td>
-</tr>
-</table>
-</div>
-<!-- /footer -->
 
-</body>
-</html>
+  </table>
+
+
+  <div class='footer' style='clear: both; padding-top: 10px; text-align: center; width: 100%;'>
+  <table border='0' cellpadding='0' cellspacing='0' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;' width='100%'>
+  <tr>
+  <td class='content-block' style='font-family: sans-serif; vertical-align: top; padding-top: 10px; padding-bottom: 10px; font-size: 12px; color: #999999; text-align: center;' valign='top' align='center'>
+  <span class='apple-link' style='color: #999999; font-size: 12px; text-align: center;'>Omega Inc, Endereço</span>
+  </td>
+  </tr>
+  <tr>
+  <td class='content-block powered-by' style='font-family: sans-serif; vertical-align: top; padding-top: 10px; padding-bottom: 10px; font-size: 12px; color: #999999; text-align: center;' valign='top' align='center'>
+  Powered by <a href='http://htmlemail.io' style='color: #999999; font-size: 12px; text-align: center; text-decoration: none;'>HTMLemail</a>.
+  </td>
+  </tr>
+  </table>
+  </div>
+
+
+
+  </div>
+  </td>
+  <td style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top'>&nbsp;</td>
+  </tr>
+  </table>
+  </body>
+  </html>
 ";
 
 
