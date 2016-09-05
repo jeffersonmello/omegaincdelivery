@@ -29,6 +29,13 @@ $(document).ready(function(){
   });
 });
 
+function formataCEP(){
+  var cep       = $("#cep");
+  var formatado = cep.val();
+
+  formatado = formatado.replace(/\.|\-/g, '');
+  cep.val(formatado);
+}
 
 var timeout = setTimeout(verifica, 2000);
 function verifica(){
@@ -113,5 +120,3 @@ function verifica(){
       return false;
     }
   }
-
-  

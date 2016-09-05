@@ -34,9 +34,11 @@
   </li>
 
   <li>
-    <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-cog nav_icon"></i> <span class="nav-label">Settings</span><span class="fa arrow"></span></a>
+    <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-cog nav_icon"></i> <span class="nav-label">Configurações</span><span class="fa arrow"></span></a>
     <ul class="nav nav-second-level">
-      <li><a href="pajax/logout.php"  class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
+      <li><a href="#"  class=" hvr-bounce-to-right"><i class="fa fa-lock nav_icon"></i>Auditoria</a></li>
+      <li><a href="#"  class=" hvr-bounce-to-right"><i class="fa fa-database nav_icon"></i>Backup</a></li>
+      <li><a href="ajax/logout.php"  class=" hvr-bounce-to-right"><i class="fa fa-sign-out nav_icon"></i>Sair</a></li>
     </ul>
   </li>
 </ul>

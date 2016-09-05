@@ -64,19 +64,18 @@ function inprimir(guid){
         }
 
         totalPedido	= accounting.formatMoney(totalPedido, "", 2, ".", ",");
-        //totalPedido	= parseFloat(totalPedido).toFixed(2);
         dataPedido	= moment(dataPedido).format('DD/MM/YYYY');
 
-        var doc = new jsPDF();
+        var doc = new jsPDF('p', 'mm', [150, 80]);
 
         doc.setFontSize(8);
-        doc.text(70, 10, ("Número Pedido: "+guidPedido));
-        doc.text(70, 14, ("Cliente: "+nomePedido));
-        doc.text(70, 18, ("Endereco: "+enderecoPedido));
-        doc.text(70, 22, ("Número: "+numerocasaPedido));
-        doc.text(70, 26, ("Telefone: "+telefonePedido));
-        doc.text(70, 30, ("Pagamento: "+pagamentotext));
-        doc.text(70, 34, ("--------------------------------------------------------------------------"));
+        doc.text(1, 10, ("Número Pedido: "+guidPedido));
+        doc.text(1, 14, ("Cliente: "+nomePedido));
+        doc.text(1, 18, ("Endereco: "+enderecoPedido));
+        doc.text(1, 22, ("Número: "+numerocasaPedido));
+        doc.text(1, 26, ("Telefone: "+telefonePedido));
+        doc.text(1, 30, ("Pagamento: "+pagamentotext));
+        doc.text(1, 34, ("---------------------------------------------------------------------------------"));
 
 
         $.ajax({
@@ -84,19 +83,37 @@ function inprimir(guid){
           type:"POST",
           data:"pedido="+guidPedido,
           success: function (dados){
-            var linha				= 34;
+            var linha				   = 34;
+            var currentproduto = 0;
 
             $.each(dados, function(index, dado){
-              var preco				= dado.valorproduto;
+              var preco				   = dado.valorproduto;
+              var produto        = dado.guidproduto;
+
+              if (currentproduto == (produto)){
+                $.ajax({
+                  url:  "ajax/pedidos/mesmo.php",
+                  type: "POST",
+                  data: "produto="+produto+"&pedido="+guidPedido,
+                  success: function(dados){
+                    doc.text(1, (linha), ((dado.nomeproduto)+" | Preço: "+ preco + "Qtde.: "+ (dados) ));
+                  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                    console.log(arguments);
+                  }
+                });
+              }
+              currentproduto     = produto;
 
               preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
 
               linha = linha + 4;
-              doc.text(70, (linha), ((dado.nomeproduto)+" | Preço: "+preco));
+              doc.text(1, (linha), ((dado.nomeproduto)+" | Preço: "+preco));
             });
 
-            doc.text(70, (linha+4), ("--------------------------------------------------------------------------"));
-            doc.text(70, (linha+8), ("Total do Pedido: R$ "+ totalPedido));
+            doc.text(1, (linha+4), ("---------------------------------------------------------------------------------"));
+            doc.text(1, (linha+8), ("Total do Pedido: R$ "+ totalPedido));
             var string = doc.output('dataurlnewwindow');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {

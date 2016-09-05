@@ -22,10 +22,10 @@ $db->connect();
 $db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
 $res = $db->getResult();
 foreach ($res as $output) {
-        $nome_usuario 	= $output["nome"];
-        $login_usuario 	= $output["usuario"];
-        $nivel_usuario  = $output["nivel"];
-        $imagem_usuario = $output["imagem"];
+	$nome_usuario 	= $output["nome"];
+	$login_usuario 	= $output["usuario"];
+	$nivel_usuario  = $output["nivel"];
+	$imagem_usuario = $output["imagem"];
 }
 
 // Configurações da página
@@ -33,7 +33,7 @@ $nivel_pagina    = 1;
 
 // Rotina de verificação nivel de usuario
 if ($nivel_usuario < $nivel_pagina){
-        header("Location: 403.html"); exit;
+	header("Location: 403.html"); exit;
 }
 
 // Funções para não exibir alguns erros de conexao
@@ -110,6 +110,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 		var subdesc						= $("#subdesc");
 		var selected					= $("#optionSelected");
 		var preco							= $("#preco");
+		var checkindis				= $("#indisponivel");
 
 		if (operacao == "editar"){
 			$.ajax({
@@ -117,21 +118,22 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 				type:"POST",
 				data:"guid="+guid,
 				success: function (dados){
-					$.each(dados, function(index){
-						var guid_categoria		= dados[index].guid_categoria;
-						var descricaoproduto	= dados[index].descricao;
-						var imagemproduto			= dados[index].imgproduto;
-						var subdescricao			= dados[index].subdescricao;
-						var precoproduto			= dados[index].preco;
-						var guid_produto			= dados[index].guid;
+					$.each(dados, function(index, dado){
+						var guid_categoria		= dado.guid_categoria;
+						var descricaoproduto	= dado.descricao;
+						var imagemproduto			= dado.imgproduto;
+						var subdescricao			= dado.subdescricao;
+						var precoproduto			= dado.preco;
+						var guid_produto			= dado.guid;
+						var indisponivel 			= dado.indisponivel;
 
 						$.ajax({
 							url:"ajax/produtos/getCategoria.php",
 							type:"POST",
 							data:"guid="+guid_categoria,
 							success: function (dados){
-								$.each(dados, function(index){
-									var categorianame = dados[index].descricao;
+								$.each(dados, function(index, dado){
+									var categorianame = dado.descricao;
 
 									selected.val(guid_categoria);
 									selected.html(categorianame);
@@ -139,6 +141,12 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 								});
 							}
 						});
+
+						if (indisponivel == 0){
+							checkindis.prop( "checked", false );
+						} else {
+							checkindis.prop( "checked", true );
+						}
 
 						$("#imageview").attr('src', imagemproduto);
 						inputguid.val(guid_produto);
@@ -174,11 +182,18 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 		var subdesc						= $("#subdesc").val();
 		var preco							= $("#preco").val();
 		var guidd 						= $("#guid").val();
+		var checkindis				= $("#indisponivel");
+
+		if (checkindis.is(":checked")) {
+			checkindis = 1;
+		} else {
+			checkindis = 0;
+		}
 
 		$.ajax({
 			url:"ajax/produtos/produto.php",
 			type:"POST",
-			data:"descricao="+campodescricao+"&imagem="+campoimagem+"&subdesc="+subdesc+"&categoria="+campocategoria+"&operacao="+operacao+"&guid="+guidd+"&preco="+preco,
+			data:"descricao="+campodescricao+"&imagem="+campoimagem+"&subdesc="+subdesc+"&categoria="+campocategoria+"&operacao="+operacao+"&guid="+guidd+"&preco="+preco+"&indisponivel="+checkindis,
 			success: function (result){
 				$('#modal').modal('hide');
 				if (result == 1) {
@@ -381,6 +396,15 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 												<fieldset class="form-group">
 													<label>Preço</label>
 													<input type="text" class="form-control" id="preco" name="preco" placeholder="Preço do Produto">
+												</fieldset>
+
+												<fieldset class="form-group">
+													<label>Indisponível</label>
+													<div class="checkbox">
+														<label>
+															<input id="indisponivel" type="checkbox"> Marque se o Produto Está Indisponível
+														</label>
+													</div>
 												</fieldset>
 
 											</form>

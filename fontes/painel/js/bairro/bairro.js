@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  $('#preloader').hide();
   reloadtable();
   reloadtable();
 
@@ -16,9 +17,14 @@ $(document).ready(function(){
 })
 
 function reloadtable(){
+  var preloader = $('#preloader');
+
+  preloader.show();
   $('#divcat').load('ajax/bairro/tab_bairros.php', function(){
   });
+  preloader.hide();
 }
+
 
 function openModal(operacao, guid){
   var modall 				= $('#modal');

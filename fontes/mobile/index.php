@@ -211,7 +211,7 @@ session_destroy();
                             <div class="item-media"><i class="material-icons color-icon">near_me</i></div>
                             <div class="item-inner">
                               <div class="item-input">
-                                <input type="text"  id="cep" name="cep" placeholder="CEP"  maxlength="8" required autofocus>
+                                <input onkeypress="formataCEP();" type="text"  id="cep" name="cep" placeholder="CEP"  maxlength="8" required autofocus>
                               </div>
                             </div>
                           </li>

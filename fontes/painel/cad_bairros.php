@@ -22,10 +22,10 @@ $db->connect();
 $db->sql("SELECT * FROM adm_usuarios WHERE guid = $id_usuario LIMIT 1");
 $res = $db->getResult();
 foreach ($res as $output) {
-        $nome_usuario 	= $output["nome"];
-        $login_usuario 	= $output["usuario"];
-        $nivel_usuario  = $output["nivel"];
-        $imagem_usuario = $output["imagem"];
+	$nome_usuario 	= $output["nome"];
+	$login_usuario 	= $output["usuario"];
+	$nivel_usuario  = $output["nivel"];
+	$imagem_usuario = $output["imagem"];
 }
 
 
@@ -71,6 +71,8 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 	<!--Toastr-->
 	<script src="js/toastr.min.js"></script>
 	<link href="css/toastr.min.css" rel="stylesheet"/>
+
+	<link href="css/progressbar.min.css" rel="stylesheet"/>
 
 	<!--DataTables-->
 	<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
@@ -195,9 +197,21 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 					<div class="blank">
 
 						<div class="blank-page">
+							<div id="preloader" style="position: absolute;z-index: 10;"  class='preloader-dots'>
+								<div class='dot'></div>
+								<div class='dot'></div>
+								<div class='dot'></div>
+								<div class='dot'></div>
+								<div class='dot'></div>
+							</div>
+
 							<div id="divcat">
 
+
+
+
 							</div>
+
 
 							<div id="modal" class="modal fade">
 								<div class="modal-dialog" role="document">

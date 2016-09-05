@@ -155,19 +155,11 @@ $db = new Database();
         function adicionarCarrinho(guid, nome, preco, imagem){
           var currentiten   = $("#listacarrinho_"+guid);
           var listacarrinho = $("#teste");
-          var botaoadd      = $("#buttonADD");
-          var myApp = new Framework7({
-            material: true
-          });
-
-          botaoadd.css("pointer-events", "none");
-
           $.ajax({
             url:("ajax/adicionacarrinho.php"),
             type: "POST",
             data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
             success:function(dados){
-              myApp.showPreloader();
               if ($(currentiten, listacarrinho).length){
                 mesmo(guid,preco);
               } else {
@@ -177,8 +169,6 @@ $db = new Database();
                   totaliza();
                 }
               }
-              botaoadd.css("pointer-events", "auto");
-              myApp.hidePreloader();
             }})
           }
 
@@ -416,10 +406,11 @@ $db = new Database();
                                   b.subdescricao,
                                   b.imgproduto as imagem,
                                   b.descricao as produto,
+                                  b.indisponivel,
                                   b.preco
                                   FROM cad_categorias AS a
                                   INNER JOIN cad_produtos AS b
-                                  ON a.guid = b.guid_categoria WHERE a.guid = $guid_categoria");
+                                  ON a.guid = b.guid_categoria WHERE a.guid = $guid_categoria AND b.indisponivel != 1");
                                   $res = $db->getResult();
                                   foreach($res as $output)
                                   {
