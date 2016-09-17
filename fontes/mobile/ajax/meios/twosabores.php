@@ -6,11 +6,14 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
 include('../class/mysql_crud.php');
 
-$busca = $_POST["busca"];
+$nome   = $_POST["nome"];
+$preco  = $_POST["guidpedido"];
 
 $db = new Database();
 $db->connect();
-$db->sql("SELECT * FROM cad_produtos WHERE descricao LIKE '%$busca%' LIMIT 10");
+$db->insert('tem_prods',array('guid_produto'=>$guid_produto,'guid_pedido'=>$guid_pedido));
 $res = $db->getResult();
+
+
 
 echo json_encode($res);

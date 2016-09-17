@@ -12,11 +12,13 @@ if (!isset($_SESSION['idBairro'])) {
 
 setlocale(LC_MONETARY,"pt_BR", "ptb");
 
-$taxa         = $_SESSION['taxaentrega'];
-$nome_cliente = $_SESSION['nomecliente'];
-$email_cliente= $_SESSION['emailcliente'];
-$guid_bairro  = $_SESSION['idBairro'];
-$guid_pedido  = $_SESSION['idPedido'];
+$taxa             = $_SESSION['taxaentrega'];
+$nome_cliente     = $_SESSION['nomecliente'];
+$email_cliente    = $_SESSION['emailcliente'];
+$guid_bairro      = $_SESSION['idBairro'];
+$guid_pedido      = $_SESSION['idPedido'];
+$countitensmeios  = (isset($_SESSION['countitensmeios'])) ? (int)$_GET['countitensmeios'] : 0;
+$guidprodtemp     = (isset($_SESSION['guidprodtemp'])) ? (int)$_GET['guidprodtemp'] : 0;
 
 
 include('class/mysql_crud.php');
@@ -56,247 +58,312 @@ $db = new Database();
   <!--AccountJS -->
   <script src="js/accounting.min.js"></script>
 
+  <script src="js/pedir/pedir.min.js" charset="utf-8"></script>
+
   <script type="text/javascript">
-  $(document).ready(function(){
-    totaliza();
+  function mesmo(guid,valor){
+    $.ajax({
+      url:("ajax/mesmoitem.php"),
+      type: "POST",
+      data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+      success:function(dados){
+        valor = accounting.formatMoney(valor, "R$ ", 2, ".", ",")
+        $("#idvaloresqtde_"+guid).html((valor)+" ("+dados+")");
+        totaliza();
+      }})
+    }
 
-    //TODO Ainda está duplicando os itens na pesquisa, mas pelo menos não mais de duas vezes, acredito que seja pelo evento keyup, se fosse keypress nao daria problemas
-    $("#search").on( 'keyup', function () {
-      var pesquisa      = $("#search").val();
-      var categorias    = $(".categorias");
-      var produtos      = $("#listaprodutos");
-      var itemproduto   = $(".itempesquisa");
-
-      categorias.hide();
-
-      $(itemproduto, produtos).remove();
-
+    function totaliza(){
       $.ajax({
-        url:("ajax/buscaprods.php"),
+        url:("ajax/totaliza.php"),
         type: "POST",
-        data: "busca="+pesquisa,
+        data: "guidpedido="+<?php echo $guid_pedido; ?>+"&taxa="+<?php echo $taxa; ?>,
         success:function(dados){
-          var i = 0;
-
-          $.each(dados, function(index, dado){
-            i = i + 1 ;
-
-            var imageem     = ('"'+ dado.imgproduto +'"');
-            var descricaao  = ('"'+ dado.descricao +'"');
-            var preeco      = dado.preco;
-            preeco = accounting.formatMoney(preeco, "R$ ", 2, ".", ",");
-            produtos.append("<li id='itempesquisa_'"+i+"' class='item-content itempesquisa'><img class='circular' src='"+dado.imgproduto+"' width='44'></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+dado.descricao+"</div><div class='item-after'><span href='#' onclick='adicionarCarrinho("+dado.guid+","+descricaao+","+dado.preco+","+imageem+")' class='button'><i class='material-icons color-icon'>add</i></span></div></div><div class='item-subtitle'>"+preeco+"</div></div></li>");
-
-          });
-        }})
-      })
-
-
-      $("#search").on( 'blur', function () {
-        var categorias    = $(".categorias"); // Lista de categorias
-        var produtos      = $("#listaprodutos");
-        var itemproduto   = $(".itempesquisa");
-        var pesquisas     = $('#search').val();
-
-        if (pesquisas.length < 1) {
-          $(itemproduto, produtos).remove();
-          categorias.show();
-        }
-      })
-    })
-
-    function mesmo(guid,valor){
-      $.ajax({
-        url:("ajax/mesmoitem.php"),
-        type: "POST",
-        data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
-        success:function(dados){
+          var valor = dados;
           valor = accounting.formatMoney(valor, "R$ ", 2, ".", ",")
-          $("#idvaloresqtde_"+guid).html((valor)+" ("+dados+")");
-          totaliza();
+          $("#total").html(valor);
         }})
       }
 
+      function removeItem(guid, preco){
+        var corrente     = $("#listacarrinho_"+guid);
 
-      function totaliza(){
         $.ajax({
-          url:("ajax/totaliza.php"),
+          url:("ajax/removeitem.php"),
           type: "POST",
-          data: "guidpedido="+<?php echo $guid_pedido; ?>+"&taxa="+<?php echo $taxa; ?>,
+          data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
           success:function(dados){
-            var valor = dados;
-            valor = accounting.formatMoney(valor, "R$ ", 2, ".", ",")
-            $("#total").html(valor);
+            if (dados == 1) {
+              mesmo(guid, preco);
+              totaliza()
+            } else {
+              corrente.remove();
+              totaliza()
+            }
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("Status: " + textStatus); alert("Error: " + errorThrown);
+          }
+        })
+      }
+
+      function adicionarCarrinho(guid, nome, preco, imagem){
+        var currentiten   = $("#listacarrinho_"+guid);
+        var listacarrinho = $("#teste");
+        $.ajax({
+          url:("ajax/adicionacarrinho.php"),
+          type: "POST",
+          data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+          success:function(dados){
+            if ($(currentiten, listacarrinho).length){
+              mesmo(guid,preco);
+            } else {
+              if (dados == 1){
+                preco = accounting.formatMoney(preco, "", 2, ".", ",");
+                listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img class='circular' src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
+                totaliza();
+              }
+            }
           }})
         }
 
-        function removeItem(guid, preco){
-          var corrente     = $("#listacarrinho_"+guid);
+        function adicionarMeio(guid, nome, preco, imagem){
+          var currentiten   = $("#listacarrinho_"+guid);
+          var listacarrinho = $("#carrinhomeias");
+          var contitensmeio = localStorage.getItem("contitensmeio");
+          var guidprodtemp =  localStorage.getItem("guidprodtemp");
+
+          alert(contitensmeio);
+          alert(guidprodtemp);
+
+          if (contitensmeio == null) {
+          $.ajax({
+            url:("ajax/meios/twosabores.php"),
+            type: "POST",
+            data: "preco="+preco+"&nome="+nome,
+            success:function(dados){
+                  preco = accounting.formatMoney(preco, "", 2, ".", ",");
+                  listacarrinho.append("<li id='listacarrinhomeia_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img class='circular' src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
+              }
+            })
+          }
+          }
+
+        function cancelaPedido(){
+          var pedido = <?php echo $guid_pedido ?>;
 
           $.ajax({
-            url:("ajax/removeitem.php"),
+            url:("ajax/cancelapedido.php"),
             type: "POST",
-            data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+            data: "guidpedido="+pedido,
             success:function(dados){
-              if (dados == 1) {
-                mesmo(guid, preco);
-                totaliza()
-              } else {
-                corrente.remove();
-                totaliza()
+              if (dados == 1){
+                location.href = 'index.php'
               }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-              alert("Status: " + textStatus); alert("Error: " + errorThrown);
             }
           })
         }
 
-        function adicionarCarrinho(guid, nome, preco, imagem){
-          var currentiten   = $("#listacarrinho_"+guid);
-          var listacarrinho = $("#teste");
+        function finalizaPedido(){
+          var myApp = new Framework7({
+            material: true
+          });
+          var mainView = myApp.addView('.view-main');
+          var total   = totaliza();
+
           $.ajax({
-            url:("ajax/adicionacarrinho.php"),
+            url:("ajax/totalitens.php"),
             type: "POST",
-            data: "guidprod="+guid+"&guidpedido="+<?php echo $guid_pedido; ?>,
+            data: "guidpedido="+<?php echo $guid_pedido; ?>,
             success:function(dados){
-              if ($(currentiten, listacarrinho).length){
-                mesmo(guid,preco);
+              if (dados == 1){
+                location.href = 'finalizar.php'
               } else {
-                if (dados == 1){
-                  preco = accounting.formatMoney(preco, "", 2, ".", ",");
-                  listacarrinho.append("<li id='listacarrinho_"+guid+"'><div class='item-content'><div class='item-media'> <i class='icon my-icon'><img class='circular' src='"+imagem+"' width='44'></i></div><div class='item-inner'><div class='item-title-row'><div class='item-title'>"+nome+"</div><div id='idvaloresqtde_"+guid+"' class='item-after'>R$ "+preco+" (1)</div></div><div class='item-subtitle'><a href='#' onclick='removeItem("+guid+","+preco+")' class='button color-red'><i class='material-icons color-icon'>delete</i></a></div></div></div></li>");
-                  totaliza();
-                }
+                myApp.addNotification({
+                  message: 'É necesário ter pelo menos um item no carrinho.',
+                  button: {
+                    text: 'Fechar',
+                  },
+                });
               }
             }})
           }
-
-          function cancelaPedido(){
-            var pedido = <?php echo $guid_pedido ?>;
-
-            $.ajax({
-              url:("ajax/cancelapedido.php"),
-              type: "POST",
-              data: "guidpedido="+pedido,
-              success:function(dados){
-                if (dados == 1){
-                  location.href = 'index.php'
-                }
-              }
-            })
-          }
-
-          function finalizaPedido(){
-            var myApp = new Framework7({
-              material: true
-            });
-            var mainView = myApp.addView('.view-main');
-            var total   = totaliza();
-
-            $.ajax({
-              url:("ajax/totalitens.php"),
-              type: "POST",
-              data: "guidpedido="+<?php echo $guid_pedido; ?>,
-              success:function(dados){
-                if (dados == 1){
-                  location.href = 'finalizar.php'
-                } else {
-                  myApp.addNotification({
-                    message: 'É necesário ter pelo menos um item no carrinho.',
-                    button: {
-                      text: 'Fechar',
-                    },
-                  });
-                }
-              }})
-            }
-            </script>
-          </head>
-          <body>
-            <!-- Status bar overlay for fullscreen mode-->
-            <div class="statusbar-overlaply"></div>
-            <!-- Panels overlay-->
-            <div class="panel-overlay"></div>
-            <!-- Left panel with reveal effect-->
-            <div class="panel panel-left panel-reveal">
-              <div class="navbar">
-                <div class="navbar-inner">
-                  <div class="left"></div>
-                  <div class="center">Menu</div>
-                  <div class="right"></div>
-                </div>
+          </script>
+        </head>
+        <body>
+          <!-- Status bar overlay for fullscreen mode-->
+          <div class="statusbar-overlaply"></div>
+          <!-- Panels overlay-->
+          <div class="panel-overlay"></div>
+          <!-- Left panel with reveal effect-->
+          <div class="panel panel-left panel-reveal">
+            <div class="navbar">
+              <div class="navbar-inner">
+                <div class="left"></div>
+                <div class="center">Menu</div>
+                <div class="right"></div>
               </div>
+            </div>
 
+            <div class="list-block">
+              <ul>
+                <li>
+                  <a href="#" data-popup=".popup-check" class="item-link open-popup">
+                    <div class="item-inner">
+                      <div class="item-title">Consultar Pedido</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" data-popup=".popup-about" class="item-link open-popup">
+                    <div class="item-inner">
+                      <div class="item-title">Sobre</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- About Popup -->
+          <div class="popup popup-about">
+            <div class="content-block">
+              <p>Sobre o Aplicativo</p>
+              <p><a href="#" class="close-popup">Fechar</a></p>
+              <p>Informaões da empresa que administra o aplicativo. <br>
+                Sobre a empresa <br>
+              </p>
+              <p>Desenvolvimento</p>
+              <p>Este aplicativo foi desenvolvido por Copyright Omega Inc. Todos os direitos Reservados<br>
+              </p>
+            </div>
+          </div>
+
+          <!-- Check Popup -->
+          <div class="popup popup-check">
+            <div class="content-block">
+              <p>Consultar Pedido</p>
+              <p><a href="#" onclick="clearTimeLine()" class="close-popup">Fechar</a></p>
               <div class="list-block">
                 <ul>
-                  <li>
-                    <a href="#" data-popup=".popup-check" class="item-link open-popup">
-                      <div class="item-inner">
-                        <div class="item-title">Consultar Pedido</div>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">search</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text"  id="numeropedido" placeholder="Numero do Pedido"  required>
                       </div>
-                    </a>
+                    </div>
                   </li>
-                  <li>
-                    <a href="#" data-popup=".popup-about" class="item-link open-popup">
-                      <div class="item-inner">
-                        <div class="item-title">Sobre</div>
+
+                  <li class="item-content">
+                    <div class="item-media"><i class="material-icons color-icon">lock_outline</i></div>
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text"  id="token" placeholder="Token"  required>
                       </div>
-                    </a>
+                    </div>
+                  </li>
+
+                  <li>
+                    <p class="buttons-row">
+                      <a type="submit" href="" onclick="searchOrder()"  class="button button-fill button-raised color-green">Pesquisar</a>
+                    </p>
                   </li>
                 </ul>
               </div>
-            </div>
-
-            <!-- About Popup -->
-            <div class="popup popup-about">
-              <div class="content-block">
-                <p>Sobre o Aplicativo</p>
-                <p><a href="#" class="close-popup">Fechar</a></p>
-                <p>Informaões da empresa que administra o aplicativo. <br>
-                  Sobre a empresa <br>
-                </p>
-                <p>Desenvolvimento</p>
-                <p>Este aplicativo foi desenvolvido por Copyright Omega Inc. Todos os direitos Reservados<br>
-                </p>
+              <div id="container">
               </div>
             </div>
+          </div>
 
-            <!-- Check Popup -->
-            <div class="popup popup-check">
-              <div class="content-block">
-                <p>Consultar Pedido</p>
-                <p><a href="#" onclick="clearTimeLine()" class="close-popup">Fechar</a></p>
-                <div class="list-block">
-                  <ul>
+          <!-- 2 Sabores Popup -->
+          <div class="popup popup-2sabores">
+            <div class="content-block">
+              <p>Monte Sua Pizza de 2 Sabores</p>
+              <p><a href="#" class="close-popup">Fechar</a></p>
+              <p>
+                <div class="list-block accordion-list">
+                  <div class="list-block">
+                    <ul id="carrinhomeias">
+                    </ul>
+                  </div>
+                  <ul id="listageralmeias">
+                    <?php
+                    $db->connect();
+                    $db->sql("SELECT * FROM cad_categorias WHERE twosaborescat = 1");
+                    $res = $db->getResult();
+                    foreach($res as $output)
+                    {
+                      $guid_categoria = $output["guid"];
+                      $iconecategoria = $output["iconecategoria"];
+                      $nome_categoria = $output["descricao"];
 
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons color-icon">search</i></div>
-                      <div class="item-inner">
-                        <div class="item-input">
-                          <input type="text"  id="numeropedido" placeholder="Numero do Pedido"  required>
-                        </div>
-                      </div>
-                    </li>
+                      echo '<li class="accordion-item categorias-meias">'
+                      ,'<a href="" class="item-link item-content">'
+                      ,'<div class="item-inner">';
+                      echo "<div class='item-title'>$iconecategoria $nome_categoria</div>";
+                      echo '</div>'
+                      ,'</a>'
+                      ,'<div class="accordion-item-content">'
+                      ,'<div class="list-block media-list">'
+                      ,'<ul>';
 
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons color-icon">lock_outline</i></div>
-                      <div class="item-inner">
-                        <div class="item-input">
-                          <input type="text"  id="token" placeholder="Token"  required>
-                        </div>
-                      </div>
-                    </li>
+                      $db->connect();
+                      $db->sql("SELECT a.guid as guidcategoria,
+                        a.descricao as descricaocategoria,
+                        a.iconecategoria as icone,
+                        a.twosaborescat,
+                        b.guid as guidprod,
+                        b.guid_categoria,
+                        b.subdescricao,
+                        b.imgproduto as imagem,
+                        b.descricao as produto,
+                        b.indisponivel,
+                        b.twosabores,
+                        b.preco
+                        FROM cad_categorias AS a
+                        INNER JOIN cad_produtos AS b
+                        ON a.guid = b.guid_categoria WHERE a.guid = $guid_categoria AND b.indisponivel != 1 AND a.twosaborescat = 1 AND b.twosabores = 1");
+                        $res = $db->getResult();
+                        foreach($res as $output)
+                        {
+                          $categoria_guid           = $output["guidcategoria"];
+                          $produto_guid             = $output["guidprod"];
+                          $produto_imagem           = $output["imagem"];
+                          $produto_nome             = $output["produto"];
+                          $produto_preco            = $output["preco"];
+                          $subdescricao             = $output["subdescricao"];
 
-                    <li>
-                      <p class="buttons-row">
-                        <a type="submit" href="" onclick="searchOrder()"  class="button button-fill button-raised color-green">Pesquisar</a>
-                      </p>
-                    </li>
-                  </ul>
-                </div>
-                <div id="container">
-                </div>
+                          $preco_value = ($produto_preco / 2);
+
+                          $preco_value = money_format('%n', $preco_value);
+
+
+                          echo "<li class='item-content' id='$produto_guid'>";
+                          echo "<div class='item-media'  href='#' onclick='viewimage(\"$produto_imagem\", \"$produto_nome\", \"$subdescricao\");'>";
+                          echo "<img class='circular' src='$produto_imagem' width='44'>";
+                          echo '</div>'
+                          ,'<div class="item-inner">'
+                          ,'<div class="item-title-row">';
+                          echo "<div class='item-title'>Meia $produto_nome</div>";
+                          echo "<div class='item-after'><span href='#' id='buttonADD' onclick='adicionarMeio($produto_guid,\"$produto_nome\",$produto_preco,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
+                          echo "</div>";
+                          echo "<div class='item-subtitle'>$preco_value</div>";
+                          echo "<div id='subdesc' class='item-text'>$subdescricao</div>";
+                          echo '</div>'
+                          ,'</li>';
+
+                        }
+
+                        echo '</ul>'
+                        ,'</div>'
+                        ,'</div>';
+                      }
+                      ?>
+                    </ul>
+                  </div>
+                </p>
               </div>
             </div>
 
@@ -425,8 +492,8 @@ $db = new Database();
 
                                     $produto_preco = money_format('%n', $produto_preco);
 
-                                    echo '<li class="item-content">'
-                                    ,'<div class="item-media">';
+                                    echo '<li class="item-content">';
+                                    echo "<div class='item-media'  href='#' onclick='viewimage(\"$produto_imagem\", \"$produto_nome\", \"$subdescricao\");'>";
                                     echo "<img class='circular' src='$produto_imagem' width='44'>";
                                     echo '</div>'
                                     ,'<div class="item-inner">'
@@ -435,7 +502,7 @@ $db = new Database();
                                     echo "<div class='item-after'><span href='#' id='buttonADD' onclick='adicionarCarrinho($produto_guid,\"$produto_nome\",$preco_value,\"$produto_imagem\")' class='button'><i class='material-icons color-icon'>add</i></span></div>";
                                     echo "</div>";
                                     echo "<div class='item-subtitle'>$produto_preco</div>";
-                                    echo "<div class='item-text'>$subdescricao</div>";
+                                    echo "<div id='subdesc' class='item-text'>$subdescricao</div>";
                                     echo '</div>'
                                     ,'</li>';
 
@@ -447,7 +514,18 @@ $db = new Database();
                                 }
                                 ?>
 
+
+
                               </ul>
+                              <a href="#" data-popup=".popup-2sabores" class="item-link open-popup">
+                                <div class="item-content">
+                                  <div class="item-media"><i class="material-icons color-icon">local_pizza</i></div>
+                                  <div class="item-inner">
+                                    <div class="item-title">Pizzas 2 Sabores</div>
+                                    <div class="item-after">Monte sua Pizza de dois Sabores</div>
+                                  </div>
+                                </div>
+                              </a>
                             </div>
                           </div>
                         </div>

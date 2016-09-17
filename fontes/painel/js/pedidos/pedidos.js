@@ -30,6 +30,23 @@ function getprint(){
   inprimir(pedido);
 }
 
+function getItemQtde(produto, pedido, callback){
+  return $.ajax({
+    url:  "ajax/pedidos/mesmo.php",
+    type: "POST",
+    data: "produto="+produto+"&pedido="+pedido,
+    async: false,
+    success: function(dados){
+      callback(dados);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      alert("Status: " + textStatus); alert("Error: " + errorThrown);
+      console.log(arguments);
+      console.log(produto, pedido);
+    }
+  });
+}
+
 function inprimir(guid){
   $.ajax({
     url: "ajax/pedidos/populate_pedidoAberto.php",
@@ -85,31 +102,25 @@ function inprimir(guid){
           success: function (dados){
             var linha				   = 34;
             var currentproduto = 0;
+            var calls = [];
 
             $.each(dados, function(index, dado){
               var preco				   = dado.valorproduto;
               var produto        = dado.guidproduto;
+              var nomeproduto    = dado.nomeproduto;
+              var qtde           = 0;
+              var pedido         = guidPedido;
 
-              if (currentproduto == (produto)){
-                $.ajax({
-                  url:  "ajax/pedidos/mesmo.php",
-                  type: "POST",
-                  data: "produto="+produto+"&pedido="+guidPedido,
-                  success: function(dados){
-                    doc.text(1, (linha), ((dado.nomeproduto)+" | Preço: "+ preco + "Qtde.: "+ (dados) ));
-                  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    alert("Status: " + textStatus); alert("Error: " + errorThrown);
-                    console.log(arguments);
-                  }
-                });
-              }
+              getItemQtde(produto, pedido, function(output) {
+                qtde = output;
+              });
+
               currentproduto     = produto;
 
               preco = accounting.formatMoney(preco, "R$ ", 2, ".", ",");
 
               linha = linha + 4;
-              doc.text(1, (linha), ((dado.nomeproduto)+" | Preço: "+preco));
+              doc.text(1, (linha), ((dado.nomeproduto)+" | Preço: "+ preco + " Qtde: "+ qtde));
             });
 
             doc.text(1, (linha+4), ("---------------------------------------------------------------------------------"));

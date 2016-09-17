@@ -5,6 +5,9 @@ $(document).ready(function(){
     return false;
   };
 
+  var myApp = new Framework7({material: true,});
+
+
   $("#cep").blur(function(){
     $("#rua").val("...")
     $("#bairro").val("...")
@@ -28,6 +31,7 @@ $(document).ready(function(){
     });
   });
 });
+
 
 function formataCEP(){
   var cep       = $("#cep");

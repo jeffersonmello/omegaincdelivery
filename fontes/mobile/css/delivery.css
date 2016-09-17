@@ -75,3 +75,18 @@
   height: 48px;
 
 }
+
+.circular-view {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}
+
+.carec-overflow {
+  white-space: nowrap;
+  width: 20em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -50,8 +50,6 @@ function searchRel(){
         doc.text(120, 10, ("Data"));
         doc.text(160, 10, ("Valor do Pedido"));
 
-
-
         $.each(dados, function(index, dado){
           var guidpedido    = dado.guid;
           var nomecliente   = dado.nome;
@@ -67,20 +65,22 @@ function searchRel(){
             //doc.text(20, 100, 'Some Text.');
           }*/
 
-          total       = (total + valortotal);
-
           doc.text(10, (linha+10), (guidpedido));
           doc.text(60, (linha+10), (nomecliente));
           doc.text(120, (linha+10), (datapedido));
           doc.text(160, (linha+10), ("R$ " + valortotal));
 
+
+          valortotal = parseFloat(valortotal);
+          total      = (total + valortotal);
+
           linha = linha + 10;
         });
 
-        //total	= accounting.formatMoney(total, "R$ ", 2, ".", ",");
+        total	= accounting.formatMoney(total, "R$ ", 2, ".", ",");
 
-        /*doc.text(160, (linha+10), "Total");
-        doc.text(160, (linha+20), ("R$ " + total));*/
+        doc.text(160, (linha+10), "Total");
+        doc.text(160, (linha+20), (total));
         var string = doc.output('dataurlnewwindow');
       }
       ,

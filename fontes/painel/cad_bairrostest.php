@@ -92,6 +92,11 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 	<script src="js/bairro/bairro.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
+		$('#example tr').click(function (event) {
+          alert($(this).attr('id')); //trying to alert id of the clicked row
+
+     });
+
 		$.ajax({
 			url: "ajax/bairro/bairrojson.php",
 			type: "POST",
@@ -105,7 +110,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 						{"data": "guid"},
 						{"data": "descricao"},
 						{"data": "taxaEntrega"},
-						{"<button type='button' onclick='openModal("+editar+", guid)' class='btn btn-secondary btn-xs'><i class='material-icons'>mode_edit</i></button> <button type='button' onclick='salvar(3, guid)'class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>"}
+						{"<button type='button' onclick='openModal(\"Editar\", guid)' class='btn btn-secondary btn-xs'><i class='material-icons'>mode_edit</i></button> <button type='button' onclick='salvar(3, guid)'class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>"}
 					],
 					"language": {
 						"sEmptyTable": "Nenhum registro encontrado",
@@ -137,7 +142,6 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 			}
 		});
 
-		reloadtable();
 	})
 
 	function reloadtable(){
@@ -146,64 +150,39 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 			type: "POST",
 			success: function(dados){
 				var newData = $.map(dados, function(el) { return el });
-				var editar = ('"'+'Editar'+'"');
+
+				$('.dataTables_processing', $('#example').closest('.dataTables_wrapper')).show();
 
 
-
-			var table =	$('#example').DataTable({
+				var table =	$('#example').DataTable({
 					data: newData,
 					columns: [
 						{"data": "guid"},
 						{"data": "descricao"},
 						{"data": "taxaEntrega"},
-						{"<button type='button' onclick='openModal("+editar+", guid)' class='btn btn-secondary btn-xs'><i class='material-icons'>mode_edit</i></button> <button type='button' onclick='salvar(3, guid)'class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>"}
+						{"<button type='button' onclick='openModal(\"Editar\", guid)' class='btn btn-secondary btn-xs'><i class='material-icons'>mode_edit</i></button> <button type='button' onclick='salvar(3, guid)'class='btn btn-secondary btn-xs'><i class='material-icons'>delete</i></button>"}
 					],
-					"language": {
-						"sEmptyTable": "Nenhum registro encontrado",
-						"sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-						"sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-						"sInfoFiltered": "(Filtrados de _MAX_ registros)",
-						"sInfoPostFix": "",
-						"sInfoThousands": ".",
-						"sLengthMenu": "_MENU_ resultados/página",
-						"sLoadingRecords": "Carregando...",
-						"sProcessing": "Processando...",
-						"sZeroRecords": "Nenhum registro encontrado",
-						"sSearch": "Pesquisar",
-						"oPaginate": {
-							"sNext": "Próximo",
-							"sPrevious": "Anterior",
-							"sFirst": "Primeiro",
-							"sLast": "Último"
-						},
-						"oAria": {
-							"sSortAscending": ": Ordenar colunas de forma ascendente",
-							"sSortDescending": ": Ordenar colunas de forma descendente"
-						}
-					},
-					"iDisplayLength": 5,
-					'sDom': '<"top"f>rt<"bottom"p>i',
-					processing: true
+					bProcessing: true
 				});
 
 				table.processing( true );
 			}
 		});
 	})
-	}
+}
 
 
-	function abrirfechar(operacao){
-		$.ajax({
-			url:"ajax/abre_fecha/abrefecha.php",
-			type:"POST",
-			data:"operacao="+operacao,
-			success: function (dados){
-				location.reload();
-			}
-		})
-	}
-	</script>
+function abrirfechar(operacao){
+	$.ajax({
+		url:"ajax/abre_fecha/abrefecha.php",
+		type:"POST",
+		data:"operacao="+operacao,
+		success: function (dados){
+			location.reload();
+		}
+	})
+}
+</script>
 </head>
 <body>
 	<div id="wrapper">
@@ -293,7 +272,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 					<br>
 
 					<div class="banner">
-						<h2>Bairros <button type="button" onclick="openModal('Novo',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
+						<h2>Bairros <button type="button" onclick="reloadtable()" class="btn btn-default btn-sm pull-right">Atualizar</button> <button type="button" onclick="openModal('Novo',0)" class="btn btn-primary btn-sm pull-right">Novo</button><br></h2>
 					</div>
 
 					<div class="blank">

@@ -5,6 +5,7 @@ use delivery;
 create table cad_categorias (
 	guid int not null auto_increment,
 	descricao varchar(500) not null,
+	twosaborescat int not null default 0;
 	iconecategoria varchar(500) default '<i class="fa fa-archive color-icon" aria-hidden="true"></i> ',
 	primary key (guid)
 );
@@ -16,9 +17,18 @@ create table cad_produtos (
 	descricao varchar(500) not null,
 	subdescricao varchar(500),
 	indisponivel int not null default 0,
+	twosabores int not null default 0,
 	preco float,
 	primary key (guid),
 	foreign key (guid_categoria) references cad_categorias (guid)
+);
+
+create table temp_prods (
+	guid int not null auto_increment,
+	descricao varchar(900),
+	preco float,
+	imagem varchar(700) default 'https://cdn1.iconfinder.com/data/icons/streamline-time/60/cell-18-2-240.png',
+	primary key (guid)
 );
 
 
@@ -57,8 +67,8 @@ create table lanc_pedidos (
 	observacao text,
 	notificado int not null default 0,
 	visualizado int not null default 0,
-	primary key (guid),
-	foreign key (guidresposta) references lanc_respostas (guid)
+	primary key (guid)
+	-- foreign key (guidresposta) references lanc_respostas (guid) --
 );
 
 create table lanc_listprodpedido (
@@ -66,7 +76,6 @@ create table lanc_listprodpedido (
 	guid_produto int not null,
 	guid_pedido int not null,
 	primary key (guid),
-	foreign key (guid_produto) references cad_produtos (guid),
 	foreign key (guid_pedido) references lanc_pedidos (guid)
 );
 
@@ -105,4 +114,18 @@ create table adm_empresa (
 	padrao int,
 	aberto int,
 	primary key (guid)
+);
+
+-- -----------------------------------------------------
+-- Table `log_auditoria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `log_auditoria` ;
+
+CREATE TABLE IF NOT EXISTS `log_auditoria` (
+	guid INT NOT NULL AUTO_INCREMENT,
+	acao VARCHAR(750) NOT NULL,
+	guidusuario INT NOT NULL,
+	nomeusuario VARCHAR(500) NOT NULL,
+	datahora DATETIME,
+	PRIMARY KEY (guid)
 );

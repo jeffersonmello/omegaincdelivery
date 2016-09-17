@@ -28,36 +28,15 @@ session_destroy();
 
   <script src="js/searchOrder.min.js"></script>
   <script src="js/omega.min.js"></script>
+  <script src="js/cep/cep.min.js"></script>
 
-  <!--Import Google Icon Font-->
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</script>
 
-  <!--Import Fontawesome Icon Font-->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-  <script type="text/javascript">
-  $(function(){
+<!--Import Google Icon Font-->
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    $('input').on('focus',function(){
-      if(!$('#content').hasClass('kbactive')){
-        addClass();
-      }
-    });
-
-    $('input').on('blur',function(){
-      removeClass();
-    });
-
-    function addClass(){ //Adds keyboard active class
-      $('#content').addClass('kbactive');
-    }
-
-    function removeClass(){ //Removes keyboard active class
-      $('#content').removeClass('kbactive');
-    }
-
-  })
-
-  </script>
+<!--Import Fontawesome Icon Font-->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 </head>
 <body>
   <!-- Status bar overlay for fullscreen mode-->
@@ -169,6 +148,41 @@ session_destroy();
     </div>
   </div>
 
+
+  <div class="popup popup-cep">
+    <div class="content-block">
+      <p>Consultar CEP</p>
+      <div class="page">
+        <!-- Search Bar -->
+        <form class="searchbar">
+          <div class="searchbar-input">
+            <input id="nomedarua" onkeyup="getCEP(this.value)" type="search" placeholder="Nome da Rua">
+            <a href="#" class="searchbar-clear"></a>
+          </div>
+          <a href="#" class="searchbar-cancel">Cancel</a>
+        </form>
+
+        <!-- Search Bar overlay-->
+        <div class="searchbar-overlay"></div>
+
+        <!-- Page content -->
+        <div class="page-content">
+          <div class="content-block searchbar-not-found">
+            Nenhum Endereço Encontrado
+          </div>
+
+          <div class="list-block list-block-search searchbar-found">
+
+            <ul id="listaresultados">
+            </ul>
+            <p><a href="#" class="button close-popup">Fechar</a></p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Views-->
   <div class="views">
     <div class="view view-main mainprincipal">
@@ -216,79 +230,88 @@ session_destroy();
                             </div>
                           </li>
 
+
                           <li class="item-content">
-                            <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
-                            <div class="item-inner">
-                              <div class="item-input">
-                                <input style="color: green" type="text" id="endereco" name="endereco" placeholder="" disabled>
-                              </div>
+                            <div class="item-input">
+                              <p><a href="#" data-popup=".popup-cep" class="button open-popup">Não sei meu cep.</a></p>
                             </div>
-                          </li>
+                            </li>
 
-                          <!--  <li class="item-content">
-                          <div class="item-inner">
-                          <div class="item-input">
-                          <p class="buttons-row">
-                          <a href="" onclick="" class="button button-fill button-raised color-bluegray">Usar Minha Localização</a>
-                        </p>
+
+
+                            <li class="item-content">
+                              <div class="item-media"><i class="material-icons color-icon">location_on</i></div>
+                              <div class="item-inner">
+                                <div class="item-input">
+                                  <input style="color: green" type="text" id="endereco" name="endereco" placeholder="" disabled>
+                                </div>
+                              </div>
+                            </li>
+
+                            <!--  <li class="item-content">
+                            <div class="item-inner">
+                            <div class="item-input">
+                            <p class="buttons-row">
+                            <a href="" onclick="" class="button button-fill button-raised color-bluegray">Usar Minha Localização</a>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </li> -->
+                    </li> -->
 
-                  <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">person</i></div>
-                    <div class="item-inner">
-                      <div class="item-input">
-                        <input type="text" onfocus="position('#nome')" id="nome" name="nome" placeholder="Seu Nome" required>
+                    <li class="item-content">
+                      <div class="item-media"><i class="material-icons color-icon">person</i></div>
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="text" onfocus="position('#nome')" id="nome" name="nome" placeholder="Seu Nome" required>
+                        </div>
                       </div>
-                    </div>
-                  </li>
+                    </li>
 
-                  <li class="item-content">
-                    <div class="item-media"><i class="material-icons color-icon">email</i></div>
-                    <div class="item-inner">
-                      <div class="item-input">
-                        <input type="email" onfocus="position('#email')" id="email" name="email" placeholder="Seu Email" required>
+                    <li class="item-content">
+                      <div class="item-media"><i class="material-icons color-icon">email</i></div>
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="email" onfocus="position('#email')" id="email" name="email" placeholder="Seu Email" required>
+                        </div>
                       </div>
-                    </div>
-                  </li>
+                    </li>
 
-                  <input name="cep" type="hidden" id="cep" value="" size="15" maxlength="8" />
-                  <input name="rua" type="hidden" id="rua" size="60" />
-                  <input name="bairro" type="hidden" id="bairro" class="form-control" size="60" />
-                  <input name="cidade" type="hidden" id="cidade" size="60" />
+                    <input name="cep" type="hidden" id="cep" value="" size="15" maxlength="8" />
+                    <input name="rua" type="hidden" id="rua" size="60" />
+                    <input name="bairro" type="hidden" id="bairro" class="form-control" size="60" />
+                    <input name="cidade" type="hidden" id="cidade" size="60" />
 
-                </ul>
+                  </ul>
+                </div>
+                <div class="list-block">
+                  <ul>
+                    <li>
+                      <p class="buttons-row">
+                        <a type="submit" href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              </form><!-- fim login page -->
+
+              <br>
+
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p class="color-icon">
+                    Horário de Atendimento: Ter. à Dom. das 18h as 00h.<br>
+                    Telefone:<br>
+                    Email:
+                  </p>
+                </div>
               </div>
-              <div class="list-block">
-                <ul>
-                  <li>
-                    <p class="buttons-row">
-                      <a type="submit" href="" onclick="verificaBairro()"  class="button button-fill button-raised color-green">Pronto</a>
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </form><!-- fim login page -->
 
-            <br>
-
-            <div class="content-block">
-              <div class="content-block-inner">
-                <p class="color-icon">
-                  Horário de Atendimento: Ter. à Dom. das 18h as 00h.<br>
-                  Telefone:<br>
-                  Email:
-                </p>
-              </div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 </div>

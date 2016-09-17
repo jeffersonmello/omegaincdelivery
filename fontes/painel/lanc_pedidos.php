@@ -91,7 +91,7 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 	<script src="js/jspdf.min.js"></script>
 
 	<!--Pedidos JS -->
-	<script src="js/pedidos/pedidos.min.js"></script>
+	<script src="js/pedidos/pedidos.js"></script>
 </head>
 <body>
 	<div id="wrapper">
