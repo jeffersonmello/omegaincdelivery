@@ -75,8 +75,7 @@ create table lanc_listprodpedido (
 	guid int not null auto_increment,
 	guid_produto int not null,
 	guid_pedido int not null,
-	primary key (guid),
-	foreign key (guid_pedido) references lanc_pedidos (guid)
+	primary key (guid)
 );
 
 create table lanc_respostas (

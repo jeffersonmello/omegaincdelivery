@@ -4,14 +4,15 @@ header('content-type: application/json; charset=utf-8');
 ini_set( 'display_errors', true );
 error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
-include('../class/mysql_crud.php');
+include('../../class/mysql_crud.php');
 
 $nome   = $_POST["nome"];
-$preco  = $_POST["guidpedido"];
+$preco  = $_POST["preco"];
+
 
 $db = new Database();
 $db->connect();
-$db->insert('tem_prods',array('guid_produto'=>$guid_produto,'guid_pedido'=>$guid_pedido));
+$db->insert('temp_prods',array('descricao'=>$nome,'preco'=>$preco));
 $res = $db->getResult();
 
 
