@@ -20,7 +20,7 @@ $(document).ready(function(){
     var categorias    = $(".categorias");
     var produtos      = $("#listaprodutos");
     var itemproduto   = $(".itempesquisa");
-    var myApp = new Framework7({material: true});
+    var myApp = new Framework7({material: true,   modalTitle: 'Delivery'});
 
     categorias.hide();
 

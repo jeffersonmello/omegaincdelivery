@@ -76,7 +76,6 @@ foreach ($res as $output) {
       type: "POST",
       success: function(dados){
         $.each(dados, function(index, dado){
-          var myApp = new Framework7({material: true,});
           var modal = myApp.modal({
             title: "Promoção",
             text: "Promoção agora Aproveite são " + dado.taxdesconto + "% de desconto !!",
