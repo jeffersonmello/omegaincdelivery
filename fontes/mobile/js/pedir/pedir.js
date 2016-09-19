@@ -1,5 +1,6 @@
 $(document).ready(function(){
   totaliza();
+  localStorage.clear();
 
   var texto = $("#subdesc").text();
 
@@ -63,6 +64,33 @@ $(document).ready(function(){
       }
     })
   })
+
+
+  function getPromotion(){
+    $.ajax({
+      url:  "ajax/promocao/desconto.php",
+      type: "POST",
+      success: function(dados){
+        $.each(dados, function(index, dado){
+          var modal = myApp.modal({
+            title: "Promoção",
+            text: "Promoção agora Aproveite são " + dado.taxdesconto + "% de desconto !!",
+            afterText:  '<div class="swiper-container" style="width: auto; margin:5px -15px -15px">'+
+            '<div class="swiper-pagination"></div>'+
+            '<div class="swiper-wrapper">'+
+            '<div><img class="circular-view" src="'+dado.imagemdesconto+'" height="150" style="display:block"></div>' +
+            '</div>'+
+            '</div>',
+            buttons: [
+              {
+                text: 'Fechar'
+              }
+            ]
+          })
+        });
+      }
+    });
+  }
 
 
   function viewimage(imagem, titulo, subdescricao){
