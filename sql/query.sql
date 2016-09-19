@@ -5,7 +5,7 @@ use delivery;
 create table cad_categorias (
 	guid int not null auto_increment,
 	descricao varchar(500) not null,
-	twosaborescat int not null default 0;
+	twosaborescat int not null default 0,
 	iconecategoria varchar(500) default '<i class="fa fa-archive color-icon" aria-hidden="true"></i> ',
 	primary key (guid)
 );
@@ -18,6 +18,7 @@ create table cad_produtos (
 	subdescricao varchar(500),
 	indisponivel int not null default 0,
 	twosabores int not null default 0,
+	definetamanho int not null default 0,
 	preco float,
 	primary key (guid),
 	foreign key (guid_categoria) references cad_categorias (guid)
@@ -74,6 +75,7 @@ create table lanc_pedidos (
 create table lanc_listprodpedido (
 	guid int not null auto_increment,
 	guid_produto int not null,
+	valorproduto float,
 	guid_pedido int not null,
 	primary key (guid)
 );
@@ -126,5 +128,20 @@ CREATE TABLE IF NOT EXISTS `log_auditoria` (
 	guidusuario INT NOT NULL,
 	nomeusuario VARCHAR(500) NOT NULL,
 	datahora DATETIME,
+	PRIMARY KEY (guid)
+);
+
+-- -----------------------------------------------------
+-- Table `tab_desconto`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tab_desconto` ;
+
+CREATE TABLE IF NOT EXISTS `tab_desconto` (
+	guid INT NOT NULL AUTO_INCREMENT,
+	ativo INT NOT NULL DEFAULT 0,
+	titulopromocao VARCHAR(750),
+	descricaopromocao TEXT,
+	taxdesconto INT NOT NULL,
+	imagemdesconto VARCHAR(900),
 	PRIMARY KEY (guid)
 );

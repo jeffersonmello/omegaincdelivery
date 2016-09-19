@@ -6,8 +6,9 @@ error_reporting(E_ALL & ~ E_NOTICE & ~ E_DEPRECATED);
 
 include('../class/mysql_crud.php');
 
-$guid_pedido  = $_POST["guidpedido"];
-$taxa  = $_POST["taxa"];
+$guid_pedido    = $_POST["guidpedido"];
+$taxa           = $_POST["taxa"];
+$taxadesconto   = $_POST["taxadesc"];
 
 $db = new Database();
 $db->connect();
@@ -39,7 +40,9 @@ $db->sql("SELECT a.guid as guidproduto,
 
 
 
-    $total = ($total + $taxa + $total2);
+    $total = (($total + $taxa + $total2));
+    $taxadesconto = ($total * ($taxadesconto / 100));
+    $total = $total - $taxadesconto;
     if(!isset($_SESSION))
     session_start();
     $_SESSION['totalpedio']     = $total;
