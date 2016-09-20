@@ -1,9 +1,12 @@
 $(document).ready(function(){
   totaliza();
   localStorage.clear();
+  //localStorage.setItem("taxadesconto", 0);
+  //verificaDesconto();
+  var myApp = new Framework7({material: true,   modalTitle: 'Delivery'});
+
 
   var texto = $("#subdesc").text();
-
   for (i = 25; i > 1; i++){
     var proximoEspaco = texto.substring(i, (i + 1));
 
@@ -21,7 +24,8 @@ $(document).ready(function(){
     var categorias    = $(".categorias");
     var produtos      = $("#listaprodutos");
     var itemproduto   = $(".itempesquisa");
-    var myApp = new Framework7({material: true,   modalTitle: 'Delivery'});
+
+    if (pesquisa.length > 2){
 
     categorias.hide();
 
@@ -49,6 +53,8 @@ $(document).ready(function(){
           myApp.hideIndicator();
         }, 1000);
       }})
+
+      }
     })
 
 
@@ -65,13 +71,31 @@ $(document).ready(function(){
     })
   })
 
+  function verificaDesconto(){
+    $.ajax({
+      url:  "ajax/promocao/verificadesconto.php",
+      type: "POST",
+      success: function(dados){
+        if (dados == 1){
+          getPromotion();
+        }
+      }
+    });
+  }
 
   function getPromotion(){
+    var campodesconto = $("#descontofield");
     $.ajax({
       url:  "ajax/promocao/desconto.php",
       type: "POST",
       success: function(dados){
         $.each(dados, function(index, dado){
+          var taxadesconto  = dado.taxdesconto;
+          localStorage.setItem("taxadesconto", taxadesconto);
+
+          campodesconto.html(taxadesconto + "%")
+          totaliza();
+
           var modal = myApp.modal({
             title: "Promoção",
             text: "Promoção agora Aproveite são " + dado.taxdesconto + "% de desconto !!",
@@ -92,9 +116,7 @@ $(document).ready(function(){
     });
   }
 
-
   function viewimage(imagem, titulo, subdescricao){
-    var myApp = new Framework7({material: true,});
     var modal = myApp.modal({
       title: titulo,
       text: subdescricao,
